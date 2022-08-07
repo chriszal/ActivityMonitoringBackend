@@ -1,0 +1,23 @@
+version: '3.3'
+networks:
+  tick:
+services:
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - '8086:8086'
+    networks:
+      - tick
+    volumes:
+      - /var/lib/influxdb:/var/lib/influxdb
+    environment:
+      INFLUXDB_ADMIN_USER: admin
+
+      # Admin password (Password will be generated and printed if not set)
+      INFLUXDB_ADMIN_PASSWORD: changeme
+
+      # Name for a user with read and write permissions on the INFLUXDB_DB database
+      INFLUXDB_USER: rwuser
+      
+      # Password for INFLUXDB_USER (Password will be generated and printed if not set)
+      INFLUXDB_USER_PASSWORD: changeme
