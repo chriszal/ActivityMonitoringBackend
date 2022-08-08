@@ -10,7 +10,7 @@ services:
       - tick
     volumes:
       - /var/lib/influxdb:/var/lib/influxdb
-      - ./influxdb.conf:/etc/influxdb/influxdb.conf
+      # - ./influxdb.conf:/etc/influxdb/influxdb.conf
     environment:
       - INFLUXDB_DB=android
       - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
