@@ -10,14 +10,51 @@ services:
       - tick
     volumes:
       - /var/lib/influxdb:/var/lib/influxdb
+      - ./influxdb.conf:/etc/influxdb/influxdb.conf
     environment:
-      INFLUXDB_ADMIN_USER: admin
+      - INFLUXDB_DB=android
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
 
-      # Admin password (Password will be generated and printed if not set)
-      INFLUXDB_ADMIN_PASSWORD: changeme
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - chronograf-storage:/var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
+      - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana-provisioning/:/etc/grafana/provisioning
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
 
-      # Name for a user with read and write permissions on the INFLUXDB_DB database
-      INFLUXDB_USER: rwuser
-      
-      # Password for INFLUXDB_USER (Password will be generated and printed if not set)
-      INFLUXDB_USER_PASSWORD: changeme
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - "mongodata:/data/db"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME= ${MONGO_USERNAME}
+
+      - MONGO_INITDB_ROOT_PASSWORD= ${MONGO_PASSWORD}
+
+      - MONGO_INITDB_DATABASE= falconapidb
+
+volumes:
+  mongodata:
+  chronograf-storage:
+  grafana-storage:
