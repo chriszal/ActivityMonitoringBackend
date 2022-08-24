@@ -1,0 +1,9 @@
+falcon==2.0.0
+gunicorn
+requests
+eventlet
+gevent
+falcon-swagger-ui
+mongoengine==0.15.0
+pytest
+pyyaml
