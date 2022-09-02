@@ -48,10 +48,6 @@ services:
       - "27017:27017"
     volumes:
       - "mongodata:/data/db"
-    environment:
-        MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-        MONGO_INITDB_DATABASE: falconapidb
   
   falcon-api:
     build:
@@ -64,8 +60,23 @@ services:
       - ./logs/:/usr/api/logs
     links:
      - mongodb
+  
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
+      #- ./assets/nginx/certs:/etc/nginx/certs
+      - static_volume:/usr/api/src/static
+    ports:
+      # - "443:443"
+      - "81:81"
+    depends_on:
+      - django
+    restart:
+      on-failure:5
 
 volumes:
   mongodata:
   chronograf-storage:
   grafana-storage:
+  static_volume:

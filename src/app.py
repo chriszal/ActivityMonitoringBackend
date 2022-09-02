@@ -1,6 +1,5 @@
 import falcon
 import pathlib
-from falcon_swagger_ui import register_swaggerui_app
 
 import src.common.constants as constants
 from src.common.cors import Cors
@@ -21,12 +20,11 @@ mongo.connect(
 
 STATIC_PATH = pathlib.Path(__file__).parent / 'static'
 
-app = falcon.API(middleware=[Cors(), RequireJSON()])
+app = falcon.API(middleware=[Cors()])
 
 study = StudyResource()
 app.add_route('/api/study/', study)
 app.add_route('/api/study/{study_id}', study, suffix="id")
-
 
 app.add_static_route('/static', str(STATIC_PATH))
 
@@ -35,7 +33,3 @@ app.add_error_handler(Exception, handler.handle_500)
 
 # handler for not found resources
 app.add_sink(handler.handle_404, '^((?!static).)*$')
-
-register_swaggerui_app(app, constants.SWAGGERUI_URL, constants.SCHEMA_URL, page_title=constants.PAGE_TITLE,
-                       favicon_url=constants.FAVICON_URL,
-                       config={'supportedSubmitMethods': ['get', 'post', 'put', 'delete'], })

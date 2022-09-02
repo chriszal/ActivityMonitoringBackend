@@ -1,3 +1,4 @@
+import os
 # Documentation settings
 SWAGGERUI_URL = '/swagger'
 SCHEMA_URL = '/static/swagger.json'
@@ -9,6 +10,6 @@ MONGO = {
     'DATABASE': 'falconapidb',
     'HOST': 'mongodb',
     'PORT': 27017,
-    'USERNAME': 'admin',
-    'PASSWORD': 'admin'
+    'USERNAME': '',
+    'PASSWORD': ''
 }
