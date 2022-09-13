@@ -3,7 +3,7 @@ from src.model.study import Study
 
 class User(Document):
     first_name = StringField()
-    last_name = StringField()
-    username = StringField()
+    sur_name = StringField()
+    username = StringField(unique=True,required=True)
     password = StringField()
-    study_id = StringField(ReferenceField(Study))
+    study_id = ListField(ReferenceField(Study))

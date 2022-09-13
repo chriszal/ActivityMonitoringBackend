@@ -1,5 +1,7 @@
 from mongoengine import *
+from src.model.user import User
 
 class Role(Document):
-    role = StringField(primary_key=True)
-    user = StringField(ReferenceField('User'),primary_key=True)
+    role = StringField(required=True,unique=True)
+    users = ListField(ReferenceField(User))
+    permissions = ListField(StringField())
