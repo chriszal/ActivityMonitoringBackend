@@ -7,5 +7,6 @@ falcon-swagger-ui
 mongoengine==0.15.0
 pytest
 pyyaml
-influxdb
 falcon-multipart
+python-decouple
+# influxdb-client

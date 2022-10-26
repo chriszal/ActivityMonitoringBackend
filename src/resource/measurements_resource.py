@@ -1,24 +1,29 @@
+from http import client
 import falcon, json
-from influxdb import InfluxDBClient
-import os
-
+import requests
+from decouple import config
 class MeasurementResource(object):
 
 
     def __init__(self):
-        self.client = InfluxDBClient(host='localhost', port=8086, database='android', gzip=True)
-
+        self.url = config('INFLUXDB_URL')
+        self.token= config('INFLUXDB_TOKEN')
+        self.org = config('INFLUXDB_ORG')
+        self.bucket=config('INFLUXDB_BUCKET')
+        
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
 
     def on_post(self, req, resp):
 
         try:
-            resp.status = falcon.HTTP_201
-            meas_data = req.media
-            self.client.query('select * from cpu_load_short')       
+            
+            input_file = req.get_param('file')
+            response = requests.post(url=self.url+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
+            
+
             resp.body = json.dumps({
-                'message': 'study succesfully created!',
+                'message': str(response)+str(" | Time elapsed: ")+str(response.elapsed.total_seconds()),
                 'status': 201,
                 'data': {}
             })
