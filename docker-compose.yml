@@ -3,15 +3,18 @@ networks:
   tick:
 services:
   influxdb:
-    image: influxdb:1.8
-    ports:
-      - '8086:8086'
+    image: influxdb:2.4
     networks:
       - tick
     volumes:
-      - /var/lib/influxdb:/var/lib/influxdb
+      - influxdb-storage:/var/lib/influxdb2:rw
       #- ./influxdb.conf:/etc/influxdb/influxdb.conf
-
+    env_file:
+      - .env
+    entrypoint: ["./entrypoint.sh"]
+    restart: unless-stopped
+    ports:
+      - ${DOCKER_INFLUXDB_INIT_PORT}:8086
   # chronograf:
   #   image: chronograf:latest
   #   ports:
@@ -76,3 +79,4 @@ volumes:
   # chronograf-storage:
   # grafana-storage:
   static_volume:
+  influxdb-storage:

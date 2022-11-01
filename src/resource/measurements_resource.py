@@ -1,15 +1,17 @@
 from http import client
 import falcon, json
 import requests
+from requests.adapters import HTTPAdapter
+#from requests.packages.urllib3.util.retry import Retry
 from decouple import config
 class MeasurementResource(object):
 
 
     def __init__(self):
         self.url = config('INFLUXDB_URL')
-        self.token= config('INFLUXDB_TOKEN')
-        self.org = config('INFLUXDB_ORG')
-        self.bucket=config('INFLUXDB_BUCKET')
+        self.token= config('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN')
+        self.org = config('DOCKER_INFLUXDB_INIT_ORG')
+        self.bucket=config('DOCKER_INFLUXDB_INIT_BUCKET')
         
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
@@ -17,8 +19,14 @@ class MeasurementResource(object):
     def on_post(self, req, resp):
 
         try:
-            
-            input_file = req.get_param('file')
+            # retry_strategy = Retry(
+            #     total=3,
+            #     backoff_factor=1
+            # )
+            # adapter = HTTPAdapter(max_retries=retry_strategy)
+            # http = requests.Session()
+            # http.mount("http://",adapter)
+            input_file = req.get_param('file')   
             response = requests.post(url=self.url+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
             
 
