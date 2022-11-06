@@ -4,28 +4,18 @@ from src.model.study import Study
 #modify user study id when creating new study
 
 class ParticipantService(object):
-    @staticmethod
-    def modify_participant(id,study_id):
-        return Study.objects(study_id=study_id,participants__id=id).update(set__participants__S__register_status="registered")
-
+    
     @staticmethod
     def list_participants_in_study(study_id):
-
-        return Study.objects.filter(study_id=study_id).values_list('participants')
-
-    @staticmethod
-    def get_participant_in_study(id,study_id):
-        for participant in Study.objects.filter(study_id=study_id).values_list('participants'):
-            if participant["_id"] == id:
-                print(participant)
-                return participant
-            else :
-                return None
-    
+        return Participant.objects.filter(study_id=study_id)
 
     @staticmethod
-    def delete_participant(id,study_id):
+    def get_participant(participant_id):
+        return Participant.objects.get(participant_id=participant_id)
+
+    @staticmethod
+    def delete_participant(participant_id):
         """
         Delete the study
         """
-        Study.objects(study_id=study_id,participants__id=id).update(pull__participants__id=id)
+        Participant.objects.get(participant_id=participant_id).delete()

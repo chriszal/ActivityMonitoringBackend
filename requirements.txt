@@ -8,5 +8,10 @@ mongoengine==0.15.0
 pytest
 pyyaml
 falcon-multipart
+falcon_auth
 python-decouple
 # influxdb-client
+bcrypt
+falcon-policy
+pretend
+# functools

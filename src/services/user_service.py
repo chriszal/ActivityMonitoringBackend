@@ -1,15 +1,17 @@
 from src.model.user import User
-import random
-import string
+from mongoengine.queryset.visitor import Q
+
 
 class UserService(object):
+
     @staticmethod
-    def create_user(first_name,sur_name,username,password):
+    def create_user(first_name, sur_name, username, password, roles):
         """
         Create a new user
         """
 
-        user = User(first_name=first_name,sur_name=sur_name,username=username,password=password).save()
+        user = User(first_name=first_name, sur_name=sur_name, username=username,
+                    password=User.set_password(password), roles=roles).save()
         return user
 
     @staticmethod
@@ -24,16 +26,19 @@ class UserService(object):
         :rtype:
         """
         return User.objects()
-    
 
     @staticmethod
-    def get_user(username):
+    def get_user(username, password):
         """
         Get created projects
         :return:
         :rtype:
         """
-        return User.objects.get(username=username)
+        user = User.objects.get(username=username)
+        if User.validate_login(user.password, password):
+            return user
+        else:
+            return None
 
     @staticmethod
     def delete_user(username):

@@ -45,6 +45,8 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    networks:
+      - tick
     volumes:
       - "mongodata:/data/db"
   
@@ -54,9 +56,13 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - '8081:8081'
+    networks:
+      - tick
     volumes:
       - ./:/usr/api
       - ./logs/:/usr/api/logs
+    environment:
+      - JWT_SECRET=${JWT_SECRET}
     links:
      - mongodb
   
