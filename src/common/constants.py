@@ -39,7 +39,7 @@ policy_config = {
             'DELETE': ['read'],
         },
         '/api/user/': {
-            'POST': ['create'],
+            'HEAD':['@passthrough'],
         },
         '/api/user/{username}': {
             'GET': ['read'],
@@ -50,7 +50,7 @@ policy_config = {
             'DELETE': ['read'],
         },
         '/api/participants/{study_id}': {
-            'GET': ['read'],
+            'GET': ['admin'],
         },
         '/api/measurement/': {
             'POST': ['participant'],

@@ -29,11 +29,18 @@ class ParticipantResource(object):
     def on_get_study(self,req,resp,study_id):
 
         try:
-          print("Conetxt"+str(req.context))
           participant_objs= self.participant_service.list_participants_in_study(study_id)
-          
-          resp.body = participant_objs.to_json()
-          resp.status = falcon.HTTP_200
+          if not participant_objs:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+              'message': 'Study does not exist.',
+              'status': 404,
+              'data': {}
+              }) 
+          else:
+
+            resp.body = participant_objs.to_json()
+            resp.status = falcon.HTTP_200
         except Exception as e:
           resp.status = falcon.HTTP_404
           resp.body = json.dumps({

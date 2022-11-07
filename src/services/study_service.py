@@ -45,4 +45,4 @@ class StudyService(object):
         Delete the study
         """
         Study.objects.get(study_id=study_id).delete()
-        Participant.objects.get(study_id=study_id).delete()
+        Participant.objects(study_id=study_id).delete()

@@ -5,12 +5,12 @@ from mongoengine.queryset.visitor import Q
 class UserService(object):
 
     @staticmethod
-    def create_user(first_name, sur_name, username, password, roles):
+    def create_user(first_name, sur_name,email, username, password, roles):
         """
         Create a new user
         """
 
-        user = User(first_name=first_name, sur_name=sur_name, username=username,
+        user = User(first_name=first_name, sur_name=sur_name,email=email, username=username,
                     password=User.set_password(password), roles=roles).save()
         return user
 

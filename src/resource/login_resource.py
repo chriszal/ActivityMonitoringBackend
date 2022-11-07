@@ -8,6 +8,9 @@ from src.services.user_service import UserService
 
 
 class LoginResource:
+    auth = {
+        'auth_disabled': True
+    }
     def __init__(self):
         self.user_service = UserService()
 

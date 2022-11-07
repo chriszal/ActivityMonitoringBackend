@@ -30,7 +30,8 @@ class RegisterResource(object):
             resp.status = falcon.HTTP_404
         else:
             payload = {
-                "id": participant_objs.get('participant_id')
+                "id": participant_objs.get('participant_id'),
+                "roles":["participant"]
             }
             secret = SECRET
             algo = "HS256"

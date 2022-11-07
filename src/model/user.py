@@ -5,6 +5,7 @@ import bcrypt
 class User(Document):
     first_name = StringField()
     sur_name = StringField()
+    email = StringField()
     username = StringField(unique=True,required=True)
     password = BinaryField() 
     roles = ListField()

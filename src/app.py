@@ -1,14 +1,16 @@
 import pathlib
 from mimetypes import suffix_map
-
+# flake8: noqa
+import random
 from pretend import stub
 import falcon
 import mongoengine as mongo
 from falcon_multipart.middleware import MultipartMiddleware
-from falcon_policy import RoleBasedPolicy
+
 
 import src.common.constants as constants
 from src.common.auth_handler import AuthHandler
+from src.common.role_handler import RoleBasedPolicy
 from src.common.cors import Cors
 from src.common.handlers import ExceptionHandler as handler
 from src.common.json_translator import JSONTranslator
@@ -29,20 +31,9 @@ mongo.connect(
 )
 
 STATIC_PATH = pathlib.Path(__file__).parent / 'static'
-def create_req_stub(uri, method, roles_header, context=None, context_type=None):
-    return stub(
-        uri_template=uri,
-        method=method,
-        get_header=lambda name, default: roles_header,
-        context=context or {},
-        context_type=context_type or dict,
-    )
 
 
-roleAuth =RoleBasedPolicy(constants.policy_config)
-
-
-app = falcon.API(middleware=[MultipartMiddleware(),AuthHandler(),roleAuth])
+app = falcon.API(middleware=[MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
 
 study = StudyResource()
 user = UserResource()

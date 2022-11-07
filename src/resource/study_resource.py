@@ -24,9 +24,9 @@ class StudyResource(object):
           #req.media will deserialize json object
           study_obj= self.study_service.create_study(**study_data)
           resp.body = json.dumps({
-            'message': 'study succesfully created!',
+            'message': 'Study succesfully created!',
             'status': 201,
-            'data': str(study_obj.id)
+            'data': str(study_obj.study_id)
           })
           return
           
