@@ -47,6 +47,7 @@ services:
       - "27017:27017"
     networks:
       - tick
+    restart: unless-stopped
     volumes:
       - "mongodata:/data/db"
   
@@ -61,6 +62,7 @@ services:
     volumes:
       - ./:/usr/api
       - ./logs/:/usr/api/logs
+    restart: unless-stopped
     environment:
       - JWT_SECRET=${JWT_SECRET}
     links:
