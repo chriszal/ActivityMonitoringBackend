@@ -16,8 +16,6 @@ class RoleBasedPolicy(object):
         if "/api/register" in req.path:
             return
 
-        if "/api/user" in req.path:
-            return
 
         route = req.uri_template
 

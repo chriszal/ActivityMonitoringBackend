@@ -3,11 +3,12 @@ from src.model.study import Study
 from src.model.participant import Participant
 import random
 import string
+from mongoengine.queryset.visitor import Q
 
 
 class StudyService(object):
     @staticmethod
-    def create_study(study_id, title, description, no_participants):
+    def create_study(study_id, title,authors, description, no_participants,study_coordinators,study_assistants):
         """
         Create a new user
         """
@@ -16,8 +17,8 @@ class StudyService(object):
             Participant(participant_id=study_id+"_"+str(i), reg_code=''.join(random.choice(string.ascii_uppercase + string.digits)
                         for _ in range(8)), name="", email="", register_status="NULL", study_id=study_id).save()
 
-        study = Study(study_id=study_id, title=title,
-                      description=description, no_participants=no_participants).save()
+        study = Study(study_id=study_id, title=title,authors=authors,
+                      description=description, no_participants=no_participants,study_coordinators=study_coordinators,study_assistants=study_assistants).save()
 
         return study
 
@@ -46,3 +47,8 @@ class StudyService(object):
         """
         Study.objects.get(study_id=study_id).delete()
         Participant.objects(study_id=study_id).delete()
+
+    @staticmethod
+    def check_participant_in_study(study_id,userid):
+
+        return Participant.objects(Q(participant_id=userid) & Q(study_id=study_id)).count()

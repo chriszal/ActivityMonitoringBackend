@@ -20,7 +20,7 @@ class StudyResource(object):
   
           resp.status = falcon.HTTP_201
           study_data = req.media
-         
+          study_data["study_coordinators"]=[req.context.userid]
           #req.media will deserialize json object
           study_obj= self.study_service.create_study(**study_data)
           resp.body = json.dumps({
@@ -32,24 +32,37 @@ class StudyResource(object):
           
         except Exception as e:
            
-            resp.status = falcon.HTTP_400
+            resp.status = falcon.HTTP_409
             resp.body = json.dumps({
             'message': str(e),
-            'status': 400,
+            'status': 409,
             'data': {}
            })
             return
 
     def on_get_id(self,req,resp,study_id):
         try:
-          study_obj= self.study_service.get_study(study_id)
+          if "participant" in req.context.roles:
+            if self.study_service.check_participant_in_study(study_id,req.context.userid)==1:
+              study_obj= self.study_service.get_study(study_id)
+              resp.body = study_obj.to_json()
+              resp.status = falcon.HTTP_200
+            else:
+              resp.status = falcon.HTTP_409
+              resp.body = json.dumps({
+                'message': 'Study cant be accessed',
+                'status': 409,
+                'data': {}
+              }) 
+          else:
+            study_obj= self.study_service.get_study(study_id)
+            resp.body = study_obj.to_json()
+            resp.status = falcon.HTTP_200
           
-          resp.body = study_obj.to_json()
-          resp.status = falcon.HTTP_200
         except Exception as e:
           resp.status = falcon.HTTP_404
           resp.body = json.dumps({
-            'message': 'Study id does not exist.',
+            'message': 'Study id does not exist. '+str(e),
             'status': 404,
             'data': {}
             }) 
@@ -57,16 +70,16 @@ class StudyResource(object):
     def on_delete_id(self, req, resp,study_id):
       try:
         self.study_service.delete_study(study_id)
-
+        resp.status = falcon.HTTP_200
         resp.body = json.dumps({
           'message': 'Study succesfully deleted!',
-          'status': 204,
+          'status': 200,
           'body':{}
         })
       except Exception as e:
           resp.status = falcon.HTTP_404
           resp.body = json.dumps({
-            'message': 'Study id does not exist.',
+            'message': 'Study id does not exist. '+str(e),
             'status': 404,
             'data': {}
             }) 

@@ -29,11 +29,11 @@ class MeasurementResource(object):
             # http.mount("http://",adapter)
             input_file = req.get_param('file')   
             response = requests.post(url="http://"+self.host+":"+self.port+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
-            
+            resp.status = falcon.HTTP_204
 
             resp.body = json.dumps({
                 'message': str(response)+str(" | Time elapsed: ")+str(response.elapsed.total_seconds()),
-                'status': 201,
+                'status': 204,
                 'data': {}
             })
             return

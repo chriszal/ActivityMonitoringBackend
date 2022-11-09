@@ -315,3 +315,324 @@ Authenticated, User : christosz
 [2022-11-07 13:21:21 +0000] [9] [INFO] Using worker: gevent
 [2022-11-07 13:21:21 +0000] [12] [INFO] Booting worker with pid: 12
 [2022-11-07 13:21:21 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-07 13:28:09 +0000] [9] [INFO] Handling signal: term
+[2022-11-07 13:28:10 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-07 13:28:10 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-07 13:28:11 +0000] [9] [INFO] Shutting down: Master
+[2022-11-07 13:28:21 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-07 13:28:21 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-07 13:28:21 +0000] [9] [INFO] Using worker: gevent
+[2022-11-07 13:28:21 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-07 13:28:21 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-07 17:05:10 +0000] [9] [INFO] Handling signal: term
+[2022-11-07 17:05:10 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-07 17:05:11 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+[2022-11-07 17:05:11 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 15:41:49 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 15:41:49 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 15:41:49 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 15:41:49 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 15:41:49 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 15:45:45 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 15:45:46 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 15:45:46 +0000] [13] [INFO] Worker exiting (pid: 13)
+b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNocmlzdG9zeiIsInJvbGVzIjpbImFkbWluIl19.4oslwrcMu-wcKwOPPAdwKldnoLnV5Bpm1gaNsbhLNc0'
+[2022-11-08 15:45:46 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 15:46:07 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 15:46:07 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 15:46:07 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 15:46:07 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 15:46:07 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 15:46:39 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 15:46:39 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 15:46:39 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+['admin']
+christosz
+[2022-11-08 15:46:39 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 15:47:11 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 15:47:11 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 15:47:11 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 15:47:11 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 15:47:11 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 15:48:15 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 15:48:15 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 15:48:16 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+['admin']
+christosz
+[2022-11-08 15:48:16 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 15:48:33 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 15:48:33 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 15:48:33 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 15:48:33 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 15:48:33 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 15:49:55 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 15:49:56 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 15:49:56 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6InRlc3QiLCJyb2xlcyI6WyJhZG1pbiIsInN0dWR5X2Nvb3JkaW5hdG9yIl19.GHU3mYcNl3h7xLamc0cYsalhdyH2symqeWJfg7Bak_w'
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+['admin', 'study_coordinator']
+test
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+[2022-11-08 15:49:56 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 17:44:50 +0000] [10] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:44:50 +0000] [10] [INFO] Listening at: http://0.0.0.0:8081 (10)
+[2022-11-08 17:44:50 +0000] [10] [INFO] Using worker: gevent
+[2022-11-08 17:44:50 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 17:44:50 +0000] [14] [INFO] Booting worker with pid: 14
+[2022-11-08 17:45:06 +0000] [10] [INFO] Handling signal: term
+[2022-11-08 17:45:06 +0000] [14] [INFO] Worker exiting (pid: 14)
+[2022-11-08 17:45:06 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 17:45:07 +0000] [10] [INFO] Shutting down: Master
+[2022-11-08 17:45:33 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:45:33 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 17:45:33 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 17:45:33 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 17:45:33 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 17:45:52 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 17:45:52 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 17:45:52 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 17:45:53 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 17:46:03 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:46:03 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 17:46:03 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 17:46:03 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 17:46:03 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 17:49:43 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 17:49:44 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 17:49:44 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+['admin', 'study_coordinator']
+test
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+[2022-11-08 17:49:45 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 17:50:22 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:50:22 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 17:50:22 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 17:50:22 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 17:50:22 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 17:50:42 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 17:50:43 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 17:50:43 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+['admin']
+[2022-11-08 17:50:43 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 17:53:38 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:53:38 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 17:53:38 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 17:53:39 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 17:53:39 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 17:55:11 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 17:55:12 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 17:55:12 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 17:55:12 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 17:55:30 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 17:55:30 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 17:55:30 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 17:55:30 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 17:55:30 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:05:08 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:05:08 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 19:05:08 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+[2022-11-08 19:05:09 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:05:18 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:05:18 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:05:18 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:05:18 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:05:18 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:06:32 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:06:33 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 19:06:33 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+HUA_2
+[2022-11-08 19:06:34 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:17:34 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:17:34 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:17:34 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:17:34 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:17:34 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:18:07 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:18:07 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:18:08 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 19:18:08 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:24:53 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:24:53 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:24:53 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:24:53 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:24:53 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:25:36 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:25:36 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 19:25:36 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:25:37 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:25:43 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:25:43 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 19:25:43 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 19:25:43 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 19:25:43 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:27:49 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 19:27:50 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2022-11-08 19:27:50 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:27:50 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 19:27:57 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:27:57 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:27:57 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:27:57 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:27:57 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:29:29 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:29:29 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 19:29:29 +0000] [13] [INFO] Worker exiting (pid: 13)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:29:29 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:29:36 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:29:36 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:29:36 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:29:36 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:29:36 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:30:45 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:30:46 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:30:46 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 19:30:46 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:30:53 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:30:53 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 19:30:53 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 19:30:53 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 19:30:53 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:32:01 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 19:32:02 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2022-11-08 19:32:02 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:32:02 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 19:32:10 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:32:10 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 19:32:10 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 19:32:10 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 19:32:10 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:37:07 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:37:07 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 19:37:07 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 19:37:07 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 19:37:07 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:37:36 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 19:37:37 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2022-11-08 19:37:37 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[2022-11-08 19:37:37 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 19:37:44 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:37:44 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:37:44 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:37:44 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:37:45 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:38:09 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:38:10 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 19:38:10 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+[<Participant: Participant object>]
+[2022-11-08 19:38:10 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 19:38:49 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:38:49 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 19:38:49 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 19:38:50 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 19:38:50 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:38:56 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 19:38:57 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 19:38:57 +0000] [11] [INFO] Worker exiting (pid: 11)
+Authenticated, Roles : ['participant']
+Authenticated, User : HUA_2
+1
+[2022-11-08 19:38:57 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 19:39:26 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 19:39:26 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 19:39:26 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 19:39:26 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 19:39:26 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-08 19:39:52 +0000] [9] [INFO] Handling signal: term
+[2022-11-08 19:39:52 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+0
+[2022-11-08 19:39:52 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-08 19:39:52 +0000] [9] [INFO] Shutting down: Master
+[2022-11-08 20:12:05 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 20:12:05 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 20:12:05 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 20:12:05 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 20:12:05 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 20:13:46 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 20:13:47 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-08 20:13:47 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2022-11-08 20:13:47 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 20:13:54 +0000] [8] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 20:13:54 +0000] [8] [INFO] Listening at: http://0.0.0.0:8081 (8)
+[2022-11-08 20:13:54 +0000] [8] [INFO] Using worker: gevent
+[2022-11-08 20:13:54 +0000] [11] [INFO] Booting worker with pid: 11
+[2022-11-08 20:13:54 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 20:17:38 +0000] [8] [INFO] Handling signal: term
+[2022-11-08 20:17:39 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2022-11-08 20:17:39 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+[2022-11-08 20:17:39 +0000] [8] [INFO] Shutting down: Master
+[2022-11-08 20:17:47 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-08 20:17:47 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-08 20:17:47 +0000] [9] [INFO] Using worker: gevent
+[2022-11-08 20:17:47 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-08 20:17:48 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-09 11:09:53 +0000] [9] [INFO] Handling signal: term
+[2022-11-09 11:09:53 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-09 11:09:53 +0000] [12] [INFO] Worker exiting (pid: 12)
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+Authenticated, Roles : ['admin', 'study_coordinator']
+Authenticated, User : test
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+Authenticated, Roles : ['admin']
+Authenticated, User : christosz
+[2022-11-09 11:09:53 +0000] [9] [INFO] Shutting down: Master
+[2022-11-09 11:10:01 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-09 11:10:01 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-09 11:10:01 +0000] [9] [INFO] Using worker: gevent
+[2022-11-09 11:10:01 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-09 11:10:02 +0000] [13] [INFO] Booting worker with pid: 13
+[2022-11-09 11:10:28 +0000] [9] [INFO] Handling signal: term
+[2022-11-09 11:10:28 +0000] [13] [INFO] Worker exiting (pid: 13)
+[2022-11-09 11:10:28 +0000] [12] [INFO] Worker exiting (pid: 12)
+[2022-11-09 11:10:29 +0000] [9] [INFO] Shutting down: Master
+[2022-11-09 11:10:38 +0000] [9] [INFO] Starting gunicorn 20.1.0
+[2022-11-09 11:10:38 +0000] [9] [INFO] Listening at: http://0.0.0.0:8081 (9)
+[2022-11-09 11:10:38 +0000] [9] [INFO] Using worker: gevent
+[2022-11-09 11:10:38 +0000] [12] [INFO] Booting worker with pid: 12
+[2022-11-09 11:10:38 +0000] [13] [INFO] Booting worker with pid: 13

@@ -1,6 +1,7 @@
 import falcon
 import json
 import jwt
+from datetime import datetime, timedelta
 from src.common.constants import SECRET
 from src.services.register_service import RegisterService
 
@@ -14,10 +15,10 @@ class RegisterResource(object):
         participant_objs = self.reg_service.register_participant(reg_code)
 
         if participant_objs == 0:
-            resp.status = falcon.HTTP_404
+            resp.status = falcon.HTTP_409
             resp.body = json.dumps({
                 'message': 'Register code already in use',
-                'status': 404,
+                'status': 409,
                 'data': {}
             })
 
@@ -31,7 +32,9 @@ class RegisterResource(object):
         else:
             payload = {
                 "id": participant_objs.get('participant_id'),
-                "roles":["participant"]
+                "roles":["participant"],
+                "exp": datetime.utcnow() + timedelta(days=365),
+                "iat":datetime.utcnow()
             }
             secret = SECRET
             algo = "HS256"

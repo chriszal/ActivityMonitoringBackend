@@ -25,42 +25,35 @@ policy_config = {
         'participant',
     ],
     'groups': {
-        'create': ['admin', 'study_coordinator', 'study_assistant'],
-        'update': ['admin', 'study_coordinator', 'study_assistant'],
-        'read': ['admin', 'study_coordinator', 'study_assistant', 'participant'],
-        'delete': ['admin'],
+        'administration': ['admin'],
+        'create':['admin', 'study_coordinator'],
+        'study': ['admin', 'study_coordinator', 'study_assistant'],
+        'mobile': ['admin', 'study_coordinator', 'study_assistant', 'participant'],
     },
     'routes': {
         '/api/study/': {
-            'POST': ['create'],
+            'POST': ['study'],
         },
         '/api/study/{study_id}': {
-            'GET': ['read'],
-            'DELETE': ['read'],
+            'GET': ['mobile'],
+            'DELETE': ['study'],
         },
         '/api/user/': {
-            'HEAD':['@passthrough'],
+            'POST': ['create'],
         },
         '/api/user/{username}': {
-            'GET': ['read'],
-            'DELETE': ['read'],
+            'GET': ['study'],
+            'DELETE': ['study'],
         },
         '/api/participant/{participant_id}': {
-            'GET': ['read'],
-            'DELETE': ['read'],
+            'GET': ['mobile'],
+            'DELETE': ['study'],
         },
         '/api/participants/{study_id}': {
-            'GET': ['admin'],
+            'GET': ['study'],
         },
         '/api/measurement/': {
-            'POST': ['participant'],
+            'POST': ['mobile'],
         },
-        '/login': {
-            'HEAD': ['@passthrough']
-        }
-        # ,
-        # '/api/register': {
-        #     'HEAD': ['@passthrough']
-        # },
     },
 }

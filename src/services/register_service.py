@@ -25,13 +25,11 @@ class RegisterService(object):
             if participant.register_status != "NULL":
                 return 0
             else:     
-                study_obj = Study.objects.get(study_id=participant.study_id)
+                #study_obj = Study.objects.get(study_id=participant.study_id)
                 participant.update(set__register_status="REGISTERED")
 
                 return {
-                        'study_id': study_obj.study_id,
-                        'title': study_obj.title,
-                        'description': study_obj.description,
+                        'study_id': participant.study_id,
                         'participant_id': participant.participant_id
                         } 
         except Participant.DoesNotExist:

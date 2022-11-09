@@ -8,9 +8,7 @@ from src.services.user_service import UserService
 
 
 class LoginResource:
-    auth = {
-        'auth_disabled': True
-    }
+
     def __init__(self):
         self.user_service = UserService()
 
@@ -38,10 +36,10 @@ class LoginResource:
             if users is not None:
                 payload = {
                     "id": users.username,
-                    "roles": users.roles
+                    "roles": users.roles,
                     # ,
-                    # "exp": str(datetime.utcnow() + timedelta(days=31)),
-                    # "iat":datetime.utcnow()
+                    "exp": datetime.utcnow() + timedelta(days=31),
+                    "iat":datetime.utcnow()
                 }
                 secret = SECRET
                 algo = "HS256"

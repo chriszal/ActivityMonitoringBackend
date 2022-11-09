@@ -18,25 +18,32 @@ class UserResource(object):
     def on_post(self, req, resp):
 
         try:
-  
-          resp.status = falcon.HTTP_201
           user_data = req.media
-         
-          #req.media will deserialize json object
-          user_obj= self.user_service.create_user(**user_data)
-          resp.body = json.dumps({
-            'message': 'User succesfully created!',
-            'status': 201,
-            'data': str(user_obj.username)
-          })
-          return
+          if "study_coordinator" in req.context.roles and ("admin" in user_data["roles"] or "study_coordinator" in user_data["roles"]):
+            resp.status = falcon.HTTP_401
+            resp.body = json.dumps({
+              'message': 'Not authorized to create an admin or a coordinator.',
+              'status': 401,
+              'data': {}
+            })
+            return
+          else:
+            #req.media will deserialize json object
+            user_obj= self.user_service.create_user(**user_data)
+            resp.status = falcon.HTTP_201
+            resp.body = json.dumps({
+              'message': 'User succesfully created!',
+              'status': 201,
+              'data': str(user_obj.username)
+            })
+            return
           
         except Exception as e:
            
-            resp.status = falcon.HTTP_400
+            resp.status = falcon.HTTP_409
             resp.body = json.dumps({
             'message': str(e),
-            'status': 400,
+            'status': 409,
             'data': {}
            })
             return
@@ -60,10 +67,10 @@ class UserResource(object):
     def on_delete_username(self, req, resp,username):
       try:
         self.user_service.delete_user(username)
-
+        resp.status = falcon.HTTP_200
         resp.body = json.dumps({
           'message': 'User succesfully deleted!',
-          'status': 204,
+          'status': 200,
           'body':{}
         })
       except Exception as e:

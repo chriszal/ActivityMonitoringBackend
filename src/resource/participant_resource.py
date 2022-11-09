@@ -52,10 +52,10 @@ class ParticipantResource(object):
     def on_delete_id(self, req, resp,participant_id):
       try:
         self.participant_service.delete_participant(participant_id)
-
+        resp.status = falcon.HTTP_200
         resp.body = json.dumps({
           'message': 'Participant succesfully deleted!',
-          'status': 204,
+          'status': 200,
           'body':{}
         })
       except Exception as e:
