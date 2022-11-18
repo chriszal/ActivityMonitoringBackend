@@ -48,6 +48,7 @@ policy_config = {
         '/api/participant/{participant_id}': {
             'GET': ['mobile'],
             'DELETE': ['study'],
+            'PUT':['mobile'],
         },
         '/api/participants/{study_id}': {
             'GET': ['study'],

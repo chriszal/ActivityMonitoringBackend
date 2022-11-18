@@ -14,5 +14,6 @@ python-decouple
 bcrypt
 falcon-policy
 pretend
+# numpy
 # functools
 #falcon_auth2[jwt]

@@ -4,8 +4,8 @@ datasources:
     type: influxdb
     access: proxy
     database: android
-    user: admin
-    password: admin
+    user: christosz
+    password: VfOBQpWlHHk8fzs8L8P0
     url: http://influxdb:8086
     isDefault: true
     editable: true

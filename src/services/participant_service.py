@@ -1,5 +1,5 @@
 from src.model.participant import Participant
-from src.model.study import Study
+from datetime import datetime
 #modify participant register field by participant id
 #modify user study id when creating new study
 
@@ -19,3 +19,15 @@ class ParticipantService(object):
         Delete the study
         """
         Participant.objects.get(participant_id=participant_id).delete()
+    
+    @staticmethod
+    def update_participant(participant_id,date_of_birth,gender,weight,height):
+      
+
+            participant = Participant.objects.get(participant_id=participant_id)
+            participant.update(set__gender=gender,set__date_of_birth=datetime.strptime(date_of_birth,'%Y-%m-%d'),set__weight=weight,set__height=height)
+            return participant
+            
+        # except Participant.DoesNotExist:
+        #     return -1
+    

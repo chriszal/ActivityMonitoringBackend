@@ -65,3 +65,33 @@ class ParticipantResource(object):
             'status': 404,
             'data': {}
             }) 
+
+    def on_put_id(self, req, resp,participant_id):
+      if req.context.userid == participant_id:
+        try:
+          participant_data = req.media
+          participant_data["participant_id"]=participant_id
+          #req.media will deserialize json object
+          participant_obj= self.participant_service.update_participant(**participant_data)
+          # if participant_obj ==-1:
+
+          resp.status = falcon.HTTP_200
+          resp.body = json.dumps({
+            'message': 'Participant succesfully updated!',
+            'status': 200,
+            'body':{}
+          })
+        except Exception as e:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+              'message': 'Participant id does not exist.',
+              'status': 404,
+              'data': str(e)
+              }) 
+      else:
+        resp.status = falcon.HTTP_409
+        resp.body = json.dumps({
+          'message': 'Authentication Failure',
+          'status': 409,
+          'data': {}
+          }) 
