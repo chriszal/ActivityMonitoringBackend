@@ -14,6 +14,7 @@ python-decouple
 bcrypt
 falcon-policy
 pretend
+gridfs
 # numpy
 # functools
 #falcon_auth2[jwt]

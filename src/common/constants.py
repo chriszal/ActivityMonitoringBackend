@@ -8,6 +8,8 @@ FAVICON_URL = 'https://falconframework.org/favicon-32x32.png'
 SECRET = os.environ.get('JWT_SECRET')
 assert SECRET is not None, "No JWT Secret key found."
 
+ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
+
 # datasource constant
 MONGO = {
     'DATABASE': 'falconapidb',
@@ -54,6 +56,9 @@ policy_config = {
             'GET': ['study'],
         },
         '/api/measurement/': {
+            'POST': ['mobile'],
+        },
+        '/api/meal/': {
             'POST': ['mobile'],
         },
     },

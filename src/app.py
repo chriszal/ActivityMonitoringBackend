@@ -21,6 +21,7 @@ from src.resource.participant_resource import ParticipantResource
 from src.resource.register_resource import RegisterResource
 from src.resource.study_resource import StudyResource
 from src.resource.user_resource import UserResource
+from src.resource.meal_resource import MealResource
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -33,12 +34,13 @@ mongo.connect(
 STATIC_PATH = pathlib.Path(__file__).parent / 'static'
 
 
-app = falcon.API(middleware=[MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
+app = falcon.API(middleware=[MultipartMiddleware()])
 
 study = StudyResource()
 user = UserResource()
 participant = ParticipantResource()
 measurement = MeasurementResource()
+meal = MealResource()
 register = RegisterResource()
 login = LoginResource()
 
@@ -53,6 +55,7 @@ app.add_route('/api/user/{username}', user, suffix="username")
 app.add_route('/api/participants/{study_id}', participant,suffix="study")
 app.add_route('/api/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/measurement/',measurement)
+app.add_route('/api/meal/',meal)
 
 app.add_static_route('/static', str(STATIC_PATH))
 

@@ -79,7 +79,7 @@ class ParticipantResource(object):
           resp.body = json.dumps({
             'message': 'Participant succesfully updated!',
             'status': 200,
-            'body':{}
+            'body': 'test'
           })
         except Exception as e:
             resp.status = falcon.HTTP_404
