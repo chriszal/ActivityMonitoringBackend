@@ -61,5 +61,8 @@ policy_config = {
         '/api/meal/': {
             'POST': ['mobile'],
         },
+        '/api/meal/{participant_id}': {
+            'GET': ['mobile'],
+        },
     },
 }

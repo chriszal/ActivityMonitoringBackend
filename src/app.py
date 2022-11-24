@@ -34,7 +34,7 @@ mongo.connect(
 STATIC_PATH = pathlib.Path(__file__).parent / 'static'
 
 
-app = falcon.API(middleware=[MultipartMiddleware()])
+app = falcon.API(middleware=[MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
 
 study = StudyResource()
 user = UserResource()
@@ -56,6 +56,7 @@ app.add_route('/api/participants/{study_id}', participant,suffix="study")
 app.add_route('/api/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/measurement/',measurement)
 app.add_route('/api/meal/',meal)
+app.add_route('/api/meal/{participant_id}',meal,suffix="id")
 
 app.add_static_route('/static', str(STATIC_PATH))
 

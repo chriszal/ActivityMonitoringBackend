@@ -14,11 +14,11 @@ class MealResource(object):
 
     # def __init__(self):
 
-    def on_get(self, req, resp):
-        # marmot = Meal.objects(participant_id=).first()
-        # photo = marmot.photo.read()
-        # content_type = marmot.photo.content_type
+    def on_get_id(self, req, resp,participant_id):
+        meal = Meal.objects(participant_id=participant_id)
+        # photo = meal.photo.read()
 
+        resp.body = meal.to_json()
         resp.status = falcon.HTTP_200
 
     def on_post(self, req, resp):
