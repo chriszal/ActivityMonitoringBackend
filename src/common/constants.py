@@ -63,6 +63,7 @@ policy_config = {
         },
         '/api/meal/{participant_id}': {
             'GET': ['mobile'],
+            'DELETE': ['mobile'],
         },
     },
 }

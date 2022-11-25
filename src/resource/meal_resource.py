@@ -63,5 +63,22 @@ class MealResource(object):
            })
             return
 
+    def on_delete_id(self, req, resp,participant_id):
+      try:
+        Meal.objects(participant_id=participant_id).delete()
+        resp.status = falcon.HTTP_200
+        resp.body = json.dumps({
+          'message': 'Meals succesfully deleted!',
+          'status': 200,
+          'body':{}
+        })
+      except Exception as e:
+          resp.status = falcon.HTTP_404
+          resp.body = json.dumps({
+            'message': 'Paricipant id does not exist. '+str(e),
+            'status': 404,
+            'data': {}
+            }) 
+
     
     
