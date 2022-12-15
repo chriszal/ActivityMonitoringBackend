@@ -8,6 +8,6 @@ COPY ./deployment/gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
 COPY . /usr/api
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
-EXPOSE 8081 8086
+EXPOSE 8081 8086 27017
 VOLUME /usr/api
 CMD ["/usr/bin/supervisord"]
