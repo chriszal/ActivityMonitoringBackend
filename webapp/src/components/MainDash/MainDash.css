@@ -1,9 +1,9 @@
 .MainDash{
-    padding-top: 1rem;
+    padding-top: 2.5rem;
+    padding-right: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    
+    justify-content: flex-start;
     
 }
 

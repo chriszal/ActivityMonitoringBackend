@@ -8,6 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import "./Table.css";
 
+
 function createData(name, trackingId, date, status) {
   return { name, trackingId, date, status };
 }
@@ -46,7 +47,7 @@ const makeStyle=(status)=>{
 export default function BasicTable() {
   return (
       <div className="Table">
-      <h3>Recent Orders</h3>
+      <h3>Studies</h3>
         <TableContainer
           component={Paper}
           style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -54,11 +55,12 @@ export default function BasicTable() {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Product</TableCell>
-                <TableCell align="left">Tracking ID</TableCell>
-                <TableCell align="left">Date</TableCell>
-                <TableCell align="left">Status</TableCell>
-                <TableCell align="left"></TableCell>
+                <TableCell>First Name</TableCell>
+                <TableCell align="left">Last Name</TableCell>
+                <TableCell align="left">Email</TableCell>
+                <TableCell align="left">Username</TableCell>
+                <TableCell align="left">Roles</TableCell>
+                <TableCell align="left">Created Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody style={{ color: "white" }}>

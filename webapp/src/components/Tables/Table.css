@@ -4,6 +4,7 @@
 
 .MuiTableRow-root.MuiTableRow-head > * {
   font-weight: bold !important;
+  background-color: #99f7e054;
 }
 
 .Table td,
@@ -17,6 +18,10 @@ th {
 .status {
   padding: 8px;
   border-radius: 9px;
+}
+
+.Table .table-cell {
+  vertical-align: top;
 }
 
 .Details {

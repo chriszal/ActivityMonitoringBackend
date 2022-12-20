@@ -1,5 +1,6 @@
 import React from "react";
 import "./Cards.css";
+import ButtonCard from "../Card/ButtonCard";
 import { cardsData } from "../../Data/Data";
 
 import Card from "../Card/Card";
@@ -18,6 +19,7 @@ const Cards = () => {
               png={card.png}
               series={card.series}
             />
+            
           </div>
         );
       })}

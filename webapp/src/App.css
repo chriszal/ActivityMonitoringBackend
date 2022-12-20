@@ -17,7 +17,7 @@
   color: var(--black);
   background: linear-gradient(
     106.37deg,
-    #ccf3f1 29.63%,
+    #a5ece9 29.63%,
     #a4e7e4 51.55%,
     #66dddb 90.85%
   );
@@ -35,7 +35,7 @@
   background: var(--glass);
   border-radius: 2rem;
   gap: 16px;
-  grid-template-columns: 11rem auto 20rem;
+  grid-template-columns: 11rem auto;
   overflow: hidden;
 }
 
