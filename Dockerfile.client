@@ -1,0 +1,12 @@
+# Build step #1: build the React front end
+FROM node:16-alpine as build-step
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install
+COPY .webapp ./
+RUN npm run build
+
+COPY ./assets/nginx/nginx.http.config /etc/nginx/nginx.conf
+CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 3000
