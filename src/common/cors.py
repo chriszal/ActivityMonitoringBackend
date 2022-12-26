@@ -7,7 +7,7 @@ class Cors(object):
     def process_request(self, req, resp):
         resp.set_header('Access-Control-Allow-Origin', '*')
         resp.set_header('Access-Control-Allow-Methods', 'DELETE, PUT, POST, GET')
-        resp.set_header('Access-Control-Allow-Headers', 'Content-Type, apisid, publickey, sessionid')
+        resp.set_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, apisid, publickey, sessionid')
         resp.set_header('Access-Control-Expose-Headers', '*')
         resp.set_header('Access-Control-Max-Age', 1728000)
         if req.method == 'OPTIONS':

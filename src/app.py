@@ -61,7 +61,7 @@ app.add_route('/api/meal/{participant_id}',meal,suffix="id")
 app.add_static_route('/static', str(STATIC_PATH))
 
 # global handler exception of application
-app.add_error_handler(Exception, handler.handle_500)
+# app.add_error_handler(Exception, handler.handle_500)
 
 # handler for not found resources
-app.add_sink(handler.handle_404, '^((?!static).)*$')
+# app.add_sink(handler.handle_404, '^((?!static).)*$')

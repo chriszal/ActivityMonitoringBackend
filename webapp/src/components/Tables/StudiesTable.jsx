@@ -1,4 +1,5 @@
 import * as React from "react";
+import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -39,29 +40,6 @@ const rows = [
 ];
 
 
-const makeStyle=(status)=>{
-  if(status === 'Approved')
-  {
-    return {
-      background: 'rgb(145 254 159 / 47%)',
-      color: 'green',
-    }
-  }
-  else if(status === 'Pending')
-  {
-    return{
-      background: '#ffadad8f',
-      color: 'red',
-    }
-  }
-  else{
-    return{
-      background: '#59bfff',
-      color: 'white',
-    }
-  }
-}
-
 const truncateDescription = (description) => {
   if (description.length > 50) {
     return description.substring(0, 50) + "...";
@@ -77,7 +55,22 @@ export default function BasicTable() {
   const [selectedRow, setSelectedRow] = React.useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rows, setRows] = React.useState([]); // create state variable for rows
+  const [loading, setLoading] = React.useState(false); // create state variable for loading indicator
 
+  React.useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true); // set loading to true while data is being fetched
+      const response = await axios.get("http://35.205.179.171:8081/api/study", {
+        headers: {
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNocmlzdG9zeiIsInJvbGVzIjpbImFkbWluIl0sImV4cCI6MTY3NDc0MzU1NiwiaWF0IjoxNjcyMDY1MTU2fQ.Sb7Y7BzGJKcr6SnBt4NPaOtn0UIb7VtHurQ2yvbvHWo`, // include the JWT token in the Authorization header
+        },
+      });
+      setRows(response.data); // set response data as the new value for rows
+      setLoading(false); // set loading to false once data is fetched
+    };
+    fetchData();
+  }, []);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -91,6 +84,9 @@ export default function BasicTable() {
   return (
       <div className="Table">
       <h3>Studies</h3>
+      {loading ? (
+        <div>Loading...</div> // show loading indicator
+      ) : (
         <TableContainer
           component={Paper}
           style={{ boxShadow: "0px 13px 20px 0px #80808029" ,borderRadius: "15px" }}
@@ -148,7 +144,7 @@ export default function BasicTable() {
               ActionsComponent={TablePaginationActions}
             />
         </TableContainer>
-        
+      )}
       </div>
   );
 }
