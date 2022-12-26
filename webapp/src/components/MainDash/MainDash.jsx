@@ -2,6 +2,7 @@ import React from "react";
 import ButtonCard from "../Card/ButtonCard";
 import Cards from "../Cards/Cards";
 import StudiesTable from "../Tables/StudiesTable";
+import UsersTable from "../Tables/UsersTable";
 import {UilPlus} from "@iconscout/react-unicons";
 import "./MainDash.css";
 const MainDash = ({ selectedTab }) => {
@@ -13,7 +14,7 @@ const MainDash = ({ selectedTab }) => {
     <div className="MainDash">
       {/* <h1>Dashboard</h1> */}
       {selectedTab === "users" ? (
-            <Cards  />
+            <UsersTable  />
           ) :(
             <>
             <ButtonCard title="Add New Study" icon={UilPlus}

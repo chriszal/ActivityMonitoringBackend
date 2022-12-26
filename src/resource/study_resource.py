@@ -8,11 +8,11 @@ class StudyResource(object):
     def __init__(self):
         self.study_service = StudyService()
 
-    # def on_get(self, req, resp):
-    #     resp.status = falcon.HTTP_200
-    #     studies = self.study_service.list_studies()
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        studies = self.study_service.list_studies()
        
-    #     resp.body = studies.to_json()
+        resp.body = studies.to_json()
 
     def on_post(self, req, resp):
 

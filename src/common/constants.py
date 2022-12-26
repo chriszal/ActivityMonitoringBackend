@@ -35,6 +35,7 @@ policy_config = {
     'routes': {
         '/api/study/': {
             'POST': ['study'],
+            'GET':['administration'],
         },
         '/api/study/{study_id}': {
             'GET': ['mobile'],
@@ -42,6 +43,7 @@ policy_config = {
         },
         '/api/user/': {
             'POST': ['create'],
+            'GET':['administration'],
         },
         '/api/user/{username}': {
             'GET': ['study'],

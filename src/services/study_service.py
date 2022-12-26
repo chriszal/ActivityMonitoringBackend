@@ -24,14 +24,14 @@ class StudyService(object):
 
         return study
 
-    # @staticmethod
-    # def list_studies():
-    #     """
-    #     Get created projects
-    #     :return:
-    #     :rtype:
-    #     """
-    #     return Study.objects()
+    @staticmethod
+    def list_studies():
+        """
+        Get created projects
+        :return:
+        :rtype:
+        """
+        return Study.objects()
 
     @staticmethod
     def get_study(study_id):
