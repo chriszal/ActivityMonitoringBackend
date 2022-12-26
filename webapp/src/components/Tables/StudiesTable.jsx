@@ -61,7 +61,7 @@ export default function BasicTable() {
   React.useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // set loading to true while data is being fetched
-      const response = await axios.get("http://35.205.179.171:8081/api/study", {
+      const response = await axios.get("http://localhost:8081/api/study", {
         headers: {
           Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNocmlzdG9zeiIsInJvbGVzIjpbImFkbWluIl0sImV4cCI6MTY3NDc0MzU1NiwiaWF0IjoxNjcyMDY1MTU2fQ.Sb7Y7BzGJKcr6SnBt4NPaOtn0UIb7VtHurQ2yvbvHWo`, // include the JWT token in the Authorization header
         },

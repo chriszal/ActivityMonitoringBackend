@@ -11,7 +11,7 @@ from falcon_multipart.middleware import MultipartMiddleware
 import src.common.constants as constants
 from src.common.auth_handler import AuthHandler
 from src.common.role_handler import RoleBasedPolicy
-from src.common.cors import Cors
+# from src.common.cors import Cors
 from src.common.handlers import ExceptionHandler as handler
 from src.common.json_translator import JSONTranslator
 from src.common.require_json import RequireJSON
@@ -22,6 +22,7 @@ from src.resource.register_resource import RegisterResource
 from src.resource.study_resource import StudyResource
 from src.resource.user_resource import UserResource
 from src.resource.meal_resource import MealResource
+from falcon_cors import CORS
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -33,8 +34,8 @@ mongo.connect(
 
 STATIC_PATH = pathlib.Path(__file__).parent / 'static'
 
-
-app = falcon.API(middleware=[MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
+cors = CORS(allow_origins_list=['http://localhost:3000'])
+app = falcon.API(middleware=[cors.middleware,MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
 
 study = StudyResource()
 user = UserResource()
