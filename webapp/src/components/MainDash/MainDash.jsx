@@ -1,13 +1,28 @@
 import React from "react";
+import ButtonCard from "../Card/ButtonCard";
 import Cards from "../Cards/Cards";
-import Table from "../Table/Table";
+import StudiesTable from "../Tables/StudiesTable";
+import UsersTable from "../Tables/UsersTable";
+import {UilPlus} from "@iconscout/react-unicons";
 import "./MainDash.css";
-const MainDash = () => {
+const MainDash = ({ selectedTab }) => {
+  const color = {
+    backGround: "linear-gradient(#27ddda, #27ddda)",
+    boxShadow: "0px 10px 20px 0px #27ddda",
+  };
   return (
     <div className="MainDash">
-      <h1>Dashboard</h1>
-      <Cards />
-      <Table />
+      {/* <h1>Dashboard</h1> */}
+      {selectedTab === "users" ? (
+            <UsersTable  />
+          ) :(
+            <>
+            <ButtonCard title="Add New Study" icon={UilPlus}
+            color={color}/>
+            <StudiesTable />
+            </>
+          )
+        }
     </div>
   );
 };

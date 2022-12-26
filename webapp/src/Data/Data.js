@@ -4,6 +4,7 @@ import {
   UilClipboardAlt,
   UilUsersAlt,
   UilPackage,
+  UilBooks,
   UilChart,
   UilSignOutAlt,
 } from "@iconscout/react-unicons";
@@ -19,26 +20,16 @@ import img3 from "../imgs/img3.png";
 
 // Sidebar Data
 export const SidebarData = [
-  {
-    icon: UilEstate,
-    heading: "Dashboard",
-  },
-  {
-    icon: UilClipboardAlt,
-    heading: "Orders",
-  },
+  
   {
     icon: UilUsersAlt,
-    heading: "Customers",
+    heading: "Users",
   },
   {
-    icon: UilPackage,
-    heading: 'Products'
+    icon: UilBooks,
+    heading: 'Studies'
   },
-  {
-    icon: UilChart,
-    heading: 'Analytics'
-  },
+  
 ];
 
 // Analytics Cards Data

@@ -8,4 +8,5 @@ class Study(Document):
     no_participants = IntField()
     study_coordinators= ListField()
     study_assistants= ListField()
-    
+    # status
+    #creation date
