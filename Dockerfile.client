@@ -1,12 +1,21 @@
-# Build step #1: build the React front end
-FROM node:16-alpine as build-step
+FROM node:14
+
+# Create the working directory
+RUN mkdir -p /app
 WORKDIR /app
 
-COPY package.json ./
+# Install required dependencies
+COPY webapp/package.json /app/package.json
 RUN npm install
-COPY .webapp ./
+
+# Copy the application code
+COPY webapp /app
+
+# Build the frontend client
 RUN npm run build
 
-COPY ./assets/nginx/nginx.http.config /etc/nginx/nginx.conf
-CMD ["nginx", "-g", "daemon off;"]
-EXPOSE 3000
+# Set the working directory
+WORKDIR /app/build
+
+# Run the frontend client
+CMD ["npm", "start"]

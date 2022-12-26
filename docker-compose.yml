@@ -46,17 +46,15 @@ services:
   #   environment:
   #     - GF_SECURITY_ADMIN_USER=admin
   #     - GF_SECURITY_ADMIN_PASSWORD=admin
-  # webapp:
-  #   build: 
-  #     context: ./docker/frontend
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - static_volume:/usr/src/app/build
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - tick
-  #   restart: unless-stopped
+  client:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./webapp:/app/webapp
+    restart: unless-stopped
   mongodb:
     image: mongo
     ports:
@@ -72,11 +70,11 @@ services:
       context: ./
       dockerfile: ./Dockerfile.api
     ports:
-      - '8081:8081'
+      - '8080:8080'
     networks:
       - tick
     volumes:
-      - ./:/usr/api
+      - ./src:/usr/api/src
       - ./logs/:/usr/api/logs
     depends_on:
       - mongodb
@@ -91,11 +89,12 @@ services:
     volumes:
       - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
       #- ./assets/nginx/certs:/etc/nginx/certs
-      - static_volume:/usr/api/src/static
+      - ./webapp/build:/usr/share/nginx/html
     ports:
-      - "81:81"
+      - "80:80"
     depends_on:
       - falcon-api
+      - client
     restart:
       unless-stopped
 
