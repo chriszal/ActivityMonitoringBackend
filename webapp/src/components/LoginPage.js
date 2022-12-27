@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
+import config from '../config/config';
 
 import './Login.css';
 
+axios.defaults.baseURL = config.apiUrl;
+
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -13,40 +16,46 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      // Send a request to the server to login
-      const res = await axios.post('/api/login', { email, password });
+  
+      const res = await axios.post('/login', { username, password });
 
-      // If successful, decode the JWT and store it in local storage
-      const jwt = res.data.token;
-      localStorage.setItem('jwt', jwt);
+      
+      const { token } = res.data;
+      localStorage.setItem('jwt', token);
+      console.log(token);
 
-      // Decode the JWT to get the user's role
-      const user = jwtDecode(jwt);
+      // // Decode the JWT to get the user's role
+      // const user = jwtDecode(jwt);
 
-      // Redirect the user to the appropriate dashboard depending on their role
-      if (user.role === 'admin') {
-        window.location.href = '/admin-dashboard';
-      } else if (user.role === 'study coordinator') {
-        window.location.href = '/study-coordinator-dashboard';
-      }
+      // // Redirect the user to the appropriate dashboard depending on their role
+      // if (user.role === 'admin') {
+      //   window.location.href = '/admin-dashboard';
+      // } else if (user.role === 'study coordinator') {
+      //   window.location.href = '/study-coordinator-dashboard';
+      // }
     } catch (err) {
       // If there was an error, display it
-      setError(err.response.data.message);
+      console.log(err.message);
+      setError(err.message);
+      
     }
   }
 
   return (
     <div className="container">
-      {error && (<div className="error-container">{error}</div>)}
+      {error && (<div class="error-container">
+                    <div class="error-message">{error}</div>
+                  </div>)}
       <form className="form" onSubmit={handleLogin}>
+      
       <h1>Login</h1>
       <div className="input-container">
-          <label className="label">Email:</label>
+          <label className="label">Username:</label>
           <input
             className="input"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
           />
         </div>
         <div className="input-container">

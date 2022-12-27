@@ -74,7 +74,7 @@ services:
     networks:
       - tick
     volumes:
-      - ./api:/usr/api
+      - ./:/usr/api
       - ./logs/:/usr/api/logs
     depends_on:
       - mongodb
