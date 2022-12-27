@@ -70,7 +70,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile.api
     ports:
-      - '8080:8080'
+      - '8081:8081'
     networks:
       - tick
     volumes:
@@ -91,10 +91,12 @@ services:
       #- ./assets/nginx/certs:/etc/nginx/certs
       - ./webapp/build:/usr/share/nginx/html
     ports:
-      - "80:80"
+      - "81:81"
     depends_on:
       - falcon-api
       - client
+    networks:
+      - tick
     restart:
       unless-stopped
 
