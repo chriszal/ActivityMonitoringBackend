@@ -1,4 +1,4 @@
-from src.model.user import User
+from api.model.user import User
 from mongoengine.queryset.visitor import Q
 
 

@@ -1,9 +1,9 @@
 from http import client
 import falcon, json
 import requests
-from src.common.constants import ALLOWED_EXTENSIONS
+from api.common.constants import ALLOWED_EXTENSIONS
 from requests.adapters import HTTPAdapter
-from src.model.meal import Meal
+from api.model.meal import Meal
 #from requests.packages.urllib3.util.retry import Retry
 from decouple import config
 

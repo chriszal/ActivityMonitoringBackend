@@ -8,20 +8,20 @@ import mongoengine as mongo
 from falcon_multipart.middleware import MultipartMiddleware
 
 
-import src.common.constants as constants
-from src.common.auth_handler import AuthHandler
-from src.common.role_handler import RoleBasedPolicy
+import api.common.constants as constants
+from api.common.auth_handler import AuthHandler
+from api.common.role_handler import RoleBasedPolicy
 # from src.common.cors import Cors
-from src.common.handlers import ExceptionHandler as handler
-from src.common.json_translator import JSONTranslator
-from src.common.require_json import RequireJSON
-from src.resource.login_resource import LoginResource
-from src.resource.measurements_resource import MeasurementResource
-from src.resource.participant_resource import ParticipantResource
-from src.resource.register_resource import RegisterResource
-from src.resource.study_resource import StudyResource
-from src.resource.user_resource import UserResource
-from src.resource.meal_resource import MealResource
+from api.common.handlers import ExceptionHandler as handler
+from api.common.json_translator import JSONTranslator
+from api.common.require_json import RequireJSON
+from api.resource.login_resource import LoginResource
+from api.resource.measurements_resource import MeasurementResource
+from api.resource.participant_resource import ParticipantResource
+from api.resource.register_resource import RegisterResource
+from api.resource.study_resource import StudyResource
+from api.resource.user_resource import UserResource
+from api.resource.meal_resource import MealResource
 from falcon_cors import CORS
 
 mongo.connect(

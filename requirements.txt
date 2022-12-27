@@ -15,6 +15,7 @@ influxdb-client
 bcrypt
 falcon-policy
 pretend
+pandas
 # gridfs
 # numpy
 # functools

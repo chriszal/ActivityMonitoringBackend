@@ -1,7 +1,7 @@
 from atexit import register
-from src.model.study import Study
+from api.model.study import Study
 # import numpy as np
-from src.model.participant import Participant
+from api.model.participant import Participant
 import random
 import datetime
 import string
