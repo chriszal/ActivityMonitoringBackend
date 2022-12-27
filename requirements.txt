@@ -11,7 +11,7 @@ pyyaml
 falcon-multipart
 falcon_auth[backend-jwt]
 python-decouple
-# influxdb-client
+influxdb-client
 bcrypt
 falcon-policy
 pretend
