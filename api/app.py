@@ -11,7 +11,7 @@ from falcon_multipart.middleware import MultipartMiddleware
 import api.common.constants as constants
 from api.common.auth_handler import AuthHandler
 from api.common.role_handler import RoleBasedPolicy
-# from src.common.cors import Cors
+from api.common.cors import Cors
 from api.common.handlers import ExceptionHandler as handler
 from api.common.json_translator import JSONTranslator
 from api.common.require_json import RequireJSON
@@ -22,7 +22,7 @@ from api.resource.register_resource import RegisterResource
 from api.resource.study_resource import StudyResource
 from api.resource.user_resource import UserResource
 from api.resource.meal_resource import MealResource
-from falcon_cors import CORS
+# from falcon_cors import CORS
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -32,10 +32,10 @@ mongo.connect(
     password=constants.MONGO['PASSWORD']
 )
 
-STATIC_PATH = pathlib.Path(__file__).parent / 'static'
+# STATIC_PATH = pathlib.Path(__file__).parent / 'static'
 
-cors = CORS(allow_origins_list=['http://localhost:3000'])
-app = falcon.API(middleware=[cors.middleware,MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
+# cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
+app = falcon.API(middleware=[Cors(),MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
 
 study = StudyResource()
 user = UserResource()
@@ -59,7 +59,7 @@ app.add_route('/api/measurement/',measurement)
 app.add_route('/api/meal/',meal)
 app.add_route('/api/meal/{participant_id}',meal,suffix="id")
 
-app.add_static_route('/static', str(STATIC_PATH))
+# app.add_static_route('/static', str(STATIC_PATH))
 
 # global handler exception of application
 # app.add_error_handler(Exception, handler.handle_500)

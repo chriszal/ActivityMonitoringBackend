@@ -2,10 +2,11 @@ import falcon
 import json
 
 
-class Cors(object):
+class Cors:
 
     def process_request(self, req, resp):
-        resp.set_header('Access-Control-Allow-Origin', '*')
+        # print("In req")
+        resp.set_header('Access-Control-Allow-Origin', 'http://0.0.0.0:3000')
         resp.set_header('Access-Control-Allow-Methods', 'DELETE, PUT, POST, GET')
         resp.set_header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, apisid, publickey, sessionid')
         resp.set_header('Access-Control-Expose-Headers', '*')

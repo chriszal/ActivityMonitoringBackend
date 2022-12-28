@@ -3,6 +3,8 @@ import axios from 'axios';
 // import jwtDecode from 'jwt-decode';
 import config from '../config/config';
 
+import { setAuthToken } from '../helpers/setAuthToken';
+
 import './Login.css';
 
 axios.defaults.baseURL = config.apiUrl;
@@ -21,22 +23,17 @@ const LoginPage = () => {
 
       
       const { token } = res.data;
-      localStorage.setItem('jwt', token);
-      console.log(token);
+      localStorage.setItem('token', token);
+      //set token to axios common header
+      setAuthToken(token);
 
-      // // Decode the JWT to get the user's role
-      // const user = jwtDecode(jwt);
-
-      // // Redirect the user to the appropriate dashboard depending on their role
-      // if (user.role === 'admin') {
-      //   window.location.href = '/admin-dashboard';
-      // } else if (user.role === 'study coordinator') {
-      //   window.location.href = '/study-coordinator-dashboard';
-      // }
+      //redirect user to home page
+      window.location.href = '/'
+      
     } catch (err) {
       // If there was an error, display it
-      console.log(err.message);
-      setError(err.message);
+      console.log(err);
+      setError("Invalid Credentials");
       
     }
   }

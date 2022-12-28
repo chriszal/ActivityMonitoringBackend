@@ -34,11 +34,15 @@ class UserService(object):
         :return:
         :rtype:
         """
-        user = User.objects.get(username=username)
-        if User.validate_login(user.password, password):
-            return user
-        else:
-            return None
+        try:
+            user = User.objects.get(username=username)
+            if User.validate_login(user.password, password):
+                return user
+            else:
+                return None
+        except User.DoesNotExist:
+            return None    
+        
 
     @staticmethod
     def delete_user(username):
