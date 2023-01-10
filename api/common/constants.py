@@ -15,8 +15,8 @@ MONGO = {
     'DATABASE': 'falconapidb',
     'HOST': 'mongodb',
     'PORT': 27017,
-    'USERNAME': '',
-    'PASSWORD': ''
+    'USERNAME': os.environ.get('MONGO_USERNAME'),
+    'PASSWORD': os.environ.get('MONGO_PASSWORD')
 }
 
 policy_config = {

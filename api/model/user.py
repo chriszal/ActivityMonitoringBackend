@@ -7,7 +7,7 @@ class User(Document):
     sur_name = StringField()
     email = StringField()
     username = StringField(unique=True,required=True)
-    password = BinaryField() 
+    password = StringField() 
     roles = ListField()
     created_at = DateTimeField(default=datetime.datetime.now())
 
@@ -19,4 +19,4 @@ class User(Document):
 
     @staticmethod
     def validate_login(old, password):
-        return bcrypt.checkpw(password.encode('utf-8'),old)
+        return bcrypt.checkpw(password.encode('utf-8'),old.encode())

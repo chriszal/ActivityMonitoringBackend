@@ -18,7 +18,8 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-  
+      delete axios.defaults.headers.common["Authorization"];
+
       const res = await axios.post('/login', { username, password });
 
       

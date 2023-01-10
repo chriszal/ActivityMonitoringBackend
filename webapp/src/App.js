@@ -11,8 +11,8 @@ import Routers from './routes'
 import {setAuthToken} from './helpers/setAuthToken'
 
 function App() {
-  const [selectedTab, setSelectedTab] = useState("users");
-  const [user, setUser] = useState(null);
+  
+  
 
   useEffect(() => {
     // Check if there is a JWT in local storage
@@ -25,7 +25,6 @@ function App() {
   }, []);
   return (
     <div className="App">
-      <div className="AppGlass">
         <Routers/>
         {/* {!user ? (
           <LoginPage  />
@@ -38,11 +37,7 @@ function App() {
           </React.Fragment>
         )
         } */}
-        {/* <LoginPage/> */}
-        {/* <Sidebar selectedTab={selectedTab} setSelectedTab={setSelectedTab}/>
-        <MainDash selectedTab={selectedTab}/> */}
-        {/* <RightSide/> */}
-      </div>
+        
     </div>
   );
 }

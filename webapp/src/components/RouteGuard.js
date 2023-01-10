@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
  
-const RouteGuard = ({ component: Component, ...rest }) => {
+const RouteGuard = ({ Component}) => {
  
    function hasJWT() {
        let flag = false;
@@ -12,16 +12,7 @@ const RouteGuard = ({ component: Component, ...rest }) => {
        return flag
    }
  
-   return (
-       <Route {...rest}
-           render={props => (
-               hasJWT() ?
-                   <Component {...props} />
-                   :
-                   <Navigate to={{ pathname: '/login' }} />
-           )}
-       />
-   );
-};
- 
+   return  hasJWT() ? <Component/>:<Navigate to="/login"  />;
+        
+}
 export default RouteGuard;

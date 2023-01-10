@@ -61,15 +61,18 @@ export default function BasicTable() {
   React.useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // set loading to true while data is being fetched
-      const response = await axios.get("http://localhost:8081/api/study", {
-        headers: {
-          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImNocmlzdG9zeiIsInJvbGVzIjpbImFkbWluIl0sImV4cCI6MTY3NDc0MzU1NiwiaWF0IjoxNjcyMDY1MTU2fQ.Sb7Y7BzGJKcr6SnBt4NPaOtn0UIb7VtHurQ2yvbvHWo`, // include the JWT token in the Authorization header
-        },
-      });
+      const response = await axios.get("/api/study");
+      console.log(response)
       setRows(response.data); // set response data as the new value for rows
       setLoading(false); // set loading to false once data is fetched
     };
-    fetchData();
+    try{
+      fetchData();
+    } catch (err) {
+      // If there was an error, display it
+      console.log(err);
+     
+    }
   }, []);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

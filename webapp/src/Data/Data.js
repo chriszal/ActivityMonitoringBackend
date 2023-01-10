@@ -19,11 +19,24 @@ import img2 from "../imgs/img2.png";
 import img3 from "../imgs/img3.png";
 
 // Sidebar Data
-export const SidebarData = [
+export const AdminSidebarData = [
   
   {
     icon: UilUsersAlt,
     heading: "Users",
+  },
+  {
+    icon: UilBooks,
+    heading: 'Studies'
+  },
+  
+];
+
+export const StudySidebarData = [
+  
+  {
+    icon: UilUsersAlt,
+    heading: "Test",
   },
   {
     icon: UilBooks,

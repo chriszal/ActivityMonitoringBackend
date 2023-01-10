@@ -46,7 +46,7 @@ services:
   #   environment:
   #     - GF_SECURITY_ADMIN_USER=admin
   #     - GF_SECURITY_ADMIN_PASSWORD=admin
-  client:
+  client: 
     build:
       context: ./
       dockerfile: ./Dockerfile.client
@@ -63,8 +63,9 @@ services:
       - tick
     restart: unless-stopped
     volumes:
-      - "mongodata:/data/db"
-  
+      - ./init-mongodb:/docker-entrypoint-initdb.d
+      - ./init-mongodb/data:/tmp/data
+      
   falcon-api:
     build:
       context: ./

@@ -16,16 +16,16 @@ function Routers() {
     return (
         <Router>
             <Routes>
-                <RouteGuard
+                <Route
                     exact
                     path="/"
-                    component={HomePage}
+                    element={<RouteGuard Component={HomePage} />}
                 />
                 <Route
                     path="/login"
-                    component={LoginPage}
+                    element={<LoginPage/>}
                 />
-                <Navigate to="/" />
+                {/* <Navigate to="/" /> */}
             </Routes>
         </Router>
     );

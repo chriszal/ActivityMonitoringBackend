@@ -2,13 +2,32 @@ import React, { useState } from "react";
 import "./Sidebar.css";
 import Logo from "../imgs/logo.png";
 import { UilSignOutAlt } from "@iconscout/react-unicons";
-import { SidebarData } from "../Data/Data";
+import { AdminSidebarData } from "../Data/Data";
+import { StudySidebarData } from "../Data/Data";
 import { UilBars } from "@iconscout/react-unicons";
 import { motion } from "framer-motion";
+import { setAuthToken } from '../helpers/setAuthToken'
 
-const Sidebar = ({ selectedTab,setSelectedTab }) => {
+const Sidebar = ({ selectedTab,setSelectedTab,roles }) => {
 
   const [expanded, setExpaned] = useState(true)
+
+
+  const sidebarData = () => {
+    if(roles.includes('admin')){
+      return AdminSidebarData;
+    }else{
+      return StudySidebarData;
+    }
+  }
+  const handleLogout = () => {
+    // Remove the token from storage (e.g. localStorage)
+    localStorage.removeItem('token');
+  
+    // Remove the token from the Axios default headers
+    setAuthToken(null);
+    window.location.href = '/login'
+  }
 
   const sidebarVariants = {
     true: {
@@ -38,7 +57,7 @@ const Sidebar = ({ selectedTab,setSelectedTab }) => {
       </div>
 
       <div className="menu">
-        {SidebarData.map((item, index) => {
+        {sidebarData().map((item, index) => {
           return (
             <div
               className={selectedTab === item.heading.toLowerCase() ? "menuItem active" : "menuItem"}
@@ -51,7 +70,7 @@ const Sidebar = ({ selectedTab,setSelectedTab }) => {
           );
         })}
         {/* signoutIcon */}
-        <div className="menuItem">
+        <div className="menuItem"  onClick={handleLogout}>
           <span>Log out</span>
           <UilSignOutAlt />
         </div>
