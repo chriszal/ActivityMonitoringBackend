@@ -5,11 +5,11 @@ RUN mkdir -p /app
 WORKDIR /app
 
 # Install required dependencies
-COPY webapp/package.json /app/package.json
+COPY client/package.json /app/package.json
 RUN npm install
 
 # Copy the application code
-COPY webapp /app
+COPY client /app
 
 # Build the frontend client
 RUN npm run build

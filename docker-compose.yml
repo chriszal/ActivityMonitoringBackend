@@ -23,7 +23,7 @@ services:
   #   ports:
   #     - "3000:3000"
   #   volumes:
-  #     - ./webapp:/app/webapp
+  #     - ./client:/app/client
   #   restart: unless-stopped
   mongodb:
     image: mongo
