@@ -1,9 +1,8 @@
 {
-  "name": "material-kit-react",
+  "name": "activity-monitoring",
   "version": "3.0.0",
-  "author": "Devias",
+  "author": "chriszal",
   "licence": "MIT",
-  "homepage": "https://devias.io",
   "private": false,
   "scripts": {
     "dev": "next",

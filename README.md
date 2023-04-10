@@ -1,6 +1,6 @@
-# Activity Monitoring Backend
+# Activity Monitoring API & CLIENT
 
-This project is a REST API built on Falcon and uses MongoDB and InfluxDB to handle data. The project deals with acquiring data from the user via endpoints and storing the collected data in InfluxDB. MongoDB is used to store users, studies created by users, and meals. Different endpoints are used to manipulate this data.
+This project is a combination of two parts. A REST API built on Falcon that uses MongoDB and InfluxDB to handle data. And a client build in React JS with Next JS for the frontend dashboard implementation. The project deals with acquiring data from the user via endpoints and storing the collected data in InfluxDB. MongoDB is used to store users, studies created by users, and meals. Different endpoints are used to manipulate this data. Two main roles are on the system right now, admin and member, each of them can access a different dashboard.
 
 Table of Contents
 -----------------
@@ -11,6 +11,7 @@ Table of Contents
     *   [Installing](#installing)
     *   [Deployment](#deployment)
 *   [Endpoints](#endpoints)
+*   [Use Cases](#use-cases)
 *   [Contributing](#contributing)
 *   [License](#license)
 
@@ -21,6 +22,8 @@ Technologies Used
 * [![MongoDB][MongoDB.icon]][MongoDB-url]
 * [![InfluxDB][InfluxDB.icon]][InfluxDB-url]
 * [![Docker][Docker.icon]][Docker-url]
+* [![React][React.icon]][React-url]
+* [![Next][Next.icon]][Next-url]
 
 Getting Started
 ---------------
@@ -83,7 +86,9 @@ The API should now be running on [http://localhost:8081](http://localhost:8081).
 
 Below is a list of the available endpoints in the API:
 
+### Use Cases
 
+Here add some use cases and diagrams.
 
 ### Contributing
 
@@ -101,3 +106,7 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 [InfluxDB-url]: https://www.influxdata.com/
 [Docker.icon]: https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [Docker-url]: https://www.docker.com/
+[React.icon]: https://img.shields.io/badge/React-2496ED?style=for-the-badge&logo=react&logoColor=white
+[React-url]: https://react.dev/
+[Next.icon]: https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white
+[Next-url]: https://nextjs.org/
