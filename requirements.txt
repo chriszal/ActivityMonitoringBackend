@@ -16,6 +16,7 @@ bcrypt
 falcon-policy
 pretend
 pandas
+python-dotenv
 # gridfs
 # numpy
 # functools

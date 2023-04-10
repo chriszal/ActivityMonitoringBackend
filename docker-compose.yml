@@ -16,45 +16,15 @@ services:
     ports:
       - ${DOCKER_INFLUXDB_INIT_PORT}:8086
     
-  # chronograf:
-  #   image: chronograf:latest
+  # client: 
+  #   build:
+  #     context: ./
+  #     dockerfile: ./Dockerfile.client
   #   ports:
-  #     - '127.0.0.1:8888:8888'
+  #     - "3000:3000"
   #   volumes:
-  #     - chronograf-storage:/var/lib/chronograf
-  #   depends_on:
-  #     - influxdb
-  #   networks:
-  #     - tick
-  #   environment:
-  #     - INFLUXDB_URL=http://influxdb:8086
-  #     - INFLUXDB_DB=android
-  #     - INFLUXDB_USERNAME=christosz
-  #     - INFLUXDB_PASSWORD=VfOBQpWlHHk8fzs8L8P0
-
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
-  #     - ./grafana-provisioning/:/etc/grafana/provisioning
-  #   depends_on:
-  #     - influxdb
-  #   networks:
-  #     - tick
-  #   environment:
-  #     - GF_SECURITY_ADMIN_USER=admin
-  #     - GF_SECURITY_ADMIN_PASSWORD=admin
-  client: 
-    build:
-      context: ./
-      dockerfile: ./Dockerfile.client
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./webapp:/app/webapp
-    restart: unless-stopped
+  #     - ./webapp:/app/webapp
+  #   restart: unless-stopped
   mongodb:
     image: mongo
     ports:
