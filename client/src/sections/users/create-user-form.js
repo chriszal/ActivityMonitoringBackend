@@ -14,7 +14,7 @@ import {
 import NextLink from 'next/link';
 import ResponsiveDialog from 'src/components/responsive-dialog';
 import Alert from '@mui/material/Alert';
-
+import { useRouter } from 'next/router'; 
 const rolesOptions = [
   {
     value: 'admin',
@@ -35,7 +35,7 @@ export const CreateUserForm = () => {
       const [dialogText,setDialogText] = useState('');
       const [showAlert, setShowAlert] = useState(false);
       const [actions,setActions] = useState();
-
+      const router = useRouter();
       const handleClickOpen = (type) => {
         let dialogText = '';
         if (type === 'create') {
@@ -57,7 +57,7 @@ export const CreateUserForm = () => {
               <Button autoFocus onClick={handleDisagree}>
                 Disagree
               </Button>
-              <Button component={NextLink} href="/admin-dashboard/users" autoFocus>
+              <Button onClick={() => router.back()} autoFocus>
                 Agree
               </Button>
             </>

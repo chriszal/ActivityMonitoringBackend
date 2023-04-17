@@ -32,7 +32,7 @@ export const StudiesTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => { },
+    onPageChange ,
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,

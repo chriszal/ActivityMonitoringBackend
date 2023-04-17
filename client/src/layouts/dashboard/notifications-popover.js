@@ -145,7 +145,7 @@ export const NotificationsPopover = (props) => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
                 <Button
                     sx={{ color: "black" }}
-                    href="/admin-dashboard/users/create"
+                    href="/"
                     endIcon={(
                         <SvgIcon fontSize="small">
                             <ArrowRightIcon />

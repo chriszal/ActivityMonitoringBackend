@@ -66,8 +66,8 @@ const Page = () => {
   
 
   const handlePageChange = useCallback(
-    (event, value) => {
-      setPage(value);
+    (event) => {
+      setPage(event.target.value);
     },
     []
   );

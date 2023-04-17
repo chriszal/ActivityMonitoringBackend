@@ -20,6 +20,7 @@ import Alert from '@mui/material/Alert';
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import axios from 'axios';
 import { LoadingButton } from '@mui/lab';
+import { useRouter } from 'next/router'; 
 
 export const CreateStudyForm = () => {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ export const CreateStudyForm = () => {
   const [actions, setActions] = useState();
   const [coordinator_loading, setCoordinatorLoading] = useState(false);
   const [assistant_loading, setAssistantLoading] = useState(false);
-
+  const router = useRouter();
   const handleClickOpen = (type) => {
     let dialogText = '';
     if (type === 'create') {
@@ -50,7 +51,7 @@ export const CreateStudyForm = () => {
           <Button autoFocus onClick={handleDisagree}>
             Disagree
           </Button>
-          <Button component={NextLink} href="/admin-dashboard/studies" autoFocus>
+          <Button component={NextLink} href="/" onClick={() => router.back()} autoFocus>
             Agree
           </Button>
         </>
@@ -330,7 +331,7 @@ export const CreateStudyForm = () => {
                 >
                   <TextField
                     fullWidth
-                    label="Number of Participants"
+                    label="Number of Participants to Generate"
                     name="no_participants"
                     onChange={handleChange}
                     required

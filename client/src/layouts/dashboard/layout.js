@@ -4,7 +4,7 @@ import { withAuthGuard } from 'src/hocs/with-auth-guard';
 import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
 import { usePathname } from 'next/navigation';
-
+import { useAuth } from 'src/hooks/use-auth';
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -25,25 +25,16 @@ const LayoutContainer = styled('div')({
 });
 
 export const Layout = withAuthGuard((props) => {
+  const { user } = useAuth();
   const { children } = props;
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(true);
-
-  
-  // useEffect(
-  //   () => {
-  //     if (openNav) {
-  //       setOpenNav(false);
-  //     }
-  //   },
-  //   [pathname, openNav]
-  // );
 
     
   return (
     <>
       <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav
+      <SideNav role={user.role}
         onClose={() => setOpenNav(false)}
         open={openNav}
       />

@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 
 import {
   Box,
@@ -19,15 +19,10 @@ import {
 import { styled } from '@mui/material/styles';
 import CameraIcon from '@heroicons/react/24/solid/CameraIcon';
 import { keyframes } from '@emotion/react';
+import { LoadingButton } from '@mui/lab';
+import { useAuth } from 'src/hooks/use-auth';
+import {generateAvatar} from 'src/utils/avatar-generator'
 
-const user = {
-  avatar: '/assets/avatars/avatar-anika-visser.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Anika Visser',
-  timezone: 'GTM-7'
-};
 
 const AvatarContainer = styled(Box)({
   position: 'relative',
@@ -77,9 +72,12 @@ const Circle = styled(Box)({
 
 
 export const AccountProfileDetails = () => {
+  
+  const {user } = useAuth();
+  const avatarUrl = generateAvatar(user.name);
   const inputRef = useRef(null);
 
-  const [avatarSrc, setAvatarSrc] = useState(user.avatar);
+  const [avatarSrc, setAvatarSrc] = useState(avatarUrl);
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
 
 
@@ -168,6 +166,8 @@ export const AccountProfileDetails = () => {
     []
   );
 
+  
+
   return (
     <form
       autoComplete="off"
@@ -194,8 +194,8 @@ export const AccountProfileDetails = () => {
                   <Avatar
                     src={avatarSrc}
                     sx={{
-                      width: 76,
-                      height: 76,
+                      width: 96,
+                      height: 96,
                       borderRadius: '50%',
                       boxShadow: 'none',
                       '&:hover': {
@@ -212,7 +212,7 @@ export const AccountProfileDetails = () => {
                       <input
                         ref={inputRef}
                         type="file"
-                        accept="image/*"
+                        accept="image/png, image/jpeg"
                         style={{ display: 'none' }}
                         onChange={handleAvatarChange}
                       />

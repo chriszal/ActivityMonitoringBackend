@@ -31,10 +31,10 @@ export const OptionsPopover = (props) => {
           }}
       >
         {/* <MenuItem sx={{color:"neutral.400"}}> */}
-        <MenuItem component={NextLink} href="/admin-dashboard/">
+        <MenuItem component={NextLink} href="/admin-dashboard/studies" onClick={onClose}>
           Admin
         </MenuItem>
-        <MenuItem component={NextLink} href="/dashboard/" >
+        <MenuItem component={NextLink} href="/dashboard/studies" onClick={onClose}>
           Member
         </MenuItem>
       </MenuList>

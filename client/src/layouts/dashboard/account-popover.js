@@ -36,13 +36,13 @@ export const AccountPopover = (props) => {
         }}
       >
         <Typography variant="overline">
-          Christos Zalachoris
+          {auth.user.name}
         </Typography>
         <Typography
           color="text.secondary"
           variant="body2"
         >
-          user_203
+          {auth.user.email}
         </Typography>
       </Box>
       <Divider />

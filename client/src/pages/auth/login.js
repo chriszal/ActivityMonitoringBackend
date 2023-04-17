@@ -24,6 +24,7 @@ const Page = () => {
   const router = useRouter();
   const auth = useAuth();
   const [method, setMethod] = useState('email');
+  const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: 'demo@devias.io',
@@ -43,12 +44,14 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        router.push('/admin-dashboard');
+        setLoading(true);
+        await auth.signIn(values.email, values.password);  
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
+      }finally{
+        setLoading(false);
       }
     }
   });
@@ -138,7 +141,7 @@ const Page = () => {
                 
                 <LoadingButton
                   fullWidth
-                  loading={formik.isSubmitting}
+                  loading={loading}
                   onClick={formik.handleSubmit}
                   size="large"
                   sx={{ mt: 3 }}

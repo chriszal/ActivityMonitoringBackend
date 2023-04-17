@@ -90,7 +90,7 @@ export const EditStudyForm = (props) => {
           <Button autoFocus onClick={handleDisagree}>
             Disagree
           </Button>
-          <Button component={NextLink} href="/admin-dashboard/studies" autoFocus>
+          <Button  onClick={() => router.back()} autoFocus>
             Agree
           </Button>
         </>
@@ -210,13 +210,13 @@ export const EditStudyForm = (props) => {
   const handleShowAlert = (type) => {
     if (type === 'update-success') {
       setShowUpdateSuccessAlert(true);
-      setTimeout(() => router.push('/admin-dashboard/studies'), 3000);
+      setTimeout(() => router.back(), 3000);
     } else if (type === 'update-fail') {
       setShowUpdateFailAlert(true);
       setTimeout(() => setShowUpdateFailAlert(false), 5000);
     } else if (type === 'delete-success') {
       setShowDeleteSuccessAlert(true);
-      setTimeout(() => router.push('/admin-dashboard/studies'), 3000);
+      setTimeout(() => router.back(), 3000);
     } else if (type === 'delete-fail') {
       setShowDeleteFailAlert(true);
     }

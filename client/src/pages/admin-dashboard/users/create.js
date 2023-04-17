@@ -3,8 +3,11 @@ import { Box, Container, Stack,Link,Breadcrumbs, Typography, Unstable_Grid2 as G
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CreateUserForm } from 'src/sections/users/create-user-form';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router'; 
 
-const Page = () => (
+const Page = () => {
+  const router = useRouter();
+  return(
   <>
     <Head>
       <title>
@@ -30,7 +33,7 @@ const Page = () => (
               <Link component={NextLink}
                 underline="hover"
                 color="inherit"
-                href="/admin-dashboard/users"
+                href="/" onClick={() => router.back()}
               >
                 Users
               </Link>
@@ -49,7 +52,7 @@ const Page = () => (
       </Container>
     </Box>
   </>
-);
+)};
 
 Page.getLayout = (page) => (
   <DashboardLayout>

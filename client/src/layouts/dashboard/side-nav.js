@@ -15,19 +15,23 @@ import {
 } from '@mui/material';
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
-import { items } from './config';
+import { items as adminItems} from './admin-config';
+import { items as memberItems} from './member-config';
 import { SideNavItem } from './side-nav-item';
 import { usePopover } from 'src/hooks/use-popover';
 import { OptionsPopover } from './options-popover';
 
 
 export const SideNav = (props) => {
-  const { open, onClose } = props;
+  const { open, onClose, role } = props;
   const pathname = usePathname();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const optionsPopover = usePopover();
+  
+  
+  const items = pathname.startsWith('/admin-dashboard') && role === 'admin' ? adminItems : memberItems;
 
-
+  const dashboardName = pathname.startsWith('/admin-dashboard') ? "Admin" : "Member"; 
   const handleClick = () => {
     onClose();
   };
@@ -86,7 +90,7 @@ export const SideNav = (props) => {
           </Box>
         </Box>
         <Box
-        onClick={optionsPopover.handleOpen}
+        onClick={role === 'member' ? null :optionsPopover.handleOpen}
         ref={optionsPopover.anchorRef}
           sx={{
             alignItems: 'center',
@@ -111,7 +115,7 @@ export const SideNav = (props) => {
               color="neutral.400"
               variant="body2"
             >
-              Admin
+              {dashboardName}
             </Typography>
           </div>
           <SvgIcon
@@ -122,7 +126,6 @@ export const SideNav = (props) => {
           </SvgIcon>
         </Box>
         <OptionsPopover
-          
           anchorEl={optionsPopover.anchorRef.current}
           open={optionsPopover.open}
           onClose={optionsPopover.handleClose} />

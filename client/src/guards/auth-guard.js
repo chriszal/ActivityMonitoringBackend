@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useAuthContext } from 'src/contexts/auth-context';
+import { useAuth } from 'src/hooks/use-auth';
 
-export const AuthGuard = (props) => {
-  const { children } = props;
+
+
+export const AuthGuard = ({ children, allowedRoles }) => {
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
-  const { isAuthenticated } = useAuthContext();
   const ignore = useRef(false);
   const [checked, setChecked] = useState(false);
 
@@ -35,9 +37,19 @@ export const AuthGuard = (props) => {
             query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
           })
           .catch(console.error);
+      } else if (!allowedRoles.includes(user.role)) {
+        console.log('Access Denied!');
+        router
+          .replace({
+            pathname: '/403',
+            query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
+          })
+          .catch(console.error);
       } else {
         setChecked(true);
       }
+
+      
     },
     [router.isReady]
   );

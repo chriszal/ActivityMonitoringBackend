@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import jwt_decode from 'jwt-decode';
+import { useRouter } from 'next/navigation';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -64,6 +65,7 @@ const reducer = (state, action) => (
 export const AuthContext = createContext({ undefined });
 
 export const AuthProvider = (props) => {
+  const router = useRouter();
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
@@ -158,10 +160,10 @@ export const AuthProvider = (props) => {
 
     try {
       window.sessionStorage.setItem('authenticated', 'true');
+      
     } catch (err) {
       console.error(err);
     }
-
     const user = {
       id: '5e86809283e28b96d2d38537',
       avatar: '/assets/avatars/avatar-anika-visser.png',
@@ -169,11 +171,20 @@ export const AuthProvider = (props) => {
       email: 'anika.visser@devias.io',
       role:'admin'
     };
+    if (user.role=="admin") {
+      router.push('/admin-dashboard/studies');
+    }else{
+      router.push('/dashboard/studies');
+    }
+
 
     dispatch({
       type: HANDLERS.SIGN_IN,
       payload: user
     });
+    
+
+    
   };
 
   const signUp = async (email, name, password) => {
@@ -185,7 +196,15 @@ export const AuthProvider = (props) => {
     dispatch({
       type: HANDLERS.SIGN_OUT
     });
+    dispatch({
+      type: HANDLERS.INITIALIZE,
+      payload: {
+        ...state.user,
+        role: undefined
+      }
+    });
   };
+  
 
   return (
     <AuthContext.Provider

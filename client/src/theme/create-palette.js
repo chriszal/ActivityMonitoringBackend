@@ -21,7 +21,7 @@ export function createPalette() {
     info,
     mode: 'light',
     neutral,
-    primary: indigo,
+    primary: success,
     success,
     text: {
       primary: neutral[900],
