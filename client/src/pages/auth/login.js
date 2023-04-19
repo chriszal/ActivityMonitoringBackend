@@ -27,8 +27,8 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
+      email: 'chriszal@gmail.com',
+      password: '1234',
       submit: null
     },
     validationSchema: Yup.object({

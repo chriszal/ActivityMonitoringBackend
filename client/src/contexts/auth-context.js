@@ -91,8 +91,8 @@ export const AuthProvider = (props) => {
       const user = {
         id: '5e86809283e28b96d2d38537',
         avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io',
+        name: 'Chris Zalachoris',
+        email: 'chriszal@gmail.com',
         role:'admin'
       };
 
@@ -154,7 +154,7 @@ export const AuthProvider = (props) => {
   // };
 
   const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
+    if (email !== 'chriszal@gmail.com' || password !== '1234') {
       throw new Error('Please check your email and password');
     }
 
@@ -167,8 +167,8 @@ export const AuthProvider = (props) => {
     const user = {
       id: '5e86809283e28b96d2d38537',
       avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io',
+      name: 'Chris Zalachoris',
+        email: 'chriszal@gmail.com',
       role:'admin'
     };
     if (user.role=="admin") {

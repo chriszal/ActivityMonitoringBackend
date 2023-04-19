@@ -1,52 +1,28 @@
 from api.model.user import User
-from mongoengine.queryset.visitor import Q
 
-
-class UserService(object):
-
-    @staticmethod
-    def create_user(first_name, sur_name,email, username, password, roles):
-        """
-        Create a new user
-        """
-
-        user = User(first_name=first_name, sur_name=sur_name,email=email, username=username,
-                    password=User.set_password(password), roles=roles).save()
+class UserService:
+    
+    def create_user(self, first_name, last_name, email, password, roles):
+        user = User(first_name=first_name, last_name=last_name, email=email, roles=roles)
+        user.set_password(password)
+        user.save()
+        return user
+    
+    def list_users(self):
+        return User.objects.all()
+    
+    def get_user_by_email(self, email):
+        return User.objects.get(email=email)
+    
+    def update_user_by_email(self, email, **kwargs):
+        user = User.objects.get(email=email)
+        for key, value in kwargs.items():
+            setattr(user, key, value)
+        user.save()
         return user
 
-    @staticmethod
-    def modify_user(User):
-        User.update(set__study_id=str(User.name))
-
-    @staticmethod
-    def list_users():
-        """
-        Get created projects
-        :return:
-        :rtype:
-        """
-        return User.objects()
-
-    @staticmethod
-    def get_user(username, password):
-        """
-        Get created projects
-        :return:
-        :rtype:
-        """
-        try:
-            user = User.objects.get(username=username)
-            if User.validate_login(user.password, password):
-                return user
-            else:
-                return None
-        except User.DoesNotExist:
-            return None    
-        
-
-    @staticmethod
-    def delete_user(username):
-        """
-        Delete the study
-        """
-        User.objects(username=username).delete()
+    def delete_user_by_email(self, email):
+        user = User.objects.get(email=email)
+        user.delete()
+    def get_user_by_id(self, id):
+        return User.objects.get(id=id)
