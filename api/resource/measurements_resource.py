@@ -20,13 +20,6 @@ class MeasurementResource(object):
     def on_post(self, req, resp):
 
         try:
-            # retry_strategy = Retry(
-            #     total=3,
-            #     backoff_factor=1
-            # )
-            # adapter = HTTPAdapter(max_retries=retry_strategy)
-            # http = requests.Session()
-            # http.mount("http://",adapter)
             input_file = req.get_param('file')   
             response = requests.post(url="http://"+self.host+":"+self.port+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
             resp.status = falcon.HTTP_204

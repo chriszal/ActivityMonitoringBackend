@@ -1,5 +1,26 @@
 .venv
 client/node_modules
+client/.next
 logs
 .env
 init-mongodb/data/data.json
+
+# dependencies
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+client/build
+client/out
+
+# misc
+.DS_Store
+client/.eslintcache
+.idea
+
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*

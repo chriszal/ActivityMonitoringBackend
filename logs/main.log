@@ -65,3 +65,7 @@ AttributeError: 'User' object has no attribute '_id'
 [2023-04-26 10:47:43 +0000] [7] [INFO] Using worker: gevent
 [2023-04-26 10:47:43 +0000] [10] [INFO] Booting worker with pid: 10
 [2023-04-26 10:47:43 +0000] [11] [INFO] Booting worker with pid: 11
+[2023-04-26 11:20:14 +0000] [7] [INFO] Handling signal: term
+[2023-04-26 11:20:14 +0000] [10] [INFO] Worker exiting (pid: 10)
+[2023-04-26 11:20:14 +0000] [11] [INFO] Worker exiting (pid: 11)
+[2023-04-26 11:20:15 +0000] [7] [INFO] Shutting down: Master
