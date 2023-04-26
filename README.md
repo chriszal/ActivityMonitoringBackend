@@ -50,27 +50,36 @@ DOCKER_INFLUXDB_INIT_USERNAME=
 DOCKER_INFLUXDB_INIT_PASSWORD= 
 INFLUXDB_URL=http://influxdb:8086 
 DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=
-DOCKER_INFLUXDB_INIT_ORG=hua 
-DOCKER_INFLUXDB_INIT_BUCKET=android 
+DOCKER_INFLUXDB_INIT_ORG=
+DOCKER_INFLUXDB_INIT_BUCKET=
 DOCKER_INFLUXDB_INIT_PORT=8086 
 DOCKER_INFLUXDB_INIT_HOST=influxdb 
-JWT_SECRET=secretkeygoeshere 
-DB_USER=admin 
-DB_PASSWORD=admin 
+JWT_SECRET= 
+DB_USER=
+DB_PASSWORD= 
 DB_NAME=falconapidb
 ```
 
 3.  Create a `data.json` file in the `init-mongodb/data` directory with the initial data for the MongoDB user collection for the system. Below is an example:
 
 
-```[     {         
-    "first_name":"Christos",         
-    "sur_name":"Zalachoris",         
-    "email":"christoszal@gmail.com",         
-    "username":"admin",         
-    "password":"$2a$12$/DPkjwFkOLI2dFQrJdnmju38mu4pfYa9a1uSd.vd8inbf8blxqMG",         
-    "roles":["admin"]     
-    } ]
+```
+[
+    {
+        "first_name":"First",
+        "last_name":"User",
+        "email":"admin@gmail.com",
+        "password":"$2a$12$/DPkjwFkOLI2dFQrJdnmju38mu4pfYa9a1uSd.vd8inbf8blxq.MG",
+        "roles":["admin"]
+    },
+    {
+        "first_name":"Second",
+        "last_name":"User2",
+        "email":"member@gmail.com",
+        "password":"$2a$12$/DPkjwFkOLI2dFQrJdnmju38mu4pfYa9a1uSd.vd8inbf8blxq.MG",
+        "roles":["member"]
+    }
+]
  ```
 
 ### Deployment

@@ -1,7 +1,7 @@
 .venv
 client/node_modules
 client/.next
-logs
+logs/main.log
 .env
 init-mongodb/data/data.json
 
