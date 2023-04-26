@@ -34,7 +34,8 @@ mongo.connect(
 
 
 # cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
-app = falcon.API(middleware=[Cors(),MultipartMiddleware(),AuthHandler(),RoleBasedPolicy(constants.policy_config)])
+# ,AuthHandler(),RoleBasedPolicy(constants.policy_config)
+app = falcon.API(middleware=[Cors(),MultipartMiddleware()])
 
 study = StudyResource()
 user = UserResource()
@@ -46,15 +47,15 @@ login = LoginResource()
 
 
 
-app.add_route("/v1/login", login)
-app.add_route('/v1/register/{reg_code}',register,suffix="reg_code")
-app.add_route('/v1/study/', study)
-app.add_route('/v1/study/{study_id}', study, suffix="id")
-app.add_route('/v1/user/', user)
-app.add_route('/v1/user/{email}', user, suffix="email")
-app.add_route('/v1/user/{id}', user, suffix="id")
-app.add_route('/v1/participants/{study_id}', participant,suffix="study")
-app.add_route('/v1/participant/{participant_id}', participant,suffix="id")
-app.add_route('/v1/measurement/',measurement)
-app.add_route('/v1/meal/',meal)
-app.add_route('/v1/meal/{participant_id}',meal,suffix="id")
+app.add_route("/api/v1/login", login)
+app.add_route('/api/v1/register/{reg_code}',register,suffix="reg_code")
+app.add_route('/api/v1/study/', study)
+app.add_route('/api/v1/study/{study_id}', study, suffix="id")
+app.add_route('/api/v1/users/', user)
+app.add_route('/api/v1/users/{email}', user, suffix="email")
+app.add_route('/api/v1/user/{id}', user, suffix="id")
+app.add_route('/api/v1/participants/{study_id}', participant,suffix="study")
+app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
+app.add_route('/api/v1/measurement/',measurement)
+app.add_route('/api/v1/meal/',meal)
+app.add_route('/api/v1/meal/{participant_id}',meal,suffix="id")

@@ -1,18 +1,16 @@
 [
     {
         "first_name":"Christos",
-        "sur_name":"Zalachoris",
+        "last_name":"Zalachoris",
         "email":"christoszal@gmail.com",
-        "username":"admin",
         "password":"$2a$12$/DPkjwFkOLI2dFQrJdnmju38mu4pfYa9a1uSd.vd8inbf8blxq.MG",
         "roles":["admin"]
     },
     {
         "first_name":"John",
-        "sur_name":"Nikolaoy",
+        "last_name":"Nikolaoy",
         "email":"nick@gmail.com",
-        "username":"john",
         "password":"$2a$12$/DPkjwFkOLI2dFQrJdnmju38mu4pfYa9a1uSd.vd8inbf8blxq.MG",
-        "roles":["study_coordinator"]
+        "roles":["member"]
     }
 ]

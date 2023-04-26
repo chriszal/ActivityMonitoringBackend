@@ -1,3 +1,5 @@
 .venv
-webapp/node_modules
+client/node_modules
 logs
+.env
+init-mongodb/data/data.json

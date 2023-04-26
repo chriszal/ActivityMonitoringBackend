@@ -18,23 +18,15 @@ class UserResource(object):
     def on_post(self, req, resp):
         try:
             user_data = req.media
-            if "study_coordinator" in req.context.roles and ("admin" in user_data["roles"] or "study_coordinator" in user_data["roles"]):
-                resp.status = falcon.HTTP_401
-                resp.body = json.dumps({
-                    'message': 'Not authorized to create an admin or a coordinator.',
-                    'status': 401,
-                    'data': {}
-                })
-                return
-            else:
-                user_obj = self.user_service.create_user(**user_data)
-                resp.status = falcon.HTTP_201
-                resp.body = json.dumps({
-                    'message': 'User successfully created!',
-                    'status': 201,
-                    'data': user_obj.to_dict()
-                })
-                return
+           
+            user_obj = self.user_service.create_user(**user_data)
+            resp.status = falcon.HTTP_201
+            resp.body = json.dumps({
+                'message': 'User successfully created!',
+                'status': 201,
+                'data': user_obj.to_dict()
+            })
+                
           
         except Exception as e:
             resp.status = falcon.HTTP_409
