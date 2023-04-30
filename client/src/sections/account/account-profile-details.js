@@ -96,7 +96,6 @@ export const AccountProfileDetails = () => {
     first_name: '',
     sur_name: '',
     email: '',
-    username: '',
     roles: []
   });
 
@@ -104,7 +103,6 @@ export const AccountProfileDetails = () => {
     first_name: '',
     sur_name: '',
     email: '',
-    username: ''
   });
 
   const handleChange = useCallback(
@@ -133,13 +131,6 @@ export const AccountProfileDetails = () => {
         case 'email':
           if (!value.match(/^\S+@\S+\.\S+$/)) {
             errorMessage = 'Invalid email address.';
-          }
-          break;
-        case 'username':
-          if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
-            errorMessage = 'Username can only contain alphanumeric characters, hyphens, underscores, and periods.';
-          } else if (value.length > 30) {
-            errorMessage = 'Username must be less than 30 characters long.';
           }
           break;
         default:
@@ -256,17 +247,6 @@ export const AccountProfileDetails = () => {
                       name="email"
                       error={Boolean(errors.email)}
                       helperText={errors.email}
-                      onBlur={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextField
-                      fullWidth
-                      label="Username"
-                      name="username"
-                      error={Boolean(errors.username)}
-                      helperText={errors.username}
                       onBlur={handleChange}
                       required
                     />

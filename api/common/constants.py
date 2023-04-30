@@ -12,18 +12,17 @@ ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
 
 # datasource constant
 MONGO = {
-    'DATABASE': 'falconapidb',
+    'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
     'HOST': 'mongodb',
     'PORT': 27017,
-    'USERNAME': os.environ.get('MONGO_USERNAME'),
-    'PASSWORD': os.environ.get('MONGO_PASSWORD')
+    'USERNAME': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
+    'PASSWORD': os.environ.get('MONGO_INITDB_ROOT_USERNAME')
 }
 
 policy_config = {
     'roles': [
         'admin',
-        'study_coordinator',
-        'study_assistant',
+        'member',
         'participant',
     ],
     'groups': {
@@ -33,37 +32,40 @@ policy_config = {
         'mobile': ['admin', 'study_coordinator', 'study_assistant', 'participant'],
     },
     'routes': {
-        '/api/study/': {
-            'POST': ['study'],
-            'GET':['administration'],
-        },
-        '/api/study/{study_id}': {
-            'GET': ['mobile'],
-            'DELETE': ['study'],
-        },
-        '/api/user/': {
+        '/api/v1/studies': {
             'POST': ['create'],
             'GET':['administration'],
         },
-        '/api/user/{username}': {
-            'GET': ['study'],
-            'DELETE': ['study'],
-        },
-        '/api/participant/{participant_id}': {
+        '/api/v1/study/{study_id}': {
             'GET': ['mobile'],
+            'PUT': ['study'],
             'DELETE': ['study'],
-            'PUT':['mobile'],
         },
-        '/api/participants/{study_id}': {
+        '/api/v1/users': {
+            'POST': ['create'],
+            'GET':['administration'],
+        },
+        '/api/v1/users/{email}': {
+            'GET': ['study'],
+            'PUT': ['study'],
+            'DELETE': ['study'],
+        },
+        '/api/v1/participant/{participant_id}': {
+            'GET': ['mobile'],
+            'PUT': ['mobile'],
+            'DELETE': ['study'],
+        },
+        '/api/v1/participants/study/{study_id}': {
             'GET': ['study'],
         },
-        '/api/measurement/': {
+        '/api/v1/measurement/': {
             'POST': ['mobile'],
         },
-        '/api/meal/': {
+        '/api/v1/meal/': {
             'POST': ['mobile'],
+            'DELETE': ['mobile'],
         },
-        '/api/meal/{participant_id}': {
+        '/api/v1/meals/participant/{participant_id}': {
             'GET': ['mobile'],
             'DELETE': ['mobile'],
         },

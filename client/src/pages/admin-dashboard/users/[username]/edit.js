@@ -67,8 +67,8 @@ const Page = () => {
           {isLoading ? (
             <>
               <Stack >
-                <Skeleton variant="text" sx={{ fontSize: '2.1rem', marginBottom: "-10px" }} width="37%" />
-                <Skeleton variant="text" sx={{ fontSize: '1.1rem', marginBottom: "10px" }} width="15%" />
+                <Skeleton variant="text" sx={{ fontSize: '2.2rem', marginBottom: "-10px" }} width="34%" />
+                <Skeleton variant="text" sx={{ fontSize: '1.3rem', marginBottom: "10px" }} width="20%" />
               </Stack>
               <Card>
                 <CardHeader sx={{ marginBottom: "13px" }}
@@ -101,13 +101,7 @@ const Page = () => {
                       >
                         <Skeleton variant="rounded" height={53} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                        sx={{marginBottom:'15px'}}
-                      >
-                        <Skeleton variant="rounded" height={53} />
-                      </Grid>
+                      
                     </Grid>
                   </Box>
                 </CardContent>
@@ -140,7 +134,7 @@ const Page = () => {
                   {data[0].email}
                 </Typography>
                 <Typography fontWeight={500} fontSize={"0.825rem"} lineHeight={1.57}>
-                  username: <Box sx={{ bgcolor: '#D3D3D3', borderRadius: 8, p: 0.1, display: 'inline-block' }}> &nbsp;  &nbsp;{username} &nbsp; &nbsp;</Box>
+                  id: <Box sx={{ bgcolor: '#D3D3D3', borderRadius: 8, p: 0.1, display: 'inline-block' }}> &nbsp;  &nbsp;{username} &nbsp; &nbsp;</Box>
                 </Typography>
               </div>
               <div>
@@ -149,7 +143,6 @@ const Page = () => {
                   spacing={3}
                 >
                   <EditUserForm
-                    username={data[0].username}
                     first_name={data[0].first_name}
                     sur_name={data[0].sur_name}
                     email={data[0].email}

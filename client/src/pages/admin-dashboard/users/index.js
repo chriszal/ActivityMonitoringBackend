@@ -15,32 +15,6 @@ import axios from 'axios';
 
 const now = new Date();
 
-// const data = [
-//     {
-//        username: "chriszal",
-//        first_name: "Chris",
-//        sur_name : "Zalachoris",
-//        email:"christoszal@gmail.com",
-//        roles:["admin","study_coordinator"],
-//        created_at: "20/3/2020",
-//         },
-//         {
-//           username: "pet",
-//           first_name: "Chris",
-//           sur_name : "Sarris",
-//           email:"it21922@hua.gr",
-//           roles:["admin","study_coordinator"],
-//           created_at: "20/3/2020",
-//            },{
-//             username: "test",
-//             first_name: "Chris",
-//             sur_name : "Dioy",
-//             email:"sunizal@gmail.com",
-//             roles:["admin","study_coordinator"],
-//             created_at: "20/3/2020",
-//              },
-// ];
-
 
 
 const Page = () => {

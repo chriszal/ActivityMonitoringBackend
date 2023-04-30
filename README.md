@@ -86,14 +86,143 @@ DB_NAME=falconapidb
 
 Run the following command to start the containers:
 
-```docker-compose up```
+```
+docker-compose up
+```
 
 The API should now be running on [http://localhost:8081](http://localhost:8081).
 
 ### Endpoints
----------
 
 Below is a list of the available endpoints in the API:
+1. Login:
+
+    `POST /api/v1/login`
+    ```
+    {
+        "email": "example@gmail.com",
+        "password": "password123"
+    }
+    ```
+2. Register Participant
+
+    `GET /api/v1/register/{reg_code}`
+3. List Users
+
+    `GET /api/v1/users`
+4. Get User By Email
+
+    `GET /api/v1/users/{email}`
+5. Update User By Email
+
+    `PUT /api/v1/users/{email}`
+    ```
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@example.com",
+        "roles": ["member"]
+    }
+    ```
+6. Get User Id By Email
+
+    `GET /api/v1/user/id/{email}`
+7. Get User Email By Id
+
+    `GET /api/v1/user/{id}`
+8. Create User
+
+    `POST /api/v1/users/`
+    ```
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "johndoe@example.com",
+        "password":"1234",
+        "roles": ["member"]
+    }
+    ```
+9. Delete User By Email
+
+    `DELETE /api/v1/users/{email}`
+10. List Studies
+
+    `GET /api/v1/studies`
+11. Create Study
+
+    `POST /api/v1/studies`
+    ```
+    {
+        "study_id":"HUA",
+        "title":"Health Study",
+        "authors":["John Doe"],
+        "description":"A study about the effects of exercise on mood",
+        "no_participants":5,
+        "owners":["duig3ige3296"],
+        "study_coordinators":[],
+        "study_assistants":[]
+    }
+    ```
+12. Get Study By Study Id
+
+    `GET /api/v1/study/{study_id}`
+13. Update Study By Study Id
+
+    `PUT /api/v1/study/{study_id}`
+    ```
+    {
+        "study_id":"HUA",
+        "title":"Health Study",
+        "authors":["John Doe"],
+        "description":"A study about the effects of exercise on mood",
+        "no_participants":5,
+        "owners":["duig3ige3296"],
+        "study_coordinators":[],
+        "study_assistants":[]
+    }
+    ```
+14. Get Studies By User Id 
+
+    `GET /api/v1/studies/user/{user_id}`
+15. List Participants
+
+    `GET /api/v1/participants`
+16. Get Participant By Participant Id
+
+    `GET /api/v1/participant/{participant_id}`
+17. Get Participants By Study Id
+
+    `GET /api/v1/participants/study/{study_id}`
+18. Delete Participant By Participant Id
+
+    `DELETE /api/v1/participant/{participant_id}`
+19. Update Participant By Participant Id
+
+    `PUT /api/v1/participant/{participant_id}`
+    ```
+    {
+        "date_of_birth":"2001-04-19",
+        "gender":"Female",
+        "weight":10,
+        "height":300
+    }
+    ```
+20. Get Meals By Participant Id
+
+    `GET /api/v1/meals/participant/{participant_id}`
+21. Create Meal 
+
+    `POST /api/v1/meal`
+    ```
+        --form image='@test.png' 
+        --form id='HUA_1' 
+        --form type='dinner' 
+        --form portion='small'
+    ```
+22. Delete Meals By Participant Id
+
+    `DELETE /api/v1/meals/participant/{participant_id}`
+
 
 ### Use Cases
 

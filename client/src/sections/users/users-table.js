@@ -54,7 +54,7 @@ export const UsersTable = (props) => {
               <TableRow>
 
                 <TableCell>
-                  Username
+                  ID
                 </TableCell>
                 <TableCell>
                   Name

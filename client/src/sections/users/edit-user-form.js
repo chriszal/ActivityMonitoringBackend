@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 
 export const EditUserForm = (props) => {
   const router = useRouter();
-  const { username } = props;
   const { email } = props;
   const { first_name } = props;
   const { sur_name } = props;
@@ -61,7 +60,7 @@ export const EditUserForm = (props) => {
           <Button autoFocus onClick={handleDisagree}>
             Disagree
           </Button>
-          <Button  onClick={() => router.back()} autoFocus>
+          <Button onClick={() => router.back()} autoFocus>
             Agree
           </Button>
         </>
@@ -123,7 +122,6 @@ export const EditUserForm = (props) => {
     first_name: first_name,
     sur_name: sur_name,
     email: email,
-    username: username,
     roles: roles
   });
 
@@ -131,7 +129,6 @@ export const EditUserForm = (props) => {
     first_name: '',
     sur_name: '',
     email: '',
-    username: ''
   });
 
   const handleOnBlur = useCallback(
@@ -160,13 +157,6 @@ export const EditUserForm = (props) => {
         case 'email':
           if (!value.match(/^\S+@\S+\.\S+$/)) {
             errorMessage = 'Invalid email address.';
-          }
-          break;
-        case 'username':
-          if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
-            errorMessage = 'Username can only contain alphanumeric characters, hyphens, underscores, and periods.';
-          } else if (value.length > 30) {
-            errorMessage = 'Username must be less than 30 characters long.';
           }
           break;
         default:
@@ -237,36 +227,7 @@ export const EditUserForm = (props) => {
           <CardContent sx={{ pt: 0 }}>
             <Box sx={{ m: -1.5 }}>
               <Grid container spacing={3}>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    defaultValue={email}
-                    error={Boolean(errors.email)}
-                    helperText={errors.email}
-                    onBlur={handleOnBlur}
-                    required
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Username"
-                    name="username"
-                    defaultValue={username}
-                    error={Boolean(errors.username)}
-                    helperText={errors.username}
-                    onBlur={handleOnBlur}
-                    required
-                  />
-                </Grid>
+
                 <Grid xs={12} md={6}>
                   <TextField
                     fullWidth
@@ -289,6 +250,21 @@ export const EditUserForm = (props) => {
                     required
                     error={Boolean(errors.sur_name)}
                     helperText={errors.sur_name}
+                  />
+                </Grid>
+                <Grid
+                  xs={12}
+                  md={6}
+                >
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    defaultValue={email}
+                    error={Boolean(errors.email)}
+                    helperText={errors.email}
+                    onBlur={handleOnBlur}
+                    required
                   />
                 </Grid>
 
