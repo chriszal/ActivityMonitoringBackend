@@ -4,7 +4,7 @@ import json
 #modify participant register field by participant id
 #modify user study id when creating new study
 
-class RegisterService(object):
+class RegisterParticipantService(object):
     @staticmethod
     def modify_participant(id,study_id):
         return Study.objects(study_id=study_id,participants__id=id).update(set__participants__S__register_status="registered")

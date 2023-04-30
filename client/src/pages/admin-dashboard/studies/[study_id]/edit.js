@@ -75,51 +75,26 @@ const Page = () => {
                 <CardContent sx={{ pt: 0 }}>
                   <Box sx={{ m: -0.5 }}>
                     <Grid container spacing={3}>
-                      <Grid
-                        xs={12}
-                        md={6}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={12}
-                      >
-                        <Skeleton variant="rounded" height={105} />
+                      <Grid xs={12} md={12}>
+                        <Skeleton variant="rounded" height={108} fullWidth />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                        sx={{marginBottom:'25px'}}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6} sx={{ marginBottom: '25px' }}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                        sx={{marginBottom:'25px'}}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6} sx={{ marginBottom: '25px' }}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                        sx={{marginBottom:'10px'}}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6} sx={{ marginBottom: '10px' }}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
-                      <Grid
-                        xs={12}
-                        md={6}
-                        sx={{marginBottom:'10px'}}
-                      >
-                        <Skeleton variant="rounded" height={53} />
+                      <Grid xs={12} md={6} sx={{ marginBottom: '10px' }}>
+                        <Skeleton variant="rounded" height={56} />
                       </Grid>
                     </Grid>
                   </Box>
@@ -147,28 +122,28 @@ const Page = () => {
               </Card>
 
             </>) : (
-          <Stack spacing={3}>
-            <div>
-              <Typography variant="h4">
-                {study_id}
-              </Typography>
-            </div>
-            <div>
-              <Grid
-                container
-                spacing={3}
-              >
-                <EditStudyForm 
-                 study_id={data[0].study_id}
-                 title={data[0].title}
-                 description={data[0].description}
-                 authors={[data[0].authors]}
-                 no_participants={data[0].no_participants}
-                 study_coordinators={[data[0].study_coordinators]}
-                 study_assistants={[data[0].study_assistants]}/>
-              </Grid>
-            </div>
-          </Stack>
+            <Stack spacing={3}>
+              <div>
+                <Typography variant="h4">
+                  {study_id}
+                </Typography>
+              </div>
+              <div>
+                <Grid
+                  container
+                  spacing={3}
+                >
+                  <EditStudyForm
+                    study_id={data[0].study_id}
+                    title={data[0].title}
+                    description={data[0].description}
+                    authors={[data[0].authors]}
+                    no_participants={data[0].no_participants}
+                    study_coordinators={[data[0].study_coordinators]}
+                    study_assistants={[data[0].study_assistants]} />
+                </Grid>
+              </div>
+            </Stack>
           )}
         </Container>
       </Box>

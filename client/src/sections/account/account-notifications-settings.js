@@ -10,18 +10,7 @@ import {
     Switch,
     Typography, Unstable_Grid2 as Grid
 } from '@mui/material';
-import { switchClasses } from "@mui/material/Switch";
-
-import { styled } from '@mui/material/styles';
-const MuiSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-disabled': {
-      color: 'grey.500',
-    },
-    '& .MuiSwitch-track': {
-      backgroundColor: theme.palette.mode === 'dark' ? '#BFBFBF' : '#BFBFBF',
-      opacity: 1,
-    },
-  }));
+import SwitchComponent from 'src/components/switch'
 export const AccountNotificationsSettings = () => (
     <Card>
         <CardContent sx={{ pt: 2 }}>
@@ -45,9 +34,7 @@ export const AccountNotificationsSettings = () => (
                                     <Typography variant="subtitle1">Updates</Typography>
                                     <Typography variant="body2">Blah Blah</Typography>
                                 </Stack>
-                                <MuiSwitch 
-                                    inputProps={{ 'aria-label': 'checkbox with default state' }}
-                                    sx={{ ml: 'auto' }} />
+                                <SwitchComponent sx={{ ml: "auto"}} />
                             </Box>
 
                             <Divider />
@@ -61,7 +48,7 @@ export const AccountNotificationsSettings = () => (
                                     <Typography variant="subtitle1">Updates</Typography>
                                     <Typography variant="body2">Blah Blah</Typography>
                                 </Stack>
-                                <MuiSwitch sx={{ ml: "auto"}} />
+                                <SwitchComponent sx={{ ml: "auto"}} />
                             </Box>
                         </Stack>
                     </Grid>
@@ -87,7 +74,7 @@ export const AccountNotificationsSettings = () => (
                                 <Typography variant="subtitle1">Updates</Typography>
                                 <Typography variant="body2">Blah Blah</Typography>
                             </Stack>
-                            <MuiSwitch sx={{ ml: "auto"}} />
+                            <SwitchComponent sx={{ ml: "auto"}} />
                         </Box>
                     </Grid>
                 </Grid>

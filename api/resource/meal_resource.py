@@ -1,11 +1,6 @@
-from http import client
 import falcon, json
-import requests
 from api.common.constants import ALLOWED_EXTENSIONS
-from requests.adapters import HTTPAdapter
 from api.model.meal import Meal
-#from requests.packages.urllib3.util.retry import Retry
-from decouple import config
 
 def allowed_file(filename):
         return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS
@@ -22,46 +17,39 @@ class MealResource(object):
         resp.status = falcon.HTTP_200
 
     def on_post(self, req, resp):
+        input_image = req.get_param('image') 
+        participant_id = req.get_param('id')
+        meal_type = req.get_param('type')
+        portion = req.get_param('portion')
 
-        try:
-            input_image = req.get_param('image') 
-            participant_id = req.get_param('id')
-            type = req.get_param('type')
-            portion = req.get_param('portion')
-            if input_image.file and allowed_file(input_image.filename):
-
-                meal = Meal(participant_id=participant_id,type=type,portion=portion)
-                meal.photo.put(input_image.file, content_type = req.content_type)
-                meal.save()
-
-                resp.status = falcon.HTTP_204
-
-                resp.body = json.dumps({
-                    'message': (),
-                    'status': 204,
-                    'data': {}
-                })
-                return
-            else:
-                resp.status = falcon.HTTP_405
-
-                resp.body = json.dumps({
-                    'message': "File extension not allowed",
-                    'status': 405,
-                    'data': {}
-                })
-                return
-
-          
-        except Exception as e:
-           
+        if not all([input_image, participant_id, meal_type, portion]):
             resp.status = falcon.HTTP_400
             resp.body = json.dumps({
-            'message': str(e),
-            'status': 400,
-            'data': {}
-           })
+                'message': 'Missing required parameters',
+                'status': 400,
+                'data': {}
+            })
             return
+
+        if not allowed_file(input_image.filename):
+            resp.status = falcon.HTTP_405
+            resp.body = json.dumps({
+                'message': 'File extension not allowed',
+                'status': 405,
+                'data': {}
+            })
+            return
+
+        meal = Meal(participant_id=participant_id, meal_type=meal_type, portion=portion)
+        meal.photo.put(input_image.file, content_type=req.content_type)
+        meal.save()
+
+        resp.status = falcon.HTTP_201
+        resp.body = json.dumps({
+            'message': 'Meal successfully created!',
+            'status': 201,
+            'data': meal.to_dict()
+        })
 
     def on_delete_id(self, req, resp,participant_id):
       try:

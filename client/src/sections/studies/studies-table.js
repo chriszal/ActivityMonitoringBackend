@@ -7,6 +7,7 @@ import {
   Checkbox,
   Button,
   Stack,
+  Alert,
   Table,
   TableBody,
   TableCell,
@@ -23,6 +24,8 @@ import ArrowSmallRightIcon from '@heroicons/react/24/solid/ArrowSmallRightIcon';
 import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import NextLink from 'next/link';
 import { CircularProgress } from '@mui/material';
+import NewtonsCradle from 'src/components/newtons-cradle-component';
+
 
 export const StudiesTable = (props) => {
   const {
@@ -81,15 +84,20 @@ export const StudiesTable = (props) => {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell align="center" colSpan={8} height={420}><CircularProgress size="2.5rem" sx={{ color: 'gray' }} /></TableCell>
-
-                </TableRow>)
+                <TableCell align="center" colSpan={8} height={420}>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <NewtonsCradle />
+                  </div>
+                </TableCell>
+              </TableRow>)
                 : (error !== "" ? (
                   <TableRow>
-                    <TableCell align="center" colSpan={8}  >
+                  <TableCell align="center" colSpan={8} >
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <Alert
-                        severity="error" style={{ textAlign: "center" }}>{error}
+                        severity="error" style={{ textAlign: "center" ,backgroundColor:"white"}}>{error}
                       </Alert>
+                      </div>
                     </TableCell>
 
                   </TableRow>)

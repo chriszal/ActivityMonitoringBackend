@@ -1,13 +1,6 @@
-import pathlib
-from mimetypes import suffix_map
-# flake8: noqa
-import random
-from pretend import stub
 import falcon
 import mongoengine as mongo
 from falcon_multipart.middleware import MultipartMiddleware
-
-
 import api.common.constants as constants
 from api.common.auth_handler import AuthHandler
 from api.common.role_handler import RoleBasedPolicy
@@ -18,11 +11,10 @@ from api.common.require_json import RequireJSON
 from api.resource.login_resource import LoginResource
 from api.resource.measurements_resource import MeasurementResource
 from api.resource.participant_resource import ParticipantResource
-from api.resource.register_resource import RegisterResource
+from api.resource.register_participant_resource import RegisterParticipantResource
 from api.resource.study_resource import StudyResource
 from api.resource.user_resource import UserResource
 from api.resource.meal_resource import MealResource
-# from falcon_cors import CORS
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -42,20 +34,24 @@ user = UserResource()
 participant = ParticipantResource()
 measurement = MeasurementResource()
 meal = MealResource()
-register = RegisterResource()
+register = RegisterParticipantResource()
 login = LoginResource()
 
 
 
 app.add_route("/api/v1/login", login)
 app.add_route('/api/v1/register/{reg_code}',register,suffix="reg_code")
-app.add_route('/api/v1/study/', study)
+app.add_route('/api/v1/studies', study)
+app.add_route('/api/v1/studies/{user_id}', study, suffix="user_id")
 app.add_route('/api/v1/study/{study_id}', study, suffix="id")
-app.add_route('/api/v1/users/', user)
+app.add_route('/api/v1/users', user)
 app.add_route('/api/v1/users/{email}', user, suffix="email")
+app.add_route('/api/v1/user/id/{email}', user, suffix="id_by_email")
 app.add_route('/api/v1/user/{id}', user, suffix="id")
+app.add_route('/api/v1/participants', participant)
 app.add_route('/api/v1/participants/{study_id}', participant,suffix="study")
 app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/v1/measurement/',measurement)
 app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meal/{participant_id}',meal,suffix="id")
+

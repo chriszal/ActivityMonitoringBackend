@@ -25,6 +25,7 @@ import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import NextLink from 'next/link';
 import { CircularProgress } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
+import LoadingWaveComponent from 'src/components/loading-component';
 
 export const UsersTable = (props) => {
   const {
@@ -75,15 +76,20 @@ export const UsersTable = (props) => {
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell align="center" colSpan={6} height={420}><CircularProgress size="2.5rem" sx={{color:'gray'}}  /></TableCell>
-
-                </TableRow>)
+                <TableCell align="center" colSpan={8} height={420}>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <LoadingWaveComponent />
+                  </div>
+                </TableCell>
+              </TableRow>)
                 : (error !== "" ? (
                   <TableRow>
-                    <TableCell align="center" colSpan={6}  >
+                  <TableCell align="center" colSpan={8} >
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <Alert
-                        severity="error" style={{ textAlign: "center" }}>{error}
+                        severity="error" style={{ textAlign: "center" ,backgroundColor:"white"}}>{error}
                       </Alert>
+                      </div>
                     </TableCell>
 
                   </TableRow>)

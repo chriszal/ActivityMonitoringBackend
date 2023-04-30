@@ -3,13 +3,13 @@ import json
 import jwt
 from datetime import datetime, timedelta
 from api.common.constants import SECRET
-from api.services.register_service import RegisterService
+from api.services.register_participant_service import RegisterParticipantService
 
 
-class RegisterResource(object):
+class RegisterParticipantResource(object):
 
     def __init__(self):
-        self.reg_service = RegisterService()
+        self.reg_service = RegisterParticipantService()
 
     def on_get_reg_code(self, req, resp, reg_code):
         participant_objs = self.reg_service.register_participant(reg_code)

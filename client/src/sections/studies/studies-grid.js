@@ -17,6 +17,7 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 
 import NextLink from 'next/link';
 import { CircularProgress } from '@mui/material';
+import LoadingWaveComponent from 'src/components/loading-component';
 const studyTypes = ['owned', 'coordinating', 'assisting'];
 
 
@@ -70,7 +71,18 @@ const StudiesGrid = ({ studies, isLoading,error }) => {
     return (
         <Grid container spacing={2}>
             {isLoading ? (
-               <CircularProgress size="2.5rem" sx={{ color: 'gray' }} />)
+               <Box
+               sx={{
+                 display: 'flex',
+                 justifyContent: 'center',
+                 alignItems: 'center',
+                 height: 'calc(100vh - 424px)',
+                 flexGrow: 1
+               }}
+             >
+               <LoadingWaveComponent />
+             </Box>
+             )
                 : (error !== "" ? (
                     <Alert
                     severity="error" style={{ textAlign: "center" }}>{error}

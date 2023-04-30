@@ -4,6 +4,9 @@ from datetime import datetime
 #modify user study id when creating new study
 
 class ParticipantService(object):
+    @staticmethod
+    def list_all_participants():
+        return Participant.objects()
     
     @staticmethod
     def list_participants_in_study(study_id):
@@ -27,7 +30,4 @@ class ParticipantService(object):
             participant = Participant.objects.get(participant_id=participant_id)
             participant.update(set__gender=gender,set__date_of_birth=datetime.strptime(date_of_birth,'%Y-%m-%d'),set__weight=weight,set__height=height)
             return participant
-            
-        # except Participant.DoesNotExist:
-        #     return -1
     
