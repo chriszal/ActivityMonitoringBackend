@@ -15,6 +15,7 @@ from api.resource.register_participant_resource import RegisterParticipantResour
 from api.resource.study_resource import StudyResource
 from api.resource.user_resource import UserResource
 from api.resource.meal_resource import MealResource
+import json 
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -23,7 +24,6 @@ mongo.connect(
     username=constants.MONGO['USERNAME'],
     password=constants.MONGO['PASSWORD']
 )
-
 
 # cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
 # ,AuthHandler(),RoleBasedPolicy(constants.policy_config)
@@ -40,11 +40,14 @@ login = LoginResource()
 
 
 app.add_route("/api/v1/login", login)
-app.add_route('/api/v1/register/{reg_code}',register,suffix="reg_code")
+app.add_route('/api/v1/participant/register/{reg_code}',register,suffix="reg_code")
+app.add_route('/api/v1/is-token-valid/{token}', user,suffix="token")
+app.add_route('/api/v1/user/register/{token}', user,suffix="user_by_token")
 app.add_route('/api/v1/studies', study)
 app.add_route('/api/v1/studies/user/{user_id}', study, suffix="user_id")
 app.add_route('/api/v1/study/{study_id}', study, suffix="id")
 app.add_route('/api/v1/users', user)
+app.add_route('/api/v1/user/register', user,suffix="token")
 app.add_route('/api/v1/users/{email}', user, suffix="email")
 app.add_route('/api/v1/user/id/{email}', user, suffix="id_by_email")
 app.add_route('/api/v1/user/{id}', user, suffix="id")
@@ -54,4 +57,5 @@ app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/v1/measurement/',measurement)
 app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
+
 

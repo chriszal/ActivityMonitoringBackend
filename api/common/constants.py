@@ -1,12 +1,16 @@
 import os
 # Documentation settings
 SWAGGERUI_URL = '/swagger'
-SCHEMA_URL = '/static/swagger.json'
+SCHEMA_URL = 'http://petstore.swagger.io/v2/swagger.json'
 PAGE_TITLE = 'Study Falcon api Swagger Doc'
 FAVICON_URL = 'https://falconframework.org/favicon-32x32.png'
 
 SECRET = os.environ.get('JWT_SECRET')
 assert SECRET is not None, "No JWT Secret key found."
+
+REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
+assert REGISTRATION_SECRET is not None, "No JWT REGISTRATION Secret key found."
+
 
 ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
 
@@ -18,6 +22,7 @@ MONGO = {
     'USERNAME': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
     'PASSWORD': os.environ.get('MONGO_INITDB_ROOT_USERNAME')
 }
+print(os.environ.get('MONGO_INITDB_ROOT_USERNAME'))
 
 policy_config = {
     'roles': [

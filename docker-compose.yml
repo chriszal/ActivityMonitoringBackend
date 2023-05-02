@@ -47,11 +47,14 @@ services:
     volumes:
       - ./:/usr/api
       - ./logs/:/usr/api/logs
+      - ./credentials.json:/usr/api/credentials.json
+
     depends_on:
       - mongodb
     restart: unless-stopped
     environment:
       - JWT_SECRET=${JWT_SECRET}
+      - JWT_REGISTRATION_SECRET=${JWT_REGISTRATION_SECRET}
     links:
      - mongodb
   

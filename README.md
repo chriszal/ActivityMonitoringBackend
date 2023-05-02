@@ -106,7 +106,7 @@ Below is a list of the available endpoints in the API:
     ```
 2. Register Participant
 
-    `GET /api/v1/register/{reg_code}`
+    `GET /api/v1/participant/register/{reg_code}`
 3. List Users
 
     `GET /api/v1/users`
@@ -222,6 +222,30 @@ Below is a list of the available endpoints in the API:
 22. Delete Meals By Participant Id
 
     `DELETE /api/v1/meals/participant/{participant_id}`
+23. Create Registration Token
+
+    `/api/v1/user/register`
+    ```
+    {
+        "email":"example@gmail.com",
+        "role":"member"
+        
+    }
+    ```
+24. Get Validity Of Token
+
+    `/api/v1/is-token-valid/{token}`
+25. Register User By Token
+
+    `/api/v1/user/register/{token}`
+    ```
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "password":"1234",
+    }
+    ```
+
 
 
 ### Use Cases

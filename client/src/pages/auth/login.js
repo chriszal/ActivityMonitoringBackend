@@ -122,7 +122,7 @@ const Page = () => {
                     label="Email Address"
                     name="email"
                     onBlur={formik.handleBlur}
-                    onBlur={formik.handleChange}
+                    onChange={formik.handleChange}
                     type="email"
                     value={formik.values.email}
                   />
@@ -133,7 +133,7 @@ const Page = () => {
                     label="Password"
                     name="password"
                     onBlur={formik.handleBlur}
-                    onBlur={formik.handleChange}
+                    onChange={formik.handleChange}
                     type="password"
                     value={formik.values.password}
                   />

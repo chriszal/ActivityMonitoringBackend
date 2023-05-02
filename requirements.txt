@@ -17,6 +17,11 @@ falcon-policy
 pretend
 pandas
 python-dotenv
+falcon-apispec
+apispec
+google-api-python-client 
+google-auth-httplib2 
+google-auth-oauthlib
 # gridfs
 # numpy
 # functools

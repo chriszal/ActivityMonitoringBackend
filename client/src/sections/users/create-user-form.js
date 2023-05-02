@@ -21,12 +21,8 @@ const rolesOptions = [
     label: 'Admin'
   },
   {
-    value: 'study_coordinator',
-    label: 'Study Coordinator'
-  },
-  {
-    value: 'study_assistant',
-    label: 'Study Assistant'
+    value: 'member',
+    label: 'Member'
   }
 ];
 
@@ -86,7 +82,7 @@ export const CreateUserForm = () => {
     first_name: '',
     sur_name: '',
     email: '',
-    username: '',
+    password: '',
     roles: []
   });
 
@@ -94,7 +90,7 @@ export const CreateUserForm = () => {
     first_name: '',
     sur_name: '',
     email: '',
-    username: ''
+    password: ''
   });
 
   const handleOnBlur = useCallback(
@@ -125,11 +121,11 @@ export const CreateUserForm = () => {
             errorMessage = 'Invalid email address.';
           }
           break;
-        case 'username':
+        case 'password':
           if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
-            errorMessage = 'Username can only contain alphanumeric characters, hyphens, underscores, and periods.';
-          } else if (value.length > 30) {
-            errorMessage = 'Username must be less than 30 characters long.';
+            errorMessage = 'Password can only contain alphanumeric characters, hyphens, underscores, and periods.';
+          } else if (value.length < 8) {
+            errorMessage = 'Passwords must be more than 8 characters long.';
           }
           break;
         default:
@@ -193,10 +189,10 @@ export const CreateUserForm = () => {
               >
                 <TextField
                   fullWidth
-                  label="Username"
-                  name="username"
-                  error={Boolean(errors.username)}
-                  helperText={errors.username}
+                  label="Password"
+                  name="password"
+                  error={Boolean(errors.password)}
+                  helperText={errors.password}
                   onBlur={handleOnBlur}
                   required
                 />

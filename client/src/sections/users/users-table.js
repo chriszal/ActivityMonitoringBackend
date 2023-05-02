@@ -25,7 +25,7 @@ import PencilIcon from '@heroicons/react/24/outline/PencilIcon';
 import NextLink from 'next/link';
 import { CircularProgress } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
-import LoadingWaveComponent from 'src/components/loading-component';
+import NewtonsCradle from 'src/components/newtons-cradle-component';
 
 export const UsersTable = (props) => {
   const {
@@ -78,7 +78,7 @@ export const UsersTable = (props) => {
                 <TableRow>
                 <TableCell align="center" colSpan={8} height={420}>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <LoadingWaveComponent />
+                    <NewtonsCradle />
                   </div>
                 </TableCell>
               </TableRow>)

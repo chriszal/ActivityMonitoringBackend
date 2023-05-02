@@ -1,5 +1,5 @@
 from api.model.user import User
-
+from api.model.registration_token import RegistrationToken
 
 class UserService:
 
@@ -39,3 +39,18 @@ class UserService:
             return True
         except User.DoesNotExist:
             return False
+
+    def create_token(self,token):
+        registration_token = RegistrationToken(token=token,used=False)
+        registration_token.save()
+        return registration_token
+
+    def update_token(self, token):
+        registration_token = RegistrationToken.objects.get(token=token)
+        registration_token.used = True
+        registration_token.save()
+        return registration_token
+
+    def is_token_used(self, token):
+        registration_token = RegistrationToken.objects.get(token=token)
+        return registration_token.used
