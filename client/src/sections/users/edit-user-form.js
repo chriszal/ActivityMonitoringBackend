@@ -17,6 +17,8 @@ import Alert from '@mui/material/Alert';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 
 export const EditUserForm = (props) => {
@@ -38,6 +40,35 @@ export const EditUserForm = (props) => {
   const [showDeleteSuccessAlert, setShowDeleteSuccessAlert] = useState(false);
   const [showDeleteFailAlert, setShowDeleteFailAlert] = useState(false);
   const [actions, setActions] = useState();
+
+
+  const validationSchema = Yup.object({
+    first_name: Yup.string()
+      .matches(/^[a-zA-Z]+$/, 'First name must only contain alphabetical characters.')
+      .max(50, 'First name must be less than 50 characters long.')
+      .required('First name is required.'),
+    sur_name: Yup.string()
+      .matches(/^[a-zA-Z]+$/, 'Surname must only contain alphabetical characters.')
+      .max(50, 'Surname must be less than 50 characters long.')
+      .required('Surname is required.'),
+    email: Yup.string()
+      .email('Invalid email address.')
+      .required('Email is required.'),
+    roles: Yup.string().oneOf(rolesOptions.map((option) => option.value), 'Invalid role.').required('Role is required.'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      first_name: first_name,
+      sur_name: sur_name,
+      email: email,
+      roles: roles[0],
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      // Handle form submission logic here
+    },
+  });
 
   const handleClickOpen = (type) => {
     let dialogText = '';
@@ -220,7 +251,7 @@ export const EditUserForm = (props) => {
   return (
     <div>
       <form autoComplete="off" noValidate >
-        <Card>
+        <Card sx={{ maxWidth: 1300 }}>
           <CardHeader
             title="Edit user"
           />

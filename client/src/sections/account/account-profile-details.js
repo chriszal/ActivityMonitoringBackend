@@ -175,9 +175,7 @@ export const AccountProfileDetails = () => {
               <Grid xs={12} md={4}>
                 <Typography variant="h6">Profile Details</Typography>
                 <Typography variant="body2">The information can be edited</Typography>
-              </Grid>
-              <Grid xs={12} md={8}>
-                <AvatarContainer
+                <AvatarContainer sx={{mt:7,ml:10}}
                   onMouseEnter={() => setIsEditingAvatar(true)}
                   onMouseLeave={() => setIsEditingAvatar(false)}
                 >
@@ -212,9 +210,12 @@ export const AccountProfileDetails = () => {
                   )}
 
                 </AvatarContainer>
+              </Grid>
+              <Grid xs={12} md={8}>
+                
 
 
-                <Grid container spacing={2}>
+                <Grid container spacing={2} sx={{mt:10}}>
 
 
                   <Grid item xs={12} md={6}>

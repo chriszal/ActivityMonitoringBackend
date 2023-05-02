@@ -6,6 +6,7 @@ import {
   Stack,
   CardActions,
   CardContent,
+  FormControl, InputLabel, MenuItem, Select,FormHelperText,
   CardHeader,
   Divider,
   TextField,
@@ -14,7 +15,9 @@ import {
 import NextLink from 'next/link';
 import ResponsiveDialog from 'src/components/responsive-dialog';
 import Alert from '@mui/material/Alert';
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 const rolesOptions = [
   {
     value: 'admin',
@@ -26,246 +29,206 @@ const rolesOptions = [
   }
 ];
 
+const validationSchema = Yup.object({
+  first_name: Yup.string()
+    .matches(/^[a-zA-Z]+$/, 'First name must only contain alphabetical characters.')
+    .max(50, 'First name must be less than 50 characters long.')
+    .required('First Name is required.'),
+  last_name: Yup.string()
+    .matches(/^[a-zA-Z]+$/, 'Last name must only contain alphabetical characters.')
+    .max(50, 'Last name must be less than 50 characters long.')
+    .required('Last name is required.'),
+  email: Yup.string()
+    .email('Invalid email address.')
+    .required('Email is required.'),
+  password: Yup.string()
+    .matches(/^[a-zA-Z0-9_.-]+$/, 'Password can only contain alphanumeric characters, hyphens, underscores, and periods.')
+    .min(8, 'Passwords must be more than 8 characters long.')
+    .required('Password is required.'),
+  roles: Yup.array()
+    .min(1, 'At least one role is required.')
+});
+
+
 export const CreateUserForm = () => {
-    const [open, setOpen] = useState(false);
-      const [dialogText,setDialogText] = useState('');
-      const [showAlert, setShowAlert] = useState(false);
-      const [actions,setActions] = useState();
-      const router = useRouter();
-      const handleClickOpen = (type) => {
-        let dialogText = '';
-        if (type === 'create') {
-          dialogText = 'Are you sure you want to create this user?';
-          setActions(
-            <>
-              <Button autoFocus onClick={handleDisagree}>
-                Back
-              </Button>
-              <Button onClick={handleSubmit} autoFocus>
-                Create
-              </Button>
-            </>
-          );
-        } else if (type === 'cancel') {
-          dialogText = 'Are you sure you want to cancel?';
-          setActions(
-            <>
-              <Button autoFocus onClick={handleDisagree}>
-                Disagree
-              </Button>
-              <Button onClick={() => router.back()} autoFocus>
-                Agree
-              </Button>
-            </>
-          );
-        }
-        setOpen(true);
-        setDialogText(dialogText);
-      };
-      
-    
-      const handleClose = () => {
-        setOpen(false);
-      };
-    
-      const handleAgree = () => {
-        console.log('User agreed.');
-        setOpen(false);
-      };
-    
-      const handleDisagree = () => {
-        console.log('User disagreed.');
-        setOpen(false);
-      };
+  const [open, setOpen] = useState(false);
+  const [dialogText, setDialogText] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [actions, setActions] = useState();
+  const router = useRouter();
 
-  const [values, setValues] = useState({
-    first_name: '',
-    sur_name: '',
-    email: '',
-    password: '',
-    roles: []
-  });
-
-  const [errors, setErrors] = useState({
-    first_name: '',
-    sur_name: '',
-    email: '',
-    password: ''
-  });
-
-  const handleOnBlur = useCallback(
-    (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-  
-      let newErrors = { ...errors };
-      let errorMessage = '';
-  
-      switch (name) {
-        case 'first_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'First name must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'First name must be less than 50 characters long.';
-          }
-          break;
-        case 'sur_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'Surname must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'Surname must be less than 50 characters long.';
-          }
-          break;
-        case 'email':
-          if (!value.match(/^\S+@\S+\.\S+$/)) {
-            errorMessage = 'Invalid email address.';
-          }
-          break;
-        case 'password':
-          if (!/^[a-zA-Z0-9_.-]+$/.test(value)) {
-            errorMessage = 'Password can only contain alphanumeric characters, hyphens, underscores, and periods.';
-          } else if (value.length < 8) {
-            errorMessage = 'Passwords must be more than 8 characters long.';
-          }
-          break;
-        default:
-          break;
-      }
-  
-      newErrors[name] = errorMessage;
-  
-      setValues((prevState) => ({
-        ...prevState,
-        [name]: value
-      }));
-  
-      setErrors(newErrors);
+  const formik = useFormik({
+    initialValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      roles: ""
     },
-    [errors]
-  );
-  
+    validationSchema,
+    onSubmit: (values) => {
+      let dialogText = '';
+      dialogText = 'Are you sure you want to create this user?';
+      setActions(
+        <>
+          <Button autoFocus onClick={handleDisagree}>
+            Back
+          </Button>
+          <Button onClick={() => {
+            setOpen(false);
+            console.log('Submitted', values);
+            handleShowAlert();
+          }} autoFocus>
+            Create
+          </Button>
+        </>
+      );
+      setOpen(true);
+      setDialogText(dialogText);
+    },
+  });
+
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDisagree = () => {
+    console.log('User disagreed.');
+    setOpen(false);
+  };
+
+
+
+
 
   const handleShowAlert = () => {
     setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 3000); 
+    setTimeout(() => setShowAlert(false), 3000);
   };
-  
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      setOpen(false);
-      console.log('Submitted', values);
-      handleShowAlert();
-    },
-    [values, handleShowAlert]
-  );
-  
+
+
+
 
   return (
     <div>
-    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
-      <Card>
-        <CardHeader subheader="Please fill out all the information" title="User" />
-        <CardContent sx={{ pt: 0 }}>
-          <Box sx={{ m: -1.5 }}>
-            <Grid container spacing={3}>
-            <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  error={Boolean(errors.email)}
-                  helperText={errors.email}
-                  onBlur={handleOnBlur}
-                  required
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Password"
-                  name="password"
-                  error={Boolean(errors.password)}
-                  helperText={errors.password}
-                  onBlur={handleOnBlur}
-                  required
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  name="first_name"
-                  onBlur={handleOnBlur}
-                  required
-                  error={Boolean(errors.first_name)}
-                  helperText={errors.first_name}
-                />
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  
-                  fullWidth
-                  label="Surname"
-                  name="sur_name"
-                  onBlur={handleOnBlur}
-                  required
-                  error={Boolean(errors.sur_name)}
-                  helperText={errors.sur_name}
-                />
-              </Grid>
-              
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  
-                  fullWidth
-                  label="Select Role"
-                  name="roles"
-                  required
-                  select
-                  SelectProps={{ native: true }}
+      <form autoComplete="off" noValidate onSubmit={formik.handleSubmit}>
+        <Card sx={{ maxWidth: 1300 }}>
+          <CardHeader subheader="Please fill out all the information" title="User" />
+          <CardContent sx={{ pt: 0 }}>
+            <Box sx={{ m: -1.5 }}>
+              <Grid container spacing={3}>
+                <Grid
+                  xs={12}
+                  md={6}
                 >
-                  {rolesOptions.map((option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.email}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
+                  />
+                </Grid>
+                <Grid
+                  xs={12}
+                  md={6}
+                >
+                  <TextField
+                    fullWidth
+                    label="Password"
+                    name="password"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.password}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
+                    helperText={formik.touched.password && formik.errors.password}
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    name="first_name"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.first_name}
+                    error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                    helperText={formik.touched.first_name && formik.errors.first_name}
+                  />
+                </Grid>
+                <Grid xs={12} md={6}>
+                  <TextField
+
+                    fullWidth
+                    label="Last Name"
+                    name="last_name"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.last_name}
+                    error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                    helperText={formik.touched.last_name && formik.errors.last_name}
+                  />
+                </Grid>
+
+                <Grid
+                  xs={12}
+                  md={6}
+                >
+                  <FormControl fullWidth error={formik.touched.roles && Boolean(formik.errors.roles)}>
+                    <InputLabel htmlFor="roles">Select Role</InputLabel>
+                    <Select
+                      label="Select Role"
+                      name="roles"
+                      value={formik.values.roles}
+                      onBlur={formik.handleBlur}
+                      onChange={(e) => {
+                        formik.setFieldValue("roles", [e.target.value]);
+                      }}
+                      inputProps={{
+                        name: "roles",
+                        id: "roles",
+                      }}
                     >
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
+                      {rolesOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {formik.touched.roles && formik.errors.roles && (
+                      <FormHelperText>{formik.errors.roles}</FormHelperText>
+                    )}
+                  </FormControl>
+
+
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </CardContent>
-        <Divider />
-        <CardActions sx={{ justifyContent: 'flex-end' }}>
+            </Box>
+          </CardContent>
+          <Divider />
+          <CardActions sx={{ justifyContent: 'flex-end' }}>
             <Stack
-                alignItems="center"
-                direction="row"
-                spacing={1}
+              alignItems="center"
+              direction="row"
+              spacing={1}
             >
-                <Button onClick={() => handleClickOpen('cancel')} variant="text" sx={{color: 'gray'}}>
-                    Cancel
-                </Button>
-                <Button onClick={() => handleClickOpen('create')} variant="contained" >
-                    Create
-                </Button>
+              <Button type='submit' variant="contained" >
+                Create
+              </Button>
             </Stack>
-          
-        </CardActions>
-      </Card>
-    </form>
-    <ResponsiveDialog
+
+          </CardActions>
+        </Card>
+      </form>
+      <ResponsiveDialog
         open={open}
         onClose={handleClose}
         title={"Confirmation"}

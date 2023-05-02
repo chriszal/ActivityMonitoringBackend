@@ -4,13 +4,14 @@ import { useRouter } from 'next/router';
 import jwt_decode from 'jwt-decode';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Link,SvgIcon, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Link, SvgIcon, Stack,Alert, TextField, Typography } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 import { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import NewtonsCradle from 'src/components/newtons-cradle-component';
 import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
+import CheckIcon from '@heroicons/react/24/solid/CheckIcon';
 
 
 
@@ -47,8 +48,9 @@ const Page = () => {
           setValidationError(data.message);
         }
       } catch (err) {
-        router.push("/404")
+        // router.push("/404");
         setValidationError("An error occurred while validating the token");
+     
 
       }
 
@@ -66,7 +68,14 @@ const Page = () => {
       first_name: '',
       last_name: '',
       password: '',
-      submit: null
+      confirm_password: '',
+      submit: null,
+      errors: {
+        first_name: false,
+        last_name: false,
+        password: false,
+        confirm_password: false,
+      },
     },
     validationSchema: Yup.object({
       first_name: Yup
@@ -79,8 +88,13 @@ const Page = () => {
         .required('Last Name is required'),
       password: Yup
         .string()
-        .max(255)
-        .required('Password is required')
+        .matches(/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/, 'Password can only contain alphanumeric characters and symbols')
+        .min(8, 'Password must be at least 8 characters long')
+        .required('Password is required'),
+      confirm_password: Yup
+        .string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .required('Confirm Password is required')
     }),
     onSubmit: async (values, helpers) => {
       try {
@@ -93,7 +107,7 @@ const Page = () => {
         });
 
         if (response.ok) {
-          router.push('/');
+          router.push('/auth/login');
         } else {
           const data = await response.json();
           helpers.setStatus({ success: false });
@@ -118,10 +132,15 @@ const Page = () => {
       </Head>
       <Box
         sx={{
+          backgroundColor: "#FBFBFB",
+          borderRadius:'0.75rem',
           flex: '1 1 auto',
           alignItems: 'center',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          maxWidth: 550,
+          px: 3,
+          width: 500
         }}
       >
         <Box
@@ -152,7 +171,7 @@ const Page = () => {
                     width: 400
                   }}
                 />
-                <Typography sx={{ mb: 3 }}
+                <Typography sx={{ mb: 3,textAlign: 'center' }}
                   variant="h5">
                   {validationError}
                 </Typography>
@@ -163,13 +182,13 @@ const Page = () => {
                 >
                   Please
                   &nbsp;
-                <Link
-                  href="mailto:it21922@hua.gr"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Contact The Admin
-                </Link>  For Further Instructions.
+                  <Link
+                    href="mailto:it21922@hua.gr"
+                    underline="hover"
+                    variant="subtitle2"
+                  >
+                    Contact The Admin
+                  </Link>  For Further Instructions.
                 </Typography>
                 <Button
                   component={NextLink}
@@ -250,7 +269,7 @@ const Page = () => {
                   />
 
                   <TextField
-                    error={!!(formik.touched.password && formik.errors.password)}
+                    error={formik.touched.password && Boolean(formik.errors.password)}
                     fullWidth
                     helperText={formik.touched.password && formik.errors.password}
                     label="Password"
@@ -259,17 +278,35 @@ const Page = () => {
                     onChange={formik.handleChange}
                     type="password"
                     value={formik.values.password}
+                    InputProps={{
+                      endAdornment: formik.touched.password && !formik.errors.password  && (
+                        <SvgIcon sx={{ color: 'primary.main' }}>
+                          <CheckIcon />
+                        </SvgIcon>
+                      )
+                    }}
+                  />
+                  <TextField
+                    error={!!(formik.touched.confirm_password && formik.errors.confirm_password)}
+                    fullWidth
+                    helperText={formik.touched.confirm_password && formik.errors.confirm_password}
+                    label="Confirm Password"
+                    name="confirm_password"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    type="password"
+                    value={formik.values.confirm_password}
+                    InputProps={{
+                      endAdornment: formik.touched.confirm_password && !formik.errors.confirm_password && (
+                        <SvgIcon sx={{ color: 'primary.main' }}>
+                          <CheckIcon />
+                        </SvgIcon>
+
+                      )
+                    }}
                   />
                 </Stack>
-                {formik.errors.submit && (
-                  <Typography
-                    color="error"
-                    sx={{ mt: 3 }}
-                    variant="body2"
-                  >
-                    {formik.errors.submit}
-                  </Typography>
-                )}
+                
                 <Button
                   fullWidth
                   size="large"
@@ -277,8 +314,14 @@ const Page = () => {
                   type="submit"
                   variant="contained"
                 >
-                  Continue
+                  Register
                 </Button>
+                {formik.errors.submit && (
+                  
+                    <Alert severity="error"
+                    sx={{ mt: 3 }}>{formik.errors.submit}</Alert>
+                    
+                )}
               </form>
             </div>
 
