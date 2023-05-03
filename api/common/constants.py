@@ -1,28 +1,38 @@
 import os
+import json
 # Documentation settings
 SWAGGERUI_URL = '/swagger'
 SCHEMA_URL = 'http://petstore.swagger.io/v2/swagger.json'
 PAGE_TITLE = 'Study Falcon api Swagger Doc'
 FAVICON_URL = 'https://falconframework.org/favicon-32x32.png'
 
-SECRET = os.environ.get('JWT_SECRET')
+SECRET ="secret"
 assert SECRET is not None, "No JWT Secret key found."
 
-REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
+REGISTRATION_SECRET = "secret"
 assert REGISTRATION_SECRET is not None, "No JWT REGISTRATION Secret key found."
+
+
+f = open('/var/mongo_credentials.json')
+data = json.load(f)
+mongo_db_user = data.get("user")
+mongo_db_password = data.get("password")
+mongo_db = data.get("databases")
+for db in mongo_db:
+    mongo_db_name = db.get("name")
 
 
 ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
 
 # datasource constant
 MONGO = {
-    'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
+    'DATABASE': mongo_db_name,
     'HOST': 'mongodb',
     'PORT': 27017,
-    'USERNAME': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
-    'PASSWORD': os.environ.get('MONGO_INITDB_ROOT_USERNAME')
+    'USERNAME': mongo_db_user,
+    'PASSWORD': mongo_db_password
 }
-print(os.environ.get('MONGO_INITDB_ROOT_USERNAME'))
+# print(os.environ.get('MONGO_INITDB_ROOT_USERNAME'))
 
 policy_config = {
     'roles': [

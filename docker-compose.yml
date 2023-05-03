@@ -8,7 +8,7 @@ services:
       - tick
     volumes:
       - influxdb-storage:/var/lib/influxdb2:rw
-      #- ./influxdb.conf:/etc/influxdb/influxdb.conf
+      - ./influxdb.conf:/etc/influxdb/influxdb.conf
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]

@@ -7,9 +7,9 @@ from api.model.user import User
 from api.model.registration_token import RegistrationToken
 from api.services.user_service import UserService
 from api.common.constants import REGISTRATION_SECRET
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google.oauth2.credentials import Credentials
+# from googleapiclient.discovery import build
+# from googleapiclient.errors import HttpError
+# from google.oauth2.credentials import Credentials
 import base64
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -31,11 +31,14 @@ class UserResource(object):
         """
         HTTP GET request method to retrieve a list of all users.
         """
-        resp.status = falcon.HTTP_200
-        users = self.user_service.list_users()
-        # Convert the list of User objects to a list of dictionary objects
-        users_dict = [user.to_dict() for user in users]
-        resp.body = json.dumps(users_dict)
+        try:
+            resp.status = falcon.HTTP_200
+            users = self.user_service.list_users()
+            # Convert the list of User objects to a list of dictionary objects
+            users_dict = [user.to_dict() for user in users]
+            resp.body = json.dumps(users_dict)
+        except Exception as e:
+            raise falcon.HTTPConflict("User creation conflict", str(e))
 
     def on_post(self, req, resp):
         """
@@ -82,8 +85,9 @@ class UserResource(object):
         """
         HTTP PUT request method to update the user object with the given email address using the provided user data.
         """
-        user_data = req.media
+        
         try:
+            user_data = req.media
             # Update the user object using the user_service and the provided user data
             user_obj = self.user_service.update_user_by_email(
                 email, **user_data)

@@ -3,21 +3,25 @@ import json
 from api.services.study_service import StudyService
 from api.model.study import Study
 
+
 class StudyResource(object):
     def __init__(self):
         self.study_service = StudyService()
 
     def on_get(self, req, resp):
-        resp.status = falcon.HTTP_200
-        studies = self.study_service.list_studies()
-        resp.body = studies.to_json()
+        try:
+            studies = self.study_service.list_studies()
+            resp.status = falcon.HTTP_200
+            resp.body = studies.to_json()
+        except Exception as e:
+            raise falcon.HTTPConflict("Study list conflict", str(e))
 
     def on_post(self, req, resp):
-        resp.status = falcon.HTTP_201
-        study_data = req.media
         # study_data["study_coordinators"] = [req.context.userid]
         try:
+            study_data = req.media
             study_obj = self.study_service.create_study(**study_data)
+            resp.status = falcon.HTTP_201
             resp.body = json.dumps({
                 'message': 'Study successfully created!',
                 'status': 201,
@@ -34,7 +38,8 @@ class StudyResource(object):
                 if self.study_service.check_participant_in_study(study_id, req.context.userid):
                     resp.body = study_obj.to_json()
                 else:
-                    raise falcon.HTTPUnauthorized("Unauthorized", "Study can't be accessed")
+                    raise falcon.HTTPUnauthorized(
+                        "Unauthorized", "Study can't be accessed")
             else:
                 resp.body = study_obj.to_json()
 
@@ -46,24 +51,26 @@ class StudyResource(object):
             raise falcon.HTTPNotFound("Study ID does not exist", str(e))
 
     def on_put_id(self, req, resp, study_id):
-      study_data = req.media
-      try:
-          updated_study = self.study_service.update_study_by_study_id(study_id, **study_data)
-          resp.status = falcon.HTTP_200
-          resp.body = json.dumps({
-              'message': 'Study successfully updated!',
-              'status': 200,
-              'data': str(updated_study.study_id)
-          })
-      except Study.DoesNotExist as e:
-          resp.status = falcon.HTTP_404
-          resp.body = json.dumps({
-              'message': 'Study id does not exist.',
-              'status': 404,
-              'data': {}
-          })
-      except Exception as e:
-          raise falcon.HTTPConflict("Study update conflict", str(e))
+
+        try:
+            study_data = req.media
+            updated_study = self.study_service.update_study_by_study_id(
+                study_id, **study_data)
+            resp.status = falcon.HTTP_200
+            resp.body = json.dumps({
+                'message': 'Study successfully updated!',
+                'status': 200,
+                'data': str(updated_study.study_id)
+            })
+        except Study.DoesNotExist as e:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'message': 'Study id does not exist.',
+                'status': 404,
+                'data': {}
+            })
+        except Exception as e:
+            raise falcon.HTTPConflict("Study update conflict", str(e))
 
     def on_delete_id(self, req, resp, study_id):
         try:
@@ -83,6 +90,9 @@ class StudyResource(object):
             })
 
     def on_get_user_id(self, req, resp, user_id):
+        try:
             studies = self.study_service.list_studies_by_user_id(user_id)
             resp.status = falcon.HTTP_200
             resp.body = json.dumps([study.to_dict() for study in studies])
+        except Exception as e:
+            raise falcon.HTTPConflict("Study dict conflict", str(e))

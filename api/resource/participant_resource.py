@@ -102,3 +102,18 @@ class ParticipantResource(object):
                 'status': 409,
                 'data': {}
             })
+    # def on_post(self, req, resp, study):
+    #   
+    #     try:
+    #         data = req.media 
+    #         participants = self.participant_service.create_participants(study, data)
+    #         resp.media = {
+    #             'success': True,
+    #             'participants': list(participants)
+    #         }
+    #     except Exception as e:
+    #         resp.status = falcon.HTTP_400
+    #         resp.media = {
+    #             'success': False,
+    #             'data': str(e)
+    #         }

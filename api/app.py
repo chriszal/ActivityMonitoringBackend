@@ -22,7 +22,9 @@ mongo.connect(
     host=constants.MONGO['HOST'],
     port=constants.MONGO['PORT'],
     username=constants.MONGO['USERNAME'],
-    password=constants.MONGO['PASSWORD']
+    password=constants.MONGO['PASSWORD'],
+    authentication_source=constants.MONGO['DATABASE']
+
 )
 
 # cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
@@ -52,6 +54,7 @@ app.add_route('/api/v1/users/{email}', user, suffix="email")
 app.add_route('/api/v1/user/id/{email}', user, suffix="id_by_email")
 app.add_route('/api/v1/user/{id}', user, suffix="id")
 app.add_route('/api/v1/participants', participant)
+# app.add_route('/api/v1/participants/{study}', participant)
 app.add_route('/api/v1/participants/study/{study_id}', participant,suffix="study")
 app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/v1/measurement/',measurement)
