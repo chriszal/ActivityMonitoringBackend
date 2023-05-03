@@ -20,7 +20,7 @@ pipeline {
         stage('create Docker image') {
             steps {
                 echo "building docker image version v1.0} ..."
-                sh 'docker build -f Dockerfile -t relevium-dev.hua.gr:443/falcon-api:v1.0 .'
+                sh 'docker build -f Dockerfile.api -t relevium-dev.hua.gr:443/falcon-api:v1.0 .'
             
             }
         }
