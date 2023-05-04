@@ -23,7 +23,6 @@ mongo.connect(
     port=constants.MONGO['PORT'],
     username=constants.MONGO['USERNAME'],
     password=constants.MONGO['PASSWORD'],
-    authentication_source=constants.MONGO['DATABASE']
 
 )
 

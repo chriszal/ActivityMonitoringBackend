@@ -103,10 +103,10 @@ class ParticipantResource(object):
                 'data': {}
             })
     # def on_post(self, req, resp, study):
-    #   
+      
     #     try:
     #         data = req.media 
-    #         participants = self.participant_service.create_participants(study, data)
+    #         participants = self.participant_service.create_participants(study, data["num_participants"])
     #         resp.media = {
     #             'success': True,
     #             'participants': list(participants)

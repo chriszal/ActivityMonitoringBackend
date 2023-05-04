@@ -29,7 +29,7 @@ class MeasurementResource(object):
                 'status': 204,
                 'data': {}
             })
-            return
+            
           
         except Exception as e:
            
@@ -39,7 +39,7 @@ class MeasurementResource(object):
             'status': 400,
             'data': {}
            })
-            return
+            
 
     
         

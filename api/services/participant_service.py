@@ -33,11 +33,10 @@ class ParticipantService(object):
         return participant
 
     # @staticmethod
-    # def create_participants(study, data):
+    # def create_participants(study, num_participants):
     #     """
     #     Creates the specified number of new participants for the given study_id with the given data.
     #     """
-    #     data_copy = data.copy()
     #     participants = Participant.objects.filter(study=study)
     #     largest_id = 0
     #     for participant in participants:
