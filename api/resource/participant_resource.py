@@ -3,6 +3,7 @@ import falcon, json
 from api.model.user import User
 from api.services.participant_service import ParticipantService
 from api.model.participant import Participant
+from api.model.study import Study
 
 class ParticipantResource(object):
 
@@ -36,28 +37,62 @@ class ParticipantResource(object):
                 'data': {}
             })
 
-    def on_get_study(self,req,resp,study_id):
-
+    def on_get_study(self, req, resp, study_id):
         try:
-          participant_objs= self.participant_service.list_participants_in_study(study_id)
-          if not participant_objs:
+            study = Study.objects.get(id=study_id)
+            participant_objs = self.participant_service.list_participants_in_study(study_id)
+            if not participant_objs:
+                resp.status = falcon.HTTP_404
+                resp.body = json.dumps({
+                    'message': 'No participants found in the study.',
+                    'status': 404,
+                    'data': {}
+                })
+            else:
+                resp.body = participant_objs.to_json()
+                resp.status = falcon.HTTP_200
+        except Study.DoesNotExist:
             resp.status = falcon.HTTP_404
             resp.body = json.dumps({
-              'message': 'Study does not exist.',
-              'status': 404,
-              'data': {}
-              }) 
-          else:
+                'message': 'Study does not exist.',
+                'status': 404,
+                'data': {}
+            })
+        except Exception as e:
+            resp.status = falcon.HTTP_500
+            resp.body = json.dumps({
+                'message': str(e),
+                'status': 500,
+                'data': {}
+            })
 
+    def on_get_registered(self, req, resp, study_id):
+        try:
+            study = Study.objects.get(id=study_id)
+            participant_objs = self.participant_service.list_registered_participants_in_study(study_id)
             resp.body = participant_objs.to_json()
             resp.status = falcon.HTTP_200
+        except Study.DoesNotExist:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'message': 'Study does not exist.',
+                'status': 404,
+                'data': {}
+            })
+        except Participant.DoesNotExist:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'message': 'Participant does not exist.',
+                'status': 404,
+                'data': {}
+            })
         except Exception as e:
-          resp.status = falcon.HTTP_404
-          resp.body = json.dumps({
-            'message': 'Participant does not exist.',
-            'status': 404,
-            'data': {}
-            }) 
+            resp.status = falcon.HTTP_500
+            resp.body = json.dumps({
+                'message': str(e),
+                'status': 500,
+                'data': {}
+            })
         
     def on_delete_id(self, req, resp, participant_id):
         try:

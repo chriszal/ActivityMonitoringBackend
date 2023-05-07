@@ -7,7 +7,7 @@ services:
     networks:
       - tick
     volumes:
-      - influxdb-storage:/var/lib/influxdb2:rw
+      - influxdb-st:/var/lib/influxdb2:rw
       - ./influxdb.conf:/etc/influxdb/influxdb.conf
     env_file:
       - .env
@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
     ports:
       - ${DOCKER_INFLUXDB_INIT_PORT}:8086
+
     
   # client: 
   #   build:
@@ -52,12 +53,20 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
-    environment:
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_REGISTRATION_SECRET=${JWT_REGISTRATION_SECRET}
+    env_file:
+      - .env
     links:
      - mongodb
-  
+
+  keycloak:
+    image: jboss/keycloak:15.0.2
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=h2
+    ports:
+      - 8080:8080
+      
   nginx:
     image: nginx:latest
     volumes:
@@ -79,4 +88,4 @@ volumes:
   chronograf-storage:
   grafana-storage:
   static_volume:
-  influxdb-storage:
+  influxdb-st:

@@ -1,28 +1,26 @@
-import os
+from decouple import config
+
+SECRET = config('JWT_SECRET')
+REGISTRATION_SECRET = config('JWT_REGISTRATION_SECRET')
+
+MONGO = {
+    'DATABASE': config('MONGO_INITDB_DATABASE'),
+    'HOST': 'mongodb',
+    'PORT': 27017,
+    'USERNAME': config('MONGO_INITDB_ROOT_USERNAME'),
+    'PASSWORD': config('MONGO_INITDB_ROOT_USERNAME')
+}
+
 # Documentation settings
 SWAGGERUI_URL = '/swagger'
-SCHEMA_URL = 'http://petstore.swagger.io/v2/swagger.json'
+SCHEMA_URL = '/static/swagger.yml'
 PAGE_TITLE = 'Study Falcon api Swagger Doc'
 FAVICON_URL = 'https://falconframework.org/favicon-32x32.png'
-
-SECRET = os.environ.get('JWT_SECRET')
-assert SECRET is not None, "No JWT Secret key found."
-
-REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
-assert REGISTRATION_SECRET is not None, "No JWT REGISTRATION Secret key found."
 
 
 ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
 
-# datasource constant
-MONGO = {
-    'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
-    'HOST': 'mongodb',
-    'PORT': 27017,
-    'USERNAME': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
-    'PASSWORD': os.environ.get('MONGO_INITDB_ROOT_USERNAME')
-}
-# print(os.environ.get('MONGO_INITDB_ROOT_USERNAME'))
+
 
 policy_config = {
     'roles': [

@@ -16,6 +16,7 @@ from api.resource.study_resource import StudyResource
 from api.resource.user_resource import UserResource
 from api.resource.meal_resource import MealResource
 import json 
+from falcon_swagger_ui import register_swaggerui_app
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -53,11 +54,41 @@ app.add_route('/api/v1/users/{email}', user, suffix="email")
 app.add_route('/api/v1/user/id/{email}', user, suffix="id_by_email")
 app.add_route('/api/v1/user/{id}', user, suffix="id")
 app.add_route('/api/v1/participants', participant)
-# app.add_route('/api/v1/participants/{study}', participant)
+# app.add_route('/api/v1/participants/create/{study}', participant)
 app.add_route('/api/v1/participants/study/{study_id}', participant,suffix="study")
+app.add_route('/api/v1/registered/participants/study/{study_id}', participant,suffix="registered")
 app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/v1/measurement/',measurement)
 app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
 
 
+
+class HealthResource:
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.media = {"status": "healthy"}
+
+health = HealthResource()
+app.add_route("/api/v1/health", health)
+
+class StaticResource:
+    def __init__(self, file_path):
+        self.file_path = file_path
+
+    def on_get(self, req, resp):
+        resp.content_type = 'text/yaml'
+        with open(self.file_path, 'r') as f:
+            resp.body = f.read()
+
+swagger_spec = StaticResource('./swagger.yml')
+app.add_route('/static/swagger.yml', swagger_spec)
+
+# Set up the Swagger UI middleware
+register_swaggerui_app(
+    app,
+    constants.SWAGGERUI_URL,
+    constants.SCHEMA_URL,
+    page_title=constants.PAGE_TITLE,
+    favicon_url=constants.FAVICON_URL,
+)

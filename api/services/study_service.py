@@ -54,7 +54,7 @@ class StudyService(object):
     @staticmethod
     def delete_study(study_id):
         study = Study.objects.get(study_id=study_id)
-        Participant.objects(study_id=str(study.id)).delete()
+        Participant.objects(study=str(study.id)).delete()
         study.delete()
 
     @staticmethod

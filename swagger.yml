@@ -1,0 +1,147 @@
+swagger: "2.0"
+info:
+  title: "Study Falcon API"
+  description: "API for Study Falcon"
+  version: "1.0.0"
+schemes:
+  - "http"
+paths:
+  /api/v1/studies:
+    get:
+      summary: "List all studies"
+      responses:
+        200:
+          description: "An array of studies"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Study"
+    post:
+      summary: "Create a new study"
+      parameters:
+        - in: "body"
+          name: "study"
+          description: "The study to be created"
+          schema:
+            $ref: "#/definitions/Study"
+      responses:
+        201:
+          description: "Study successfully created"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+              status:
+                type: "integer"
+              data:
+                type: "string"
+
+  /api/v1/studies/user/{user_id}:
+    get:
+      summary: "List studies by user_id"
+      parameters:
+        - in: "path"
+          name: "user_id"
+          description: "The user ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "An array of studies"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Study"
+
+  /api/v1/study/{study_id}:
+    get:
+      summary: "Get study by study_id"
+      parameters:
+        - in: "path"
+          name: "study_id"
+          description: "The study ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "The study"
+          schema:
+            $ref: "#/definitions/Study"
+    put:
+      summary: "Update study by study_id"
+      parameters:
+        - in: "path"
+          name: "study_id"
+          description: "The study ID"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "study"
+          description: "The study to be updated"
+          schema:
+            $ref: "#/definitions/Study"
+      responses:
+        200:
+          description: "Study successfully updated"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+              status:
+                type: "integer"
+              data:
+                type: "string"
+    delete:
+      summary: "Delete study by study_id"
+      parameters:
+        - in: "path"
+          name: "study_id"
+          description: "The study ID"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Study successfully deleted"
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+              status:
+                type: "integer"
+              body:
+                type: "object"
+
+definitions:
+  Study:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      study_id:
+        type: "string"
+      title:
+        type: "string"
+      authors:
+        type: "array"
+        items:
+          type: "string"
+      description:
+        type: "string"
+      no_participants:
+        type: "integer"
+      owners:
+        type: "array"
+        items:
+          type: "string"
+      study_coordinators:
+        type: "array"
+        items:
+          type: "string"
+      study_assistants:
+        type: "array"
+        items:
+          type: "string"
+
