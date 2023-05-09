@@ -1,26 +1,43 @@
-from decouple import config
+import os
 
-SECRET = config('JWT_SECRET')
-REGISTRATION_SECRET = config('JWT_REGISTRATION_SECRET')
+SECRET = os.environ.get('JWT_SECRET')
+REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
 
 MONGO = {
-    'DATABASE': config('MONGO_INITDB_DATABASE'),
+    'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
     'HOST': 'mongodb',
     'PORT': 27017,
-    'USERNAME': config('MONGO_INITDB_ROOT_USERNAME'),
-    'PASSWORD': config('MONGO_INITDB_ROOT_USERNAME')
+    'USERNAME': os.environ.get('MONGO_INITDB_ROOT_USERNAME'),
+    'PASSWORD': os.environ.get('MONGO_INITDB_ROOT_PASSWORD')
+}
+
+RABBITMQ = {
+    'USERNAME': os.environ.get('RABBITMQ_USERNAME'),
+    'PASSWORD': os.environ.get('RABBITMQ_PASSWORD'),
+    'HOST': os.environ.get('RABBITMQ_HOST'),
+    'QUEUE': os.environ.get('RABBITMQ_QUEUE'),
+    'ROUTING_KEY': os.environ.get('RABBITMQ_ROUTING_KEY'),
+    'EXCHANGE': os.environ.get('RABBITMQ_EXCHANGE')
+}
+
+INFLUXDB = {
+    'HOST': os.environ.get('DOCKER_INFLUXDB_INIT_HOST'),
+    'PORT': os.environ.get('DOCKER_INFLUXDB_INIT_PORT'),
+    'ADMIN_TOKEN': os.environ.get('DOCKER_INFLUXDB_INIT_ADMIN_TOKEN'),
+    'ORG': os.environ.get('DOCKER_INFLUXDB_INIT_ORG'),
+    'BUCKET': os.environ.get('DOCKER_INFLUXDB_INIT_BUCKET')
 }
 
 # Documentation settings
-SWAGGERUI_URL = '/swagger'
-SCHEMA_URL = '/static/swagger.yml'
-PAGE_TITLE = 'Study Falcon api Swagger Doc'
-FAVICON_URL = 'https://falconframework.org/favicon-32x32.png'
+SWAGGER_CONFIG = {
+    'SWAGGERUI_URL': '/swagger',
+    'SCHEMA_URL': '/static/swagger.yml',
+    'PAGE_TITLE': 'Study Falcon api Swagger Doc',
+    'FAVICON_URL': 'https://falconframework.org/favicon-32x32.png'
+}
 
 
 ALLOWED_EXTENSIONS = set(['jpeg','png','jpg'])
-
-
 
 policy_config = {
     'roles': [

@@ -16,7 +16,18 @@ from api.resource.study_resource import StudyResource
 from api.resource.user_resource import UserResource
 from api.resource.meal_resource import MealResource
 import json 
+from api.rabbitmq import RabbitMQ
+
+
 from falcon_swagger_ui import register_swaggerui_app
+import logging
+
+logging.basicConfig(
+        format='%(asctime)s %(message)s',
+        datefmt='%m/%d/%Y %I:%M:%S %p',
+        level=logging.INFO
+    )
+
 
 mongo.connect(
     constants.MONGO['DATABASE'],
@@ -27,6 +38,17 @@ mongo.connect(
 
 )
 
+rabbitMQ_instance = RabbitMQ(
+    queue=constants.RABBITMQ['QUEUE'],
+    host=constants.RABBITMQ['HOST'],
+    routing_key=constants.RABBITMQ['ROUTING_KEY'],
+    username=constants.RABBITMQ['USERNAME'],
+    password=constants.RABBITMQ['PASSWORD'],
+    exchange=constants.RABBITMQ['EXCHANGE']
+)
+
+
+
 # cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
 # ,AuthHandler(),RoleBasedPolicy(constants.policy_config)
 app = falcon.API(middleware=[Cors(),MultipartMiddleware()])
@@ -34,7 +56,7 @@ app = falcon.API(middleware=[Cors(),MultipartMiddleware()])
 study = StudyResource()
 user = UserResource()
 participant = ParticipantResource()
-measurement = MeasurementResource()
+measurement = MeasurementResource(rabbitMQ_instance,constants.INFLUXDB)
 meal = MealResource()
 register = RegisterParticipantResource()
 login = LoginResource()
@@ -63,6 +85,7 @@ app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
 
 
+# Add health check endpoint
 
 class HealthResource:
     def on_get(self, req, resp):
@@ -71,6 +94,9 @@ class HealthResource:
 
 health = HealthResource()
 app.add_route("/api/v1/health", health)
+
+
+# Add route to serve the Swagger UI
 
 class StaticResource:
     def __init__(self, file_path):
@@ -87,8 +113,8 @@ app.add_route('/static/swagger.yml', swagger_spec)
 # Set up the Swagger UI middleware
 register_swaggerui_app(
     app,
-    constants.SWAGGERUI_URL,
-    constants.SCHEMA_URL,
-    page_title=constants.PAGE_TITLE,
-    favicon_url=constants.FAVICON_URL,
+    constants.SWAGGER_CONFIG['SWAGGERUI_URL'],
+    constants.SWAGGER_CONFIG['SCHEMA_URL'],
+    page_title=constants.SWAGGER_CONFIG['PAGE_TITLE'],
+    favicon_url=constants.SWAGGER_CONFIG['FAVICON_URL'],
 )

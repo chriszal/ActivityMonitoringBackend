@@ -3,6 +3,7 @@ client/node_modules
 client/.next
 logs/main.log
 .env
+supervisord.log
 init-mongodb/data/data.json
 
 # dependencies

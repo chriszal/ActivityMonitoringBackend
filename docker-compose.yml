@@ -1,13 +1,15 @@
 version: '3.3'
 networks:
   tick:
+    
 services:
   influxdb:
+    container_name: influxdb-container
     image: influxdb:2.4
     networks:
       - tick
     volumes:
-      - influxdb-st:/var/lib/influxdb2:rw
+      - influxdb-storage:/var/lib/influxdb2:rw
       - ./influxdb.conf:/etc/influxdb/influxdb.conf
     env_file:
       - .env
@@ -15,6 +17,39 @@ services:
     restart: unless-stopped
     ports:
       - ${DOCKER_INFLUXDB_INIT_PORT}:8086
+
+  rabbitmqServer:
+    container_name: rabbitmqServer
+    image: "rabbitmq:3.6-management-alpine"
+    hostname: "rabbitmq-host"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "pass"
+    networks:
+      - tick
+
+  receiver:
+    container_name: receiver
+    build:
+      context: ./receiver
+      dockerfile: Dockerfile.receiver
+    restart: always
+    depends_on:
+      - rabbitmqServer
+    ports:
+      - 8000:8000
+    environment:
+      RABBITMQ_USERNAME: admin
+      RABBITMQ_PASSWORD: pass
+      RABBITMQ_HOST: rabbitmqServer
+      RABBITMQ_QUEUE: dataqueue
+      RABBITMQ_ROUTING_KEY: dataqueue 
+      RABBITMQ_EXCHANGE: exchange_test
+    networks:
+      - tick
 
     
   # client: 
@@ -27,6 +62,7 @@ services:
   #     - ./client:/app/client
   #   restart: unless-stopped
   mongodb:
+    container_name: mongodb-container
     image: mongo
     ports:
       - "27017:27017"
@@ -38,6 +74,7 @@ services:
       - ./init-mongodb/data:/tmp/data
       
   falcon-api:
+    container_name: falcon-api-container
     build:
       context: ./
       dockerfile: ./Dockerfile.api
@@ -52,27 +89,30 @@ services:
 
     depends_on:
       - mongodb
+      - rabbitmqServer
     restart: unless-stopped
     env_file:
       - .env
     links:
      - mongodb
 
-  keycloak:
-    image: jboss/keycloak:15.0.2
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
-      - DB_VENDOR=h2
-    ports:
-      - 8080:8080
+  # keycloak:
+  #   container_name: keycloak-container
+  #   image: jboss/keycloak:15.0.2
+  #   environment:
+  #     - KEYCLOAK_USER=admin
+  #     - KEYCLOAK_PASSWORD=admin
+  #     - DB_VENDOR=h2
+  #   ports:
+  #     - 8080:8080
       
   nginx:
+    container_name: nginx-container
     image: nginx:latest
     volumes:
       - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
       #- ./assets/nginx/certs:/etc/nginx/certs
-      - ./webapp/build:/usr/share/nginx/html
+      # - ./webapp/build:/usr/share/nginx/html
     ports:
       - "81:81"
     depends_on:
@@ -83,9 +123,12 @@ services:
     restart:
       unless-stopped
 
+
 volumes:
   mongodata:
   chronograf-storage:
   grafana-storage:
   static_volume:
-  influxdb-st:
+  influxdb-storage:
+
+
