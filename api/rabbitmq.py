@@ -13,8 +13,8 @@ class RabbitMQ():
         self._exchange = exchange
         self._username = username
         self._password = password
-        self.start_server()
-        logging.info("Producer Server Started...")
+        # self.start_server()
+        # logging.info("Producer Server Started...")
 
     def start_server(self):
         self.create_channel()
@@ -56,7 +56,7 @@ class RabbitMQ():
         """
         :param message: message to be publish in JSON format
         """
-
+        self.start_server()
         self._channel.basic_publish(
             exchange=self._exchange,
             routing_key=self._routing_key,
@@ -64,3 +64,4 @@ class RabbitMQ():
             properties=pika.BasicProperties(content_type='application/json')
         )
         logging.info("Published Message: {}".format(message))
+        self._connection.close()

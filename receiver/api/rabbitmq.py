@@ -28,7 +28,7 @@ class rabbitMQServer():
 
     def create_channel(self):
         credentials = pika.PlainCredentials(username=self._username, password=self._password)
-        parameters = pika.ConnectionParameters(self._host, credentials=credentials ,heartbeat=30)
+        parameters = pika.ConnectionParameters(self._host, credentials=credentials ,heartbeat=0)
         self._connection = pika.BlockingConnection(parameters)
         self._channel = self._connection.channel()
 
@@ -55,7 +55,8 @@ class rabbitMQServer():
         tag = body.decode()
         # logging.info(tag['data'])
         logging.info(f'Received message with tag {tag} from queue')
-        time.sleep(5) # Sleep for 5 seconds
+        time.sleep(15) # Sleep for 5 seconds
+        # To-DO get data from json split it to get file name and then call the query bellow. 
         channel.basic_ack(delivery_tag=method.delivery_tag)
         # query = f'from(bucket:"android") |> range(start:-1000000h) |> filter(fn: (r) => r._measurement == "accel" and r.chunk_id == "{tag}")'
         # response = requests.post(

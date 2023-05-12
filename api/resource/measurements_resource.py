@@ -63,13 +63,14 @@ import requests
 class MeasurementResource(object):
 
 
-    def __init__(self,rabbitmq,INFLUXDB):
+    def __init__(self,rabbitmq,INFLUXDB,logging):
         self.host = INFLUXDB['HOST']
         self.port = INFLUXDB['PORT']
         self.token = INFLUXDB['ADMIN_TOKEN']
         self.org = INFLUXDB['ORG']
         self.bucket = INFLUXDB['BUCKET']
         self.rabbitmq = rabbitmq
+        self.logging = logging
         
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
@@ -80,6 +81,7 @@ class MeasurementResource(object):
             input_file = req.get_param('file')  
             self.rabbitmq.publish(message={"data": input_file.filename})
             response = requests.post(url="http://"+self.host+":"+self.port+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
+            self.logging.info(response)
             resp.status = falcon.HTTP_204
 
             resp.body = json.dumps({
