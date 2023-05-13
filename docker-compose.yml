@@ -41,13 +41,7 @@ services:
       - rabbitmqServer
     ports:
       - 8000:8000
-    environment:
-      RABBITMQ_USERNAME: admin
-      RABBITMQ_PASSWORD: pass
-      RABBITMQ_HOST: rabbitmqServer
-      RABBITMQ_QUEUE: dataqueue
-      RABBITMQ_ROUTING_KEY: dataqueue 
-      RABBITMQ_EXCHANGE: exchange_test
+    env_file: .env
     networks:
       - tick
 

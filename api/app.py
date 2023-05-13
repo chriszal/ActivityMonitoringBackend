@@ -39,9 +39,7 @@ mongo.connect(
 )
 
 rabbitMQ_instance = RabbitMQ(
-    queue=constants.RABBITMQ['QUEUE'],
     host=constants.RABBITMQ['HOST'],
-    routing_key=constants.RABBITMQ['ROUTING_KEY'],
     username=constants.RABBITMQ['USERNAME'],
     password=constants.RABBITMQ['PASSWORD'],
     exchange=constants.RABBITMQ['EXCHANGE']

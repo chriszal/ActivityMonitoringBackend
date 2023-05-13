@@ -15,8 +15,6 @@ RABBITMQ = {
     'USERNAME': os.environ.get('RABBITMQ_USERNAME'),
     'PASSWORD': os.environ.get('RABBITMQ_PASSWORD'),
     'HOST': os.environ.get('RABBITMQ_HOST'),
-    'QUEUE': os.environ.get('RABBITMQ_QUEUE'),
-    'ROUTING_KEY': os.environ.get('RABBITMQ_ROUTING_KEY'),
     'EXCHANGE': os.environ.get('RABBITMQ_EXCHANGE')
 }
 

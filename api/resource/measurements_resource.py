@@ -58,12 +58,14 @@
 #                     'data': {}
 #                 })
 
+from threading import Thread
 import falcon, json
 import requests
+from os.path import splitext
+
 class MeasurementResource(object):
 
-
-    def __init__(self,rabbitmq,INFLUXDB,logging):
+    def __init__(self, rabbitmq, INFLUXDB, logging):
         self.host = INFLUXDB['HOST']
         self.port = INFLUXDB['PORT']
         self.token = INFLUXDB['ADMIN_TOKEN']
@@ -75,26 +77,51 @@ class MeasurementResource(object):
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
 
-    def on_post(self, req, resp):
-
+    def process_file(self, filename, file,status_codes):
         try:
-            input_file = req.get_param('file')  
-            self.rabbitmq.publish(message={"data": input_file.filename})
-            response = requests.post(url="http://"+self.host+":"+self.port+"/api/v2/write?org="+self.org+"&bucket="+self.bucket+"&precision=ms",data=input_file.file,headers={'Content-Encoding':'gzip','Authorization':'Token '+self.token})
-            self.logging.info(response)
-            resp.status = falcon.HTTP_204
-
-            resp.body = json.dumps({
-                'message': str(response)+str(" | Time elapsed: ")+str(response.elapsed.total_seconds()),
-                'status': 204,
-                'data': str(response)
-            })
+            response = requests.post(url=f"http://{self.host}:{self.port}/api/v2/write?org={self.org}&bucket={self.bucket}&precision=ms", data=file, headers={'Content-Encoding':'gzip','Authorization':f'Token {self.token}'})
+            self.logging.info(response.status_code)
+            status_codes.append(response.status_code)
+            return response.status_code
         except Exception as e:
-           
-            resp.status = falcon.HTTP_400
+            self.logging.error(f"Error processing file {filename}: {str(e)}")
+            return 500
+
+    def on_post(self, req, resp):
+        status_codes = []
+        threads = []
+        messages = []
+
+        for key in req.params.keys():
+            if key.startswith('file'):
+                input_file = req.get_param(key)
+                if input_file is not None:
+                    filename = splitext(input_file.filename)[0]  # remove .gz extension
+                    sensor_type = 'accelerometer' if filename.startswith('a') else 'gyroscope'
+                    messages.append({"sensor_type": sensor_type, "chunk_id": filename})
+                    thread = Thread(target=self.process_file, args=(filename, input_file.file, status_codes))
+                    thread.start()
+                    threads.append(thread)
+
+        for thread in threads:
+            thread.join()
+        try:
+            for message in messages:
+                self.rabbitmq.publish(message=message)
+        except Exception as e:
+            self.logging.error(f"Error publishing message: {str(e)}")
+
+        if all(code == 204 for code in status_codes):
+            resp.status = falcon.HTTP_204
             resp.body = json.dumps({
-            'message': str(e),
-            'status': 400,
-            'data': {}
-           })
-            
+                'message': 'Data successfully written to InfluxDB',
+                'status': 204,
+                'data': {}
+            })
+        else:
+            resp.status = falcon.HTTP_500
+            resp.body = json.dumps({
+                'message': 'Failed to write data to InfluxDB',
+                'status': 500,
+                'data': {}
+            })

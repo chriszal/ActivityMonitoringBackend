@@ -6,25 +6,22 @@ import pika
 
 class RabbitMQ():
 
-    def __init__(self, queue, host, routing_key, username, password, exchange=''):
-        self._queue = queue
+    def __init__(self, host, username, password, exchange=''):
         self._host = host
-        self._routing_key = routing_key
         self._exchange = exchange
         self._username = username
         self._password = password
-        # self.start_server()
-        # logging.info("Producer Server Started...")
 
-    def start_server(self):
+    def start_connection(self):
         self.create_channel()
         self.create_exchange()
-        self.create_bind()
+        self.create_accelerometer_queue()
+        self.create_gyroscope_queue()
         logging.info("Channel created...")
 
     def create_channel(self):
         credentials = pika.PlainCredentials(username=self._username, password=self._password)
-        parameters = pika.ConnectionParameters(self._host, credentials=credentials)
+        parameters = pika.ConnectionParameters(self._host, credentials=credentials, heartbeat=60)
         connected = False
         while not connected:
             try:
@@ -43,25 +40,40 @@ class RabbitMQ():
             durable=True,
             auto_delete=False
         )
-        self._channel.queue_declare(queue=self._queue, durable=False)
 
-    def create_bind(self):
+    def create_accelerometer_queue(self):
+        self._channel.queue_declare(queue='accelerometer_queue', durable=False)
         self._channel.queue_bind(
-            queue=self._queue,
             exchange=self._exchange,
-            routing_key=self._routing_key
+            queue='accelerometer_queue',
+            routing_key='accelerometer'
+        )
+
+    def create_gyroscope_queue(self):
+        self._channel.queue_declare(queue='gyroscope_queue', durable=False)
+        self._channel.queue_bind(
+            exchange=self._exchange,
+            queue='gyroscope_queue',
+            routing_key='gyroscope'
         )
 
     def publish(self, message={}):
         """
         :param message: message to be publish in JSON format
         """
-        self.start_server()
-        self._channel.basic_publish(
-            exchange=self._exchange,
-            routing_key=self._routing_key,
-            body=json.dumps(message),
-            properties=pika.BasicProperties(content_type='application/json')
-        )
-        logging.info("Published Message: {}".format(message))
-        self._connection.close()
+        try:
+            self.start_connection()
+            sensor_type = message['sensor_type']
+            queue_name = sensor_type + '_queue'
+            self._channel.basic_publish(
+                exchange=self._exchange,
+                routing_key=sensor_type,
+                body=json.dumps(message),
+                properties=pika.BasicProperties(content_type='application/json')
+            )
+            logging.info(f"Published Message to queue {queue_name}: {message}")
+        except Exception as e:
+            logging.error(f"Failed to publish message: {e}")
+        finally:
+            if self._connection.is_open:
+                self._connection.close()
