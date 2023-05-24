@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useContext } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
 import {
   Box,
   Button,
@@ -12,12 +14,10 @@ import {
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
-import NextLink from 'next/link';
-import ResponsiveDialog from 'src/components/responsive-dialog';
-import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios';
 const rolesOptions = [
   {
     value: 'admin',
@@ -51,11 +51,40 @@ const validationSchema = Yup.object({
 
 
 export const CreateUserForm = () => {
-  const [open, setOpen] = useState(false);
-  const [dialogText, setDialogText] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
-  const [actions, setActions] = useState();
+  const { openDialog, closeDialog } = useContext(DialogContext);
+  const { showAlert } = useContext(AlertContext);
   const router = useRouter();
+
+
+  const onSubmit = async (values) => {
+    const dialogText = 'Are you sure you want to create this user?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button onClick={async () => {
+          closeDialog();
+          console.log('Submitted', values);
+          try {
+            const response = await axios.post('http://0.0.0.0:8081/api/v1/users', values);
+            console.log(response.data);
+            showAlert('User created successfully!', 'success');
+            router.back()
+          } catch (error) {
+            console.error("There was an error creating the user", error.response.data.message);
+            showAlert(error.response.data.message, 'error');
+            // handle errors
+          }
+        }} autoFocus>
+          Create
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
+};
+
+
 
   const formik = useFormik({
     initialValues: {
@@ -66,46 +95,8 @@ export const CreateUserForm = () => {
       roles: ""
     },
     validationSchema,
-    onSubmit: (values) => {
-      let dialogText = '';
-      dialogText = 'Are you sure you want to create this user?';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Back
-          </Button>
-          <Button onClick={() => {
-            setOpen(false);
-            console.log('Submitted', values);
-            handleShowAlert();
-          }} autoFocus>
-            Create
-          </Button>
-        </>
-      );
-      setOpen(true);
-      setDialogText(dialogText);
-    },
+    onSubmit
   });
-
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleDisagree = () => {
-    console.log('User disagreed.');
-    setOpen(false);
-  };
-
-
-
-
-
-  const handleShowAlert = () => {
-    setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 3000);
-  };
 
 
 
@@ -228,26 +219,7 @@ export const CreateUserForm = () => {
           </CardActions>
         </Card>
       </form>
-      <ResponsiveDialog
-        open={open}
-        onClose={handleClose}
-        title={"Confirmation"}
-        message={dialogText}
-        actions={actions}
-      />
-      {showAlert && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 16,
-            right: 16,
-            zIndex: 9999
-          }}
-        >
-          <Alert onClose={() => setShowAlert(false)}>User created successfully!</Alert>
-        </div>
-      )}
-
+    
     </div>
   );
 };

@@ -21,8 +21,10 @@ import CameraIcon from '@heroicons/react/24/solid/CameraIcon';
 import { keyframes } from '@emotion/react';
 import { LoadingButton } from '@mui/lab';
 import { useAuth } from 'src/hooks/use-auth';
-import {generateAvatar} from 'src/utils/avatar-generator'
-
+import { generateAvatar } from 'src/utils/avatar-generator'
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
 
 const AvatarContainer = styled(Box)({
   position: 'relative',
@@ -69,11 +71,24 @@ const Circle = styled(Box)({
   transform: 'translate(-50%, -50%)'
 });
 
+const validationSchema = Yup.object({
+  first_name: Yup.string()
+    .matches(/^[a-zA-Z]+$/, 'First name must only contain alphabetical characters.')
+    .max(50, 'First name must be less than 50 characters long.')
+    .required('First Name is required.'),
+  last_name: Yup.string()
+    .matches(/^[a-zA-Z]+$/, 'Last name must only contain alphabetical characters.')
+    .max(50, 'Last name must be less than 50 characters long.')
+    .required('Last name is required.')
+});
 
 
 export const AccountProfileDetails = () => {
-  
-  const {user } = useAuth();
+
+  const { user } = useAuth();
+  const [firstName, lastName] = user.name.split(" ");
+  const role = user.role;
+  const email = user.email;
   const avatarUrl = generateAvatar(user.name);
   const inputRef = useRef(null);
 
@@ -92,78 +107,25 @@ export const AccountProfileDetails = () => {
     },
     [setAvatarSrc]
   );
-  const [values, setValues] = useState({
-    first_name: '',
-    sur_name: '',
-    email: '',
-    roles: []
+  const formik = useFormik({
+    initialValues: {
+      first_name: firstName,
+      last_name: lastName,
+      email: email,
+      role: role
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    }
   });
 
-  const [errors, setErrors] = useState({
-    first_name: '',
-    sur_name: '',
-    email: '',
-  });
-
-  const handleChange = useCallback(
-    (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-
-      let newErrors = { ...errors };
-      let errorMessage = '';
-
-      switch (name) {
-        case 'first_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'First name must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'First name must be less than 50 characters long.';
-          }
-          break;
-        case 'sur_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'Surname must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'Surname must be less than 50 characters long.';
-          }
-          break;
-        case 'email':
-          if (!value.match(/^\S+@\S+\.\S+$/)) {
-            errorMessage = 'Invalid email address.';
-          }
-          break;
-        default:
-          break;
-      }
-
-      newErrors[name] = errorMessage;
-
-      setValues((prevState) => ({
-        ...prevState,
-        [name]: value
-      }));
-
-      setErrors(newErrors);
-    },
-    [errors]
-  );
-
-
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-    },
-    []
-  );
-
-  
 
   return (
     <form
       autoComplete="off"
       noValidate
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit}
     >
       <Card>
         <CardContent sx={{ pt: 2 }}>
@@ -175,7 +137,7 @@ export const AccountProfileDetails = () => {
               <Grid xs={12} md={4}>
                 <Typography variant="h6">Profile Details</Typography>
                 <Typography variant="body2">The information can be edited</Typography>
-                <AvatarContainer sx={{mt:7,ml:10}}
+                <AvatarContainer sx={{ mt: 7, ml: 10 }}
                   onMouseEnter={() => setIsEditingAvatar(true)}
                   onMouseLeave={() => setIsEditingAvatar(false)}
                 >
@@ -212,10 +174,10 @@ export const AccountProfileDetails = () => {
                 </AvatarContainer>
               </Grid>
               <Grid xs={12} md={8}>
-                
 
 
-                <Grid container spacing={2} sx={{mt:10}}>
+
+                <Grid container spacing={2} sx={{ mt: 10 }}>
 
 
                   <Grid item xs={12} md={6}>
@@ -224,21 +186,26 @@ export const AccountProfileDetails = () => {
                       fullWidth
                       label="First Name"
                       name="first_name"
-                      onBlur={handleChange}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
                       required
-                      error={Boolean(errors.first_name)}
-                      helperText={errors.first_name}
+                      value={formik.values.first_name}
+                      error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                      helperText={formik.touched.first_name && formik.errors.first_name}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
-                      label="Surname"
-                      name="sur_name"
-                      onBlur={handleChange}
+                      label="Last name"
+                      name="last_name"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
                       required
-                      error={Boolean(errors.sur_name)}
-                      helperText={errors.sur_name}
+                      value={formik.values.last_name}
+                      error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                      helperText={formik.touched.last_name && formik.errors.last_name}
+
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -246,10 +213,9 @@ export const AccountProfileDetails = () => {
                       fullWidth
                       label="Email"
                       name="email"
-                      error={Boolean(errors.email)}
-                      helperText={errors.email}
-                      onBlur={handleChange}
-                      required
+                      disabled
+                      value={formik.values.email}
+                      InputLabelProps={{ shrink: true }}
                     />
                   </Grid>
                   <Grid item xs={12} md={6}>
@@ -258,8 +224,9 @@ export const AccountProfileDetails = () => {
                       fullWidth
                       label="Role"
                       name="roles"
+                      value={formik.values.role}
+                      InputLabelProps={{ shrink: true }}
                     >
-                      {values.roles}
                     </TextField>
                   </Grid>
                 </Grid>

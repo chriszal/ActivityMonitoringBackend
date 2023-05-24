@@ -71,6 +71,9 @@ export const StudiesTable = (props) => {
                   No. Participants
                 </TableCell>
                 <TableCell>
+                  Owners
+                </TableCell>
+                <TableCell>
                   Study Coordinators
                 </TableCell>
                 <TableCell>
@@ -130,12 +133,13 @@ export const StudiesTable = (props) => {
                             {study.no_participants}
                           </TableCell>
                           <TableCell>
-                          {/* {study.study_coordinators.join(', ')} */}
-                            {study.study_coordinators}
+                            {study.owners.join(', ')}
                           </TableCell>
                           <TableCell>
-                          {/* {study.study_assistants.join(', ')} */}
-                            {study.study_assistants}
+                            {study.study_coordinators.join(', ')}
+                          </TableCell>
+                          <TableCell>
+                            {study.study_assistants.join(', ')}
                           </TableCell>
                           <TableCell>
                             <Stack

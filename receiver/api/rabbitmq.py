@@ -1,17 +1,12 @@
 import logging
-import os
-import gzip
 import json
-import requests
 import pika
-import time
-import shutil
 from api.services.data_processor import DataProcessor
 # import subprocess
 
-class rabbitMQServer():
+class RabbitMQReceiver():
     """
-    Producer component that will publish message and handle
+    Consumer component that will receive messages and handle
     connection and channel interactions with RabbitMQ.
     """
 
@@ -27,7 +22,8 @@ class rabbitMQServer():
         influx_org='',
         influx_bucket=''
     ):
-        self._queues = ['accelerometer_queue', 'gyroscope_queue']
+        self._routing_key = 'raw.smartwatch.physical_activity.steps'  
+        self.queue_name = ''
         self._host = host
         self._exchange = exchange
         self._username = username
@@ -38,9 +34,8 @@ class rabbitMQServer():
     def start_server(self):
         self.create_channel()
         self.create_exchange()
-        for queue in self._queues:
-            self.create_bind(queue)
-        logging.info("Channel created...")
+        self.create_bind()
+        logging.info("Receiver Channel created...")
 
     def create_channel(self):
         credentials = pika.PlainCredentials(username=self._username, password=self._password)
@@ -51,21 +46,22 @@ class rabbitMQServer():
     def create_exchange(self):
         self._channel.exchange_declare(
             exchange=self._exchange,
-            exchange_type='direct',
+            exchange_type='topic',  # using topic exchange type
             passive=False,
             durable=True,
             auto_delete=False
         )
 
-    def create_bind(self, queue):
-        self._channel.queue_declare(queue=queue, durable=False)
+    def create_bind(self):
+        queue_result = self._channel.queue_declare('', exclusive=True)
+        self.queue_name = queue_result.method.queue
+        logging.info(f"Queue created: {self.queue_name}")
         self._channel.queue_bind(
-            queue=queue,
             exchange=self._exchange,
-            routing_key=queue.replace('_queue', '')  # extract routing key from queue name
+            queue=self.queue_name,
+            routing_key=self._routing_key
         )
-        self._channel.basic_qos(prefetch_count=1)
-  
+
 
     
     def callback(self, channel, method, properties, body):
@@ -73,7 +69,7 @@ class rabbitMQServer():
             message = json.loads(body.decode())
             logging.info(f'Received message: {message}')
 
-            sensor_type = message.get('sensor_type')
+            sensor_type = message.get('type')
             chunk_id = message.get('chunk_id')
 
             if sensor_type == 'accelerometer':
@@ -94,13 +90,13 @@ class rabbitMQServer():
 
     def get_messages(self):
         try:
-            logging.info("Starting the server...")
-            for queue in self._queues:
-                self._channel.basic_consume(
-                    queue=queue,
-                    on_message_callback=self.callback,  
-                    auto_ack=False
-                )
+            logging.info("Starting the receiver...")
+            logging.info(f"Consuming from queue: {self.queue_name}")
+            self._channel.basic_consume(
+                queue=self.queue_name,
+                on_message_callback=self.callback,  
+                auto_ack=False
+            )
             self._channel.start_consuming()
         except Exception as e:
             logging.debug(f'Exception: {e}')

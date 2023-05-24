@@ -1,4 +1,7 @@
 import { useCallback, useState } from 'react';
+import { useContext } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
 import {
   Box,
   Button,
@@ -14,247 +17,204 @@ import {
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
-import NextLink from 'next/link';
-import ResponsiveDialog from 'src/components/responsive-dialog';
-import Alert from '@mui/material/Alert';
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import axios from 'axios';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router'; 
 
+
+const validationSchema = Yup.object({
+  study_id: Yup.string().required('Study ID is required').max(10, 'Study ID must be less than 10 characters long').matches(/^[a-zA-Z0-9]+$/, 'Study ID can only contain alphanumerics'),
+  title: Yup.string().required('Title is required').max(100, 'Title must be less than 100 characters long'),
+  description: Yup.string().required('Description is required').max(1000, 'Description must be less than 1000 characters long'),
+  authors: Yup.string().required('Authors is required'),
+  no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100'),
+  study_ownersInput: Yup.string().required('Owner input is required')
+});
+
+
 export const CreateStudyForm = () => {
-  const [open, setOpen] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [dialogText, setDialogText] = useState('');
-  const [actions, setActions] = useState();
   const [coordinator_loading, setCoordinatorLoading] = useState(false);
   const [assistant_loading, setAssistantLoading] = useState(false);
+  const [owner_loading, setOwnerLoading] = useState(false);
+
+  const { openDialog, closeDialog } = useContext(DialogContext);
+  const { showAlert } = useContext(AlertContext);
   const router = useRouter();
-  const handleClickOpen = (type) => {
-    let dialogText = '';
-    if (type === 'create') {
-      dialogText = 'Are you sure you want to create this study?';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Back
-          </Button>
-          <Button onClick={handleSubmit} autoFocus>
-            Create
-          </Button>
-        </>
-      );
-    } else if (type === 'cancel') {
-      dialogText = 'Are you sure you want to cancel?';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Disagree
-          </Button>
-          <Button component={NextLink} href="/" onClick={() => router.back()} autoFocus>
-            Agree
-          </Button>
-        </>
-      );
-    }
-    setOpen(true);
-    setDialogText(dialogText);
-  };
+  
 
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleAgree = () => {
-    console.log('User agreed.');
-    setOpen(false);
-  };
-
-  const handleDisagree = () => {
-    console.log('User disagreed.');
-    setOpen(false);
-  };
-
-
-  const [values, setValues] = useState({
-    study_id: '',
-    title: '',
-    description: '',
-    authors: '',
-    no_participants: '',
-    study_coordinators: [],
-    study_coordinatorsInput: "",
-    study_assistants: [],
-    study_assistantsInput: ""
-  });
-
-  const [errors, setErrors] = useState({
-    study_id: '',
-    title: '',
-    description: '',
-    authors: '',
-    study_coordinatorsInput: '',
-    study_assistantsInput: ''
-  });
-
-  const handleChange = useCallback(
-    (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-
-      let newErrors = { ...errors };
-      let errorMessage = '';
-
-      switch (name) {
-        case 'study_id':
-          if (value.length > 10 || !value.match(/^[a-zA-Z0-9]+$/)) {
-            errorMessage = 'Study ID must be less than 10 characters long and can only contain alphanumerics.';
+  const onSubmit = async (values) => {
+    const dialogText = 'Are you sure you want to create this study?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button onClick={async () => {
+            const { study_coordinatorInput, study_assistantsInput,study_ownersInput, ...postData } = values;
+          closeDialog();
+          console.log('Submitted',postData);
+          try {
+            const response = await axios.post('http://0.0.0.0:8081/api/v1/studies', postData);         
+            console.log(response.data);
+            showAlert('Study created successfully!', 'success');
+            router.back()
+          } catch (error) {
+            console.error("There was an error creating the study", error.response.data.message);
+            showAlert(error.response.data.message, 'error');
+            // handle errors
           }
-          break;
-        case 'title':
-          if (value.length > 100) {
-            errorMessage = 'Title must be less than 100 characters long.';
-          }
-          break;
-        case 'description':
-          if (value.length > 1000) {
-            errorMessage = 'Description must be less than 1000 characters long.';
-          }
-          break;
-        case 'no_participants':
-          if (value < 1 || value > 100) {
-            errorMessage = 'Number of participants must be between 1 and 100.';
-          }
-          break;
-        case 'study_coordinatorsInput':
-          if (value.length < 1) {
-            errorMessage = '';
-          }
-          break;
-        case 'study_assistantssInput':
-          if (value.length < 1) {
-            errorMessage = '';
-          }
-          break;
-        default:
-          break;
-      }
+        }} autoFocus>
+          Create
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
+};
 
-      newErrors[name] = errorMessage;
 
-      setValues((prevState) => ({
-        ...prevState,
-        [name]: value
-      }));
-
-      setErrors(newErrors);
+  const formik = useFormik({
+    initialValues: {
+      study_id: '',
+      title: '',
+      description: '',
+      authors: '',
+      no_participants: '',
+      study_owners: [],
+      study_ownersInput:"",
+      study_coordinators: [],
+      study_coordinatorsInput: "",
+      study_assistants: [],
+      study_assistantsInput: ""
     },
-    [errors]
-  );
-  const handleShowAlert = () => {
-    setShowAlert(true);
-    setTimeout(() => setShowAlert(false), 3000);
-  };
+    validationSchema,
+    onSubmit
+  });
+  
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      setOpen(false);
-      console.log('Submitted', values);
-      handleShowAlert();
-    },
-    [values, handleShowAlert]
-  );
 
 
   const handleCoordinatorSearch = async () => {
-    const coordinatorEmail = values.study_coordinatorsInput.trim();
+    const coordinatorEmail = formik.values.study_coordinatorsInput.trim();
     if (!coordinatorEmail) {
-
       return;
     }
-
+    console.log(formik.values.study_assistants+" "+formik.values.study_ownersInput);
+    //Check if email already exists as a chip in any of the fields
+    if (formik.values.study_ownersInput.includes(coordinatorEmail) || formik.values.study_assistantsInput.includes(coordinatorEmail)) {
+      formik.setFieldError('study_coordinatorsInput', "Email already exists as a owner or assistant.");
+      return;
+    }
+  
     try {
       setCoordinatorLoading(true);
-      const response = await axios.get(`https://api-generator.retool.com/L8N5dY/studies?study_coordinators=${coordinatorEmail}`);
-      const coordinatorExists = response.data.length > 0;
+      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${coordinatorEmail}`);
+      const coordinatorExists = Object.keys(response.data).length > 0;
+      console.log(response.data.id)
       if (coordinatorExists) {
-        // Check if coordinator already exists in the array
-        if (!values.study_coordinators.includes(coordinatorEmail)) {
-          setValues(prevValues => ({ ...prevValues, study_coordinators: [...prevValues.study_coordinators, coordinatorEmail] }));
-          setErrors({ study_coordinatorsInput: "" });
+        if (!formik.values.study_coordinators.includes(coordinatorEmail)) {
+          formik.setValues(prevValues => ({ ...prevValues, study_coordinators: [...prevValues.study_coordinators, response.data.id] }));
+          formik.setErrors({ study_coordinatorsInput: "" });
           document.getElementsByName('study_coordinatorsInput')[0].value = '';
         } else {
-          setErrors({ study_coordinatorsInput: "Coordinator already exists." });
+          formik.setErrors({ study_coordinatorsInput: "Coordinator already exists." });
         }
       } else {
-        setErrors({ study_coordinatorsInput: "Coordinator not found." });
+        formik.setErrors({ study_coordinatorsInput: "Coordinator not found." });
       }
     } catch (error) {
-      console.error(error);
-      setErrors({ study_coordinatorsInput: error });
+      const errorMessage = error.response?.data?.message || "An error occurred while searching for the coordinator.";
+      formik.setErrors({ study_coordinatorsInput: errorMessage });
     } finally {
       setCoordinatorLoading(false);
     }
   };
+  
 
   const handleDeleteCoordinator = (index) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      study_coordinators: prevValues.study_coordinators.filter(
-        (value, i) => i !== index
-      )
-    }));
+    formik.setFieldValue('study_coordinators', formik.values.study_coordinators.filter(
+      (value, i) => i !== index
+    ));
   };
 
   const handleAssistantSearch = async () => {
-    const assistantEmail = values.study_assistantsInput.trim();
+    const assistantEmail = formik.values.study_assistantsInput.trim();
     if (!assistantEmail) {
       return;
     }
-
-
+  
     try {
-      setAssistantLoading(true)
-      const response = await axios.get(`https://api-generator.retool.com/L8N5dY/studies?study_assistants=${assistantEmail}`);
-      const assistantExists = response.data.length > 0;
+      setAssistantLoading(true);
+      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${assistantEmail}`);
+      const assistantExists = Object.keys(response.data).length > 0;
       if (assistantExists) {
         // Check if assistant already exists in the array
-        if (!values.study_assistants.includes(assistantEmail)) {
-          setValues(prevValues => ({ ...prevValues, study_assistants: [...prevValues.study_assistants, assistantEmail] }));
-          setErrors({ study_assistantsInput: "" });
-          document.getElementsByName('study_assistantsInput')[0].value = '';
+        if (!formik.values.study_assistants.includes(assistantEmail)) {
+          formik.setFieldValue('study_assistants', [...formik.values.study_assistants, assistantEmail]);
+          formik.setFieldValue('study_assistantsInput', "");
         } else {
-          setErrors({ study_assistantsInput: "Assistant already exists." });
+          formik.setFieldError('study_assistantsInput', "Assistant already exists.");
         }
       } else {
-        setErrors({ study_assistantsInput: "Assistant not found." });
+        formik.setFieldError('study_assistantsInput', "Assistant not found.");
       }
     } catch (error) {
       console.error(error);
-      setErrors({ study_assistantsInput: error });
+      formik.setFieldError('study_assistantsInput', error.toString());
     } finally {
       setAssistantLoading(false);
     }
   };
 
   const handleDeleteAssistant = (index) => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      study_assistants: prevValues.study_assistants.filter(
-        (value, i) => i !== index
-      )
-    }));
+    formik.setFieldValue('study_assistants', formik.values.study_assistants.filter(
+      (value, i) => i !== index
+    ));
   };
 
+  const handleOwnerSearch = async () => {
+    const ownerEmail = formik.values.study_ownersInput.trim();
+    if (!ownerEmail) {
+      return;
+    }
+  
+    try {
+      setOwnerLoading(true);
+      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${ownerEmail}`);
+      const ownerExists = Object.keys(response.data).length > 0;
+      if (ownerExists) {
+        // Check if assistant already exists in the array
+        if (!formik.values.study_owners.includes(ownerEmail)) {
+          formik.setFieldValue('study_owners', [...formik.values.study_owners, ownerEmail]);
+          formik.setFieldValue('study_ownersInput', "");
+        } else {
+          formik.setFieldError('study_ownersInput', "Owner already exists.");
+        }
+      } else {
+        formik.setFieldError('study_ownersInput', "Owner not found.");
+      }
+    } catch (error) {
+      console.error(error);
+      formik.setFieldError('study_ownersInput', error.toString());
+    } finally {
+      setOwnerLoading(false);
+    }
+  };
+
+  const handleDeleteOwner = (index) => {
+    formik.setFieldValue('study_owners', formik.values.study_owners.filter(
+      (value, i) => i !== index
+    ));
+  };
 
   return (
     <div>
       <form
         autoComplete="off"
         noValidate
-        onSubmit={handleSubmit}
+        onSubmit={formik.handleSubmit}
       >
         <Card>
           <CardHeader
@@ -275,10 +235,12 @@ export const CreateStudyForm = () => {
                     fullWidth
                     label="Specify a Unique Study ID"
                     name="study_id"
-                    onBlur={handleChange}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     required
-                    error={Boolean(errors.study_id)}
-                    helperText={errors.study_id}
+                    value={formik.values.study_id}
+                    error={formik.touched.study_id && Boolean(formik.errors.study_id)}
+                    helperText={formik.touched.study_id && formik.errors.study_id}
                   />
                 </Grid>
                 <Grid
@@ -288,11 +250,13 @@ export const CreateStudyForm = () => {
                   <TextField
                     fullWidth
                     label="Title"
-                    onBlur={handleChange}
-                    required
                     name="title"
-                    error={Boolean(errors.title)}
-                    helperText={errors.title}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.title}
+                    error={formik.touched.title && Boolean(formik.errors.title)}
+                    helperText={formik.touched.title && formik.errors.title}
                   />
                 </Grid>
                 <Grid
@@ -302,14 +266,16 @@ export const CreateStudyForm = () => {
                   <TextField
                     fullWidth
                     label="Description"
-                    onBlur={handleChange}
                     name="description"
-                    required
                     multiline
                     rows={3}
                     inputProps={{ maxLength: 12 }}
-                    error={Boolean(errors.description)}
-                    helperText={errors.description}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.description}
+                    error={formik.touched.description && Boolean(formik.errors.description)}
+                    helperText={formik.touched.description && formik.errors.description}
                   />
                 </Grid>
                 <Grid
@@ -320,9 +286,12 @@ export const CreateStudyForm = () => {
                     fullWidth
                     label="Authors"
                     name="authors"
-                    helperText="Please seperate with comma if more than one"
-                    onBlur={handleChange}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     required
+                    value={formik.values.authors}
+                    error={formik.touched.authors && Boolean(formik.errors.authors)}
+                    helperText={formik.touched.authors && formik.errors.authors}
                   />
                 </Grid>
                 <Grid
@@ -333,11 +302,13 @@ export const CreateStudyForm = () => {
                     fullWidth
                     label="Number of Participants to Generate"
                     name="no_participants"
-                    onChange={handleChange}
-                    required
                     type="number"
-                    error={Boolean(errors.no_participants)}
-                    helperText={errors.no_participants}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.no_participants}
+                    error={formik.touched.no_participants && Boolean(formik.errors.no_participants)}
+                    helperText={formik.touched.no_participants && formik.errors.no_participants}
                     InputProps={{
                       inputProps: {
                         max: 100, min: 1
@@ -353,11 +324,9 @@ export const CreateStudyForm = () => {
                     fullWidth
                     label="Type the email of a Coordinator"
                     name="study_coordinatorsInput"
-                    required
-                    onChange={handleChange}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter' || e.key === " ") {
-                        // alert(e.target.value);
+                        e.preventDefault();
                         handleCoordinatorSearch();
                       }
                     }}
@@ -367,30 +336,12 @@ export const CreateStudyForm = () => {
                           loading={coordinator_loading}
                           onClick={handleCoordinatorSearch}
                           sx={{ color: 'grey.500', marginRight: "-12px", }}
-                        // sx={{
-                        //   height: '53px',
-                        //   width: '47px',
-                        //   marginRight: "-12px",
-                        //   borderRadius: "0 4px 4px 0",
-                        //   borderTopLeftRadius: 0,
-                        //   borderBottomLeftRadius: 0,
-                        //   backgroundColor: "grey.200",
-                        //   border: "1px gray",
-                        //   display: 'flex',
-                        //   alignItems: 'center',
-                        //   justifyContent: 'center',
-                        //   "&:hover": {
-                        //     backgroundColor: "grey.300",
-                        //     borderColor: "grey.500"
-                        //   }
-                        // }}
                         >
                           <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
                         </LoadingButton>
-
                       ),
                       startAdornment: (
-                        Array.isArray(values.study_coordinators) && values.study_coordinators.map((coordinator, index) => (
+                        Array.isArray(formik.values.study_coordinators) && formik.values.study_coordinators.map((coordinator, index) => (
                           <Chip
                             key={index}
                             size="small"
@@ -401,8 +352,13 @@ export const CreateStudyForm = () => {
                         ))
                       )
                     }}
-                    error={Boolean(errors.study_coordinatorsInput)}
-                    helperText={errors.study_coordinatorsInput}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.study_coordinatorsInput}
+                    error={formik.touched.study_coordinatorsInput && Boolean(formik.errors.study_coordinatorsInput)}
+                    helperText={formik.touched.study_coordinatorsInput && formik.errors.study_coordinatorsInput}
+                    
                   />
                 </Grid>
 
@@ -414,9 +370,9 @@ export const CreateStudyForm = () => {
                     fullWidth
                     label="Type the email of a Assistant"
                     name="study_assistantsInput"
-                    onChange={handleChange}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter' || e.key === " ") {
+                        e.preventDefault();
                         handleAssistantSearch();
                       }
                     }}
@@ -428,11 +384,10 @@ export const CreateStudyForm = () => {
                           sx={{ color: 'grey.500', marginRight: "-12px", }}
                         >
                           <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
-
                         </LoadingButton>
                       ),
                       startAdornment: (
-                        Array.isArray(values.study_assistants) && values.study_assistants.map((assistant, index) => (
+                        Array.isArray(formik.values.study_assistants) && formik.values.study_assistants.map((assistant, index) => (
                           <Chip
                             key={index}
                             size="small"
@@ -443,8 +398,58 @@ export const CreateStudyForm = () => {
                         ))
                       )
                     }}
-                    error={Boolean(errors.study_assistantsInput)}
-                    helperText={errors.study_assistantsInput}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.study_assistantsInput}
+                    error={formik.touched.study_assistantsInput && Boolean(formik.errors.study_assistantsInput)}
+                    helperText={formik.touched.study_assistantsInput && formik.errors.study_assistantsInput}
+                    
+                  />
+                </Grid>
+                <Grid
+                  xs={12}
+                  md={6}
+                >
+                  <TextField
+                    fullWidth
+                    label="Type the email of the user you want for owner"
+                    name="study_ownersInput"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' || e.key === " ") {
+                        e.preventDefault();
+                        handleOwnerSearch();
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <LoadingButton
+                          loading={owner_loading}
+                          onClick={handleOwnerSearch}
+                          sx={{ color: 'grey.500', marginRight: "-12px", }}
+                        >
+                          <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
+                        </LoadingButton>
+                      ),
+                      startAdornment: (
+                        Array.isArray(formik.values.study_owners) && formik.values.study_owners.map((owner, index) => (
+                          <Chip
+                            key={index}
+                            size="small"
+                            label={owner}
+                            onDelete={() => handleDeleteOwner(index)}
+                            sx={{ m: 0.5, marginTop: "20px" }}
+                          />
+                        ))
+                      )
+                    }}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    required
+                    value={formik.values.study_ownersInput}
+                    error={formik.touched.study_ownersInput && Boolean(formik.errors.study_ownersInput)}
+                    helperText={formik.touched.study_ownersInput && formik.errors.study_ownersInput}
+                    
                   />
                 </Grid>
               </Grid>
@@ -457,10 +462,7 @@ export const CreateStudyForm = () => {
               direction="row"
               spacing={1}
             >
-              <Button onClick={() => handleClickOpen('cancel')} variant="text" sx={{ color: 'gray' }}>
-                Cancel
-              </Button>
-              <Button onClick={() => handleClickOpen('create')} variant="contained" >
+              <Button type='submit' variant="contained" >
                 Create
               </Button>
             </Stack>
@@ -468,25 +470,6 @@ export const CreateStudyForm = () => {
           </CardActions>
         </Card>
       </form>
-      <ResponsiveDialog
-        open={open}
-        onClose={handleClose}
-        title={"Confirmation"}
-        message={dialogText}
-        actions={actions}
-      />
-      {showAlert && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 16,
-            right: 16,
-            zIndex: 9999
-          }}
-        >
-          <Alert onClose={() => setShowAlert(false)}>Study created successfully!</Alert>
-        </div>
-      )}
 
     </div>
   );

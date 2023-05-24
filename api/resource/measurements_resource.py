@@ -91,14 +91,14 @@ class MeasurementResource(object):
         status_codes = []
         threads = []
         messages = []
-
+        source = req.get_param('source')
         for key in req.params.keys():
             if key.startswith('file'):
                 input_file = req.get_param(key)
                 if input_file is not None:
                     filename = splitext(input_file.filename)[0]  # remove .gz extension
                     sensor_type = 'accelerometer' if filename.startswith('a') else 'gyroscope'
-                    messages.append({"sensor_type": sensor_type, "chunk_id": filename})
+                    messages.append({"type": sensor_type, "chunk_id": filename, "source": source})
                     thread = Thread(target=self.process_file, args=(filename, input_file.file, status_codes))
                     thread.start()
                     threads.append(thread)

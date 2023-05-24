@@ -24,7 +24,7 @@ const Page = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      axios.get('https://retoolapi.dev/bBorK0/users')
+      axios.get('http://0.0.0.0:8081/api/v1/users')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);
@@ -95,8 +95,8 @@ const Page = () => {
     const lowerCaseQuery = searchQuery.toLowerCase();
     return users.filter(
       (user) =>
-        user.username.toLowerCase().includes(lowerCaseQuery) ||
-        user.email.includes(searchQuery) || user.sur_name.toLowerCase().includes(lowerCaseQuery)
+        user.id.toLowerCase().includes(lowerCaseQuery) ||
+        user.email.includes(searchQuery) || user.first_name.toLowerCase().includes(lowerCaseQuery)
     );
   }, [users, searchQuery]);
 

@@ -1,4 +1,7 @@
 import { useCallback, useState } from 'react';
+import { useContext } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
 import {
   Box,
   Button,
@@ -6,14 +9,12 @@ import {
   Stack,
   CardActions,
   CardContent,
+  FormControl, InputLabel, MenuItem, Select, FormHelperText,
   CardHeader,
   Divider,
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
-import NextLink from 'next/link';
-import ResponsiveDialog from 'src/components/responsive-dialog';
-import Alert from '@mui/material/Alert';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -25,262 +26,145 @@ export const EditUserForm = (props) => {
   const router = useRouter();
   const { email } = props;
   const { first_name } = props;
-  const { sur_name } = props;
+  const { last_name } = props;
   const { roles } = props;
-  const rolesOptions = roles.map((role) => ({
-    value: role.toLowerCase(),
-    label: role.charAt(0).toUpperCase() + role.slice(1),
-  }));
+  const { openDialog, closeDialog } = useContext(DialogContext);
+  const { showAlert } = useContext(AlertContext);
+  let rolesOptions = [];
 
-
-  const [open, setOpen] = useState(false);
-  const [dialogText, setDialogText] = useState('');
-  const [showUpdateSuccessAlert, setShowUpdateSuccessAlert] = useState(false);
-  const [showUpdateFailAlert, setShowUpdateFailAlert] = useState(false);
-  const [showDeleteSuccessAlert, setShowDeleteSuccessAlert] = useState(false);
-  const [showDeleteFailAlert, setShowDeleteFailAlert] = useState(false);
-  const [actions, setActions] = useState();
-
+  if (roles[0].toLowerCase() === 'admin') {
+    rolesOptions = [
+      { value: 'admin', label: 'Admin' },
+      { value: 'member', label: 'Member' },
+    ];
+  } else {
+    rolesOptions = [
+      { value: 'member', label: 'Member' },
+      { value: 'admin', label: 'Admin' },
+    ];
+  }
 
   const validationSchema = Yup.object({
     first_name: Yup.string()
       .matches(/^[a-zA-Z]+$/, 'First name must only contain alphabetical characters.')
       .max(50, 'First name must be less than 50 characters long.')
-      .required('First name is required.'),
-    sur_name: Yup.string()
-      .matches(/^[a-zA-Z]+$/, 'Surname must only contain alphabetical characters.')
-      .max(50, 'Surname must be less than 50 characters long.')
-      .required('Surname is required.'),
+      .required('First Name is required.'),
+    last_name: Yup.string()
+      .matches(/^[a-zA-Z]+$/, 'Last name must only contain alphabetical characters.')
+      .max(50, 'Last name must be less than 50 characters long.')
+      .required('Last name is required.'),
     email: Yup.string()
       .email('Invalid email address.')
       .required('Email is required.'),
-    roles: Yup.string().oneOf(rolesOptions.map((option) => option.value), 'Invalid role.').required('Role is required.'),
+    roles: Yup.array()
+      .min(1, 'At least one role is required.')
   });
 
+  const onSubmit = async (values) => {
+    const dialogText = 'Are you sure you want to update this user?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button variant="contained" autoFocus 
+          onClick={async () => {
+            closeDialog();
+            try {
+              const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              console.log(response.data);
+              showAlert('User updated successfully!', 'success');
+              router.back();
+            } catch (error) {
+              console.error("There was an error updating the user", error.response.data.message);
+              showAlert(error.response.data.message, 'error');
+            }
+          }} >
+          Update
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
+  };
   const formik = useFormik({
     initialValues: {
       first_name: first_name,
-      sur_name: sur_name,
+      last_name: last_name,
       email: email,
       roles: roles[0],
     },
     validationSchema,
-    onSubmit: async (values) => {
-      // Handle form submission logic here
-    },
+    onSubmit
   });
 
-  const handleClickOpen = (type) => {
-    let dialogText = '';
-    if (type === 'update') {
-      dialogText = 'Are you sure you want to create this user?';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Back
-          </Button>
-          <Button onClick={handleUpdate} autoFocus>
-            Update
-          </Button>
-        </>
-      );
-    } else if (type === 'cancel') {
-      dialogText = 'Are you sure you want to cancel?';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Disagree
-          </Button>
-          <Button onClick={() => router.back()} autoFocus>
-            Agree
-          </Button>
-        </>
-      );
-    } else if (type === 'delete') {
-      dialogText = 'Are you sure you want to permanently delete this user? This action is irreversible!';
-      setActions(
-        <>
-          <Button autoFocus onClick={handleDisagree}>
-            Back
-          </Button>
-          <Button color="error" variant="contained" onClick={handleDelete} autoFocus>
-            Delete
-          </Button>
-        </>
-      );
-    }
-    setOpen(true);
-    setDialogText(dialogText);
+  const handleClickOpen = () => {
+    const dialogText = 'Are you sure you want to delete this user?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button variant="contained" color="error" autoFocus
+          onClick={async () => {
+            closeDialog();
+            try {
+              const response = await axios.delete(`http://0.0.0.0:8081/api/v1/users/${email}`);
+              console.log(response.data);
+              showAlert('User deleted successfully!', 'success');
+              router.back();
+            } catch (error) {
+              console.error("There was an error updating the user", error);
+              showAlert(error.response.data.message, 'error');
+            }
+          }} >
+          Delete
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason && reason == "backdropClick")
-      return;
-    setOpen(false);
-  }
+  
 
-  const handleDelete = async () => {
-    try {
-      setActions(
-        <>
-          <Button autoFocus disabled>
-            Back
-          </Button>
-          <LoadingButton color="error" variant="contained" loading={true} autoFocus disabled>
-            Delete
-          </LoadingButton>
-        </>
-      );
-
-      await axios.delete(`https://api-generator.retool.com/bBorK0/users/${username}`);
-      setOpen(false);
-      handleShowAlert("delete-success");
-    } catch (error) {
-      console.log(error);
-      setOpen(false);
-      handleShowAlert("delete-fail");
-
-    }
-
-  };
-
-  const handleDisagree = () => {
-    console.log('User disagreed.');
-    setOpen(false);
-  };
-
-  const [values, setValues] = useState({
-    first_name: first_name,
-    sur_name: sur_name,
-    email: email,
-    roles: roles
-  });
-
-  const [errors, setErrors] = useState({
-    first_name: '',
-    sur_name: '',
-    email: '',
-  });
-
-  const handleOnBlur = useCallback(
-    (event) => {
-      const name = event.target.name;
-      const value = event.target.value;
-
-      let newErrors = { ...errors };
-      let errorMessage = '';
-
-      switch (name) {
-        case 'first_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'First name must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'First name must be less than 50 characters long.';
-          }
-          break;
-        case 'sur_name':
-          if (!/^[a-zA-Z]+$/.test(value)) {
-            errorMessage = 'Surname must only contain alphabetical characters.';
-          } else if (value.length > 50) {
-            errorMessage = 'Surname must be less than 50 characters long.';
-          }
-          break;
-        case 'email':
-          if (!value.match(/^\S+@\S+\.\S+$/)) {
-            errorMessage = 'Invalid email address.';
-          }
-          break;
-        default:
-          break;
-      }
-
-      newErrors[name] = errorMessage;
-
-      setValues((prevState) => ({
-        ...prevState,
-        [name]: value
-      }));
-
-      setErrors(newErrors);
-    },
-    [errors]
-  );
-
-
-  const handleShowAlert = (type) => {
-    if (type === 'update-success') {
-      setShowUpdateSuccessAlert(true);
-      setTimeout(() => router.back(), 3000);
-    } else if (type === 'update-fail') {
-      setShowUpdateFailAlert(true);
-      setTimeout(() => setShowUpdateFailAlert(false), 5000);
-    } else if (type === 'delete-success') {
-      setShowDeleteSuccessAlert(true);
-      setTimeout(() => router.back(), 3000);
-    } else if (type === 'delete-fail') {
-      setShowDeleteFailAlert(true);
-    }
-  };
-
-
-  const handleUpdate = async () => {
-    try {
-      setActions(
-        <>
-          <Button autoFocus disabled>
-            Back
-          </Button>
-          <LoadingButton variant="contained" loading={true} autoFocus disabled>
-            Update
-          </LoadingButton>
-        </>
-      );
-
-      await axios.put(`https://api-generator.retool.com/bBorK0/users/${username}`, values);
-      setOpen(false);
-      handleShowAlert("update-success");
-    } catch (error) {
-      console.log(error);
-      setOpen(false);
-      handleShowAlert("update-fail");
-    }
-  };
 
 
 
   return (
     <div>
-      <form autoComplete="off" noValidate >
-        <Card sx={{ maxWidth: 1300 }}>
+      <form autoComplete="off" noValidate onSubmit={formik.handleSubmit}>
+        <Card sx={{ maxWidth: '1160px' }}>
           <CardHeader
             title="Edit user"
           />
           <CardContent sx={{ pt: 0 }}>
             <Box sx={{ m: -1.5 }}>
-              <Grid container spacing={3}>
+              <Grid container spacing={3} >
 
                 <Grid xs={12} md={6}>
                   <TextField
                     fullWidth
                     label="First Name"
                     name="first_name"
-                    defaultValue={first_name}
-                    onBlur={handleOnBlur}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     required
-                    error={Boolean(errors.first_name)}
-                    helperText={errors.first_name}
+                    value={formik.values.first_name}
+                    error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                    helperText={formik.touched.first_name && formik.errors.first_name}
                   />
                 </Grid>
                 <Grid xs={12} md={6}>
                   <TextField
+
                     fullWidth
-                    label="Surname"
-                    name="sur_name"
-                    defaultValue={sur_name}
-                    onBlur={handleOnBlur}
+                    label="Last Name"
+                    name="last_name"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     required
-                    error={Boolean(errors.sur_name)}
-                    helperText={errors.sur_name}
+                    value={formik.values.last_name}
+                    error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                    helperText={formik.touched.last_name && formik.errors.last_name}
                   />
                 </Grid>
                 <Grid
@@ -291,11 +175,12 @@ export const EditUserForm = (props) => {
                     fullWidth
                     label="Email"
                     name="email"
-                    defaultValue={email}
-                    error={Boolean(errors.email)}
-                    helperText={errors.email}
-                    onBlur={handleOnBlur}
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
                     required
+                    value={formik.values.email}
+                    error={formik.touched.email && Boolean(formik.errors.email)}
+                    helperText={formik.touched.email && formik.errors.email}
                   />
                 </Grid>
 
@@ -303,32 +188,38 @@ export const EditUserForm = (props) => {
                   xs={12}
                   md={6}
                 >
-                  <TextField
-                    fullWidth
-                    label="Select Role"
-                    onBlur={handleOnBlur}
-                    name="roles"
-                    defaultValue={roles}
-                    required
-                    select
-                    SelectProps={{ native: true }}
-                  >
-                    {rolesOptions.map((option) => (
-                      <option
-                        key={option.value}
-                        value={option.value}
-                      >
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField>
+                  <FormControl fullWidth error={formik.touched.roles && Boolean(formik.errors.roles)}>
+                    <InputLabel htmlFor="roles">Select Role</InputLabel>
+                    <Select
+                      label="Select Role"
+                      name="roles"
+                      value={formik.values.roles}
+                      onBlur={formik.handleBlur}
+                      onChange={(e) => {
+                        formik.setFieldValue("roles", [e.target.value]);
+                      }}
+                      inputProps={{
+                        name: "roles",
+                        id: "roles",
+                      }}
+                    >
+                      {rolesOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {formik.touched.roles && formik.errors.roles && (
+                      <FormHelperText>{formik.errors.roles}</FormHelperText>
+                    )}
+                  </FormControl>
                 </Grid>
               </Grid>
             </Box>
           </CardContent>
           <Divider />
           <CardActions >
-            <Button variant="contained" color="error" sx={{ marginLeft: 2 }} onClick={() => handleClickOpen('delete')}>
+            <Button variant="contained" color="error" onClick={() => handleClickOpen()}>
               Delete User
             </Button>
             <Stack sx={{ ml: 'auto', justifyContent: 'flex-end' }}
@@ -336,11 +227,7 @@ export const EditUserForm = (props) => {
               direction="row"
               spacing={1}
             >
-
-              <Button onClick={() => handleClickOpen('cancel')} variant="text" sx={{ color: 'gray' }}>
-                Cancel
-              </Button>
-              <Button variant="contained" onClick={() => handleClickOpen('update')}>
+              <Button variant="contained" type="submit" >
                 Update
               </Button>
 
@@ -349,31 +236,6 @@ export const EditUserForm = (props) => {
           </CardActions>
         </Card>
       </form>
-      <ResponsiveDialog
-        open={open}
-        onClose={handleClose}
-        title={"Confirmation"}
-        message={dialogText}
-        actions={actions}
-      />
-
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 16,
-          right: 16,
-          zIndex: 9999
-        }}
-      >{showUpdateSuccessAlert && (
-        <Alert severity="success" onClose={() => setShowUpdateSuccessAlert(false)}>User updated successfully!</Alert>)}
-        {showUpdateFailAlert && (
-          <Alert severity="error" onClose={() => setShowUpdateFailAlert(false)}>User update failed!</Alert>)}
-        {showDeleteSuccessAlert && (
-          <Alert severity="success" onClose={() => setShowDeleteSuccessAlert(false)}>User deleted successfully!</Alert>)}
-        {showDeleteFailAlert && (
-          <Alert severity="error" onClose={() => setShowDeleteFailAlert(false)}>Error occurred!</Alert>)}
-      </div>
-
 
     </div>
   );

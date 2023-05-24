@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useContext } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
 import {
     Box,
     Button,
@@ -12,9 +14,6 @@ import {
     TextField,
     Unstable_Grid2 as Grid
 } from '@mui/material';
-import NextLink from 'next/link';
-import ResponsiveDialog from 'src/components/responsive-dialog';
-import Alert from '@mui/material/Alert';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -33,35 +32,35 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email('Invalid email address.')
         .required('Email is required.'),
-    roles: Yup.array()
+    role: Yup.array()
         .min(1, 'At least one role is required.')
 });
 
 
 export const CreateEmailRegistrationForm = () => {
-    const [open, setOpen] = useState(false);
-    const [dialogText, setDialogText] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
-    const [actions, setActions] = useState();
+    const { openDialog, closeDialog } = useContext(DialogContext);
+    const { showAlert } = useContext(AlertContext);
+
     const router = useRouter();
 
     const formik = useFormik({
         initialValues: {
             email: "",
-            roles: "",
+            role: "",
         },
         validationSchema,
         onSubmit: async (values, helpers) => {
-            let dialogText = "";
-            dialogText = "Are you sure you want to create this user?";
-            setActions(
+            const dialogText = "Are you sure you want to send a registration form to this email?";
+            const dialogActions = (
                 <>
-                    <Button autoFocus onClick={handleDisagree}>
+                    <Button autoFocus onClick={closeDialog}>
                         Back
                     </Button>
                     <Button
                         onClick={async () => {
+                            closeDialog();
                             try {
+                                console.log(values)
                                 const response = await fetch(
                                     `http://0.0.0.0:8081/api/v1/user/register`,
                                     {
@@ -74,12 +73,12 @@ export const CreateEmailRegistrationForm = () => {
                                 );
 
                                 if (response.ok) {
-                                    setOpen(false);
                                     console.log("Submitted", values);
-                                    //   router.push("/");
-                                    handleShowAlert();
+                                    showAlert('Registration email sent successfully!', 'success');
+                                    router.back();
                                 } else {
                                     const data = await response.json();
+                                    showAlert('Registration email failed to send!', 'error');
                                     helpers.setStatus({ success: false });
                                     helpers.setErrors({ submit: data.message });
                                     helpers.setSubmitting(false);
@@ -87,41 +86,19 @@ export const CreateEmailRegistrationForm = () => {
                             } catch (err) {
                                 helpers.setStatus({ success: false });
                                 helpers.setErrors({ submit: err.message });
+                                showAlert( err.message, 'error');
                                 helpers.setSubmitting(false);
                             }
                         }}
                         autoFocus
                     >
-                        Create
+                        Send
                     </Button>
                 </>
             );
-            setOpen(true);
-            setDialogText(dialogText);
+            openDialog('Confirmation', dialogText, dialogActions);
         },
     });
-
-
-
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const handleDisagree = () => {
-        console.log('User disagreed.');
-        setOpen(false);
-    };
-
-
-
-
-
-    const handleShowAlert = () => {
-        setShowAlert(true);
-        setTimeout(() => setShowAlert(false), 3000);
-    };
-
 
 
 
@@ -154,19 +131,19 @@ export const CreateEmailRegistrationForm = () => {
                                     xs={12}
                                     md={6}
                                 >
-                                    <FormControl fullWidth error={formik.touched.roles && Boolean(formik.errors.roles)}>
-                                        <InputLabel htmlFor="roles">Select Role</InputLabel>
+                                    <FormControl fullWidth error={formik.touched.role && Boolean(formik.errors.role)}>
+                                        <InputLabel htmlFor="role">Select Role</InputLabel>
                                         <Select
                                             label="Select Role"
-                                            name="roles"
-                                            value={formik.values.roles}
+                                            name="role"
+                                            value={formik.values.role}
                                             onBlur={formik.handleBlur}
                                             onChange={(e) => {
-                                                formik.setFieldValue("roles", [e.target.value]);
+                                                formik.setFieldValue("role", [e.target.value]);
                                             }}
                                             inputProps={{
-                                                name: "roles",
-                                                id: "roles",
+                                                name: "role",
+                                                id: "role",
                                             }}
                                         >
                                             {rolesOptions.map((option) => (
@@ -175,8 +152,8 @@ export const CreateEmailRegistrationForm = () => {
                                                 </MenuItem>
                                             ))}
                                         </Select>
-                                        {formik.touched.roles && formik.errors.roles && (
-                                            <FormHelperText>{formik.errors.roles}</FormHelperText>
+                                        {formik.touched.role && formik.errors.role && (
+                                            <FormHelperText>{formik.errors.role}</FormHelperText>
                                         )}
                                     </FormControl>
 
@@ -200,25 +177,7 @@ export const CreateEmailRegistrationForm = () => {
                     </CardActions>
                 </Card>
             </form>
-            <ResponsiveDialog
-                open={open}
-                onClose={handleClose}
-                title={"Confirmation"}
-                message={dialogText}
-                actions={actions}
-            />
-            {showAlert && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        bottom: 16,
-                        right: 16,
-                        zIndex: 9999
-                    }}
-                >
-                    <Alert onClose={() => setShowAlert(false)}>User created successfully!</Alert>
-                </div>
-            )}
+           
 
         </div>
     );

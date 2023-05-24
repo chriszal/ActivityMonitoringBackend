@@ -24,7 +24,7 @@ const Page = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      axios.get('https://retoolapi.dev/L8N5dY/studies')
+      axios.get('http://0.0.0.0:8081/api/v1/studies')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

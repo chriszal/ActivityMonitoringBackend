@@ -3,9 +3,7 @@ import logging
 import time
 import pika
 
-
 class RabbitMQ():
-
     def __init__(self, host, username, password, exchange=''):
         self._host = host
         self._exchange = exchange
@@ -15,8 +13,6 @@ class RabbitMQ():
     def start_connection(self):
         self.create_channel()
         self.create_exchange()
-        self.create_accelerometer_queue()
-        self.create_gyroscope_queue()
         logging.info("Channel created...")
 
     def create_channel(self):
@@ -35,43 +31,27 @@ class RabbitMQ():
     def create_exchange(self):
         self._channel.exchange_declare(
             exchange=self._exchange,
-            exchange_type='direct',
+            exchange_type='topic', 
             passive=False,
             durable=True,
             auto_delete=False
         )
 
-    def create_accelerometer_queue(self):
-        self._channel.queue_declare(queue='accelerometer_queue', durable=False)
-        self._channel.queue_bind(
-            exchange=self._exchange,
-            queue='accelerometer_queue',
-            routing_key='accelerometer'
-        )
-
-    def create_gyroscope_queue(self):
-        self._channel.queue_declare(queue='gyroscope_queue', durable=False)
-        self._channel.queue_bind(
-            exchange=self._exchange,
-            queue='gyroscope_queue',
-            routing_key='gyroscope'
-        )
-
     def publish(self, message={}):
-        """
-        :param message: message to be publish in JSON format
-        """
+        """ :param message: message to be publish in JSON format """
         try:
             self.start_connection()
-            sensor_type = message['sensor_type']
-            queue_name = sensor_type + '_queue'
+            type = message['type']
+            source = message['source']  
+            routing_key = f'raw.{source}.*' 
+
             self._channel.basic_publish(
                 exchange=self._exchange,
-                routing_key=sensor_type,
+                routing_key=routing_key,
                 body=json.dumps(message),
                 properties=pika.BasicProperties(content_type='application/json')
             )
-            logging.info(f"Published Message to queue {queue_name}: {message}")
+            logging.info(f"Published Message with routing key {routing_key}: {message}")
         except Exception as e:
             logging.error(f"Failed to publish message: {e}")
         finally:

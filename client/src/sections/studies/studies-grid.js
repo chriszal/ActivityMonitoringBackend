@@ -66,66 +66,66 @@ StudyCard.propTypes = {
     study: PropTypes.object.isRequired
 };
 
-const StudiesGrid = ({ studies, isLoading,error }) => {
+const StudiesGrid = ({ studies, isLoading, error }) => {
     const test = [];
     return (
         <Grid container spacing={2}>
             {isLoading ? (
-               <Box
-               sx={{
-                 display: 'flex',
-                 justifyContent: 'center',
-                 alignItems: 'center',
-                 height: 'calc(100vh - 424px)',
-                 flexGrow: 1
-               }}
-             >
-               <LoadingWaveComponent />
-             </Box>
-             )
-                : (error !== "" ? (
-                    <Alert
-                    severity="error" style={{ textAlign: "center" }}>{error}
-                  </Alert>)
-                  : (studies.length > 0 ? (
-                studies.map((study) => (
-                    <Grid item xs={12} sm={6} md={4} key={study.study_id}>
-                        <StudyCard study={study} />
-                    </Grid>
-                ))
-            ) : (
                 <Box
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
                         height: 'calc(100vh - 424px)',
-                        textAlign: 'center',
-                        "& > *": {
-                            maxWidth: '80%',
-                            marginBottom: '1rem'
-                        },
                         flexGrow: 1
                     }}
                 >
-                    <Typography variant="h4" sx={{ fontSize: '1.5rem' }}>No studies found</Typography>
-                    <Typography variant="body1">It looks like you haven't created any studies yet.</Typography>
-                    <Button component={NextLink}
-                        href="/dashboard/studies/create" variant="contained" color="primary" size="large">Create a new study</Button>
+                    <LoadingWaveComponent />
                 </Box>
-            )))}
+            )
+                : (error !== "" ? (
+                    <Alert
+                        severity="error" style={{ textAlign: "center" }}>{error}
+                    </Alert>)
+                    : (studies.length > 0 ? (
+                        studies.map((study) => (
+                            <Grid item xs={12} sm={6} md={4} key={study.study_id}>
+                                <StudyCard study={study} />
+                            </Grid>
+                        ))
+                    ) : (
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: 'calc(100vh - 424px)',
+                                textAlign: 'center',
+                                "& > *": {
+                                    maxWidth: '80%',
+                                    marginBottom: '1rem'
+                                },
+                                flexGrow: 1
+                            }}
+                        >
+                            <Typography variant="h4" sx={{ fontSize: '1.5rem' }}>No studies found</Typography>
+                            <Typography variant="body1">It looks like you haven't created any studies yet.</Typography>
+                            <Button component={NextLink}
+                                href="/dashboard/studies/create" variant="contained" color="primary" size="large">Create a new study</Button>
+                        </Box>
+                    )))}
             {studies.length > 0 && (
                 <Grid item xs={12} sm={6} md={4}>
-                <Card sx={{ p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '250px' }}>
-                  <Typography variant="h6" sx={{ marginBottom: '1rem' }}>Add New Study</Typography>
-                  <Button component={NextLink}
-                        href="/dashboard/studies/create" variant="outlined" color="primary" sx={{ borderRadius: '50%', width: '40px', height: '60px', padding: 0 }}>
-                    <SvgIcon><PlusIcon /></SvgIcon>
-                  </Button>
-                </Card>
-              </Grid>
-              
+                    <Card sx={{ p: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '250px' }}>
+                        <Typography variant="h6" sx={{ marginBottom: '1rem' }}>Add New Study</Typography>
+                        <Button component={NextLink}
+                            href="/dashboard/studies/create" variant="outlined" color="primary" sx={{ borderRadius: '50%', width: '40px', height: '60px', padding: 0 }}>
+                            <SvgIcon><PlusIcon /></SvgIcon>
+                        </Button>
+                    </Card>
+                </Grid>
+
 
             )}
         </Grid>

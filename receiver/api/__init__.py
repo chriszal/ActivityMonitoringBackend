@@ -1,8 +1,7 @@
 import logging
 import mongoengine as mongo
 from api.enum import EnvironmentVariables
-from api.rabbitmq import rabbitMQServer
-
+from api.rabbitmq import RabbitMQReceiver
 
 def main():
     logging.basicConfig(
@@ -18,7 +17,7 @@ def main():
         password=EnvironmentVariables.MONGO_INITDB_ROOT_PASSWORD.get_env()
     )
 
-    server = rabbitMQServer(
+    server = RabbitMQReceiver(
         host=EnvironmentVariables.RABBITMQ_HOST.get_env(),
         username=EnvironmentVariables.RABBITMQ_USERNAME.get_env(),
         password=EnvironmentVariables.RABBITMQ_PASSWORD.get_env(),
@@ -32,3 +31,4 @@ def main():
     
     )
     server.get_messages()
+
