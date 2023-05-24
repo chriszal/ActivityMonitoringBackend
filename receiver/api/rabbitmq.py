@@ -22,7 +22,7 @@ class RabbitMQReceiver():
         influx_org='',
         influx_bucket=''
     ):
-        self._routing_key = 'raw.smartwatch.physical_activity.steps'  
+        self._routing_key = 'raw.smartwatch.physical_activity.*'  
         self.queue_name = ''
         self._host = host
         self._exchange = exchange

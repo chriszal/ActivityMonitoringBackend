@@ -43,7 +43,7 @@ class RabbitMQ():
             self.start_connection()
             type = message['type']
             source = message['source']  
-            routing_key = f'raw.{source}.*' 
+            routing_key = f'raw.{source}.physical_activity.steps' 
 
             self._channel.basic_publish(
                 exchange=self._exchange,

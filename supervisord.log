@@ -611,3 +611,17 @@
 2023-05-24 15:55:09,112 INFO supervisord started with pid 1
 2023-05-24 15:55:10,120 INFO spawned: 'gunicorn_study' with pid 7
 2023-05-24 15:55:11,168 INFO success: gunicorn_study entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-05-24 18:34:22,198 WARN received SIGTERM indicating exit request
+2023-05-24 18:34:22,213 INFO waiting for gunicorn_study to die
+2023-05-24 18:34:23,218 INFO stopped: gunicorn_study (terminated by SIGTERM)
+2023-05-24 18:35:31,782 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2023-05-24 18:35:31,795 INFO supervisord started with pid 1
+2023-05-24 18:35:32,804 INFO spawned: 'gunicorn_study' with pid 7
+2023-05-24 18:35:33,806 INFO success: gunicorn_study entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2023-05-24 20:19:02,142 WARN received SIGTERM indicating exit request
+2023-05-24 20:19:02,161 INFO waiting for gunicorn_study to die
+2023-05-24 20:19:03,167 INFO stopped: gunicorn_study (terminated by SIGTERM)
+2023-05-24 20:23:21,607 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2023-05-24 20:23:21,626 INFO supervisord started with pid 1
+2023-05-24 20:23:22,635 INFO spawned: 'gunicorn_study' with pid 6
+2023-05-24 20:23:23,697 INFO success: gunicorn_study entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
