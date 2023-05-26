@@ -3,7 +3,6 @@ import logging
 import time
 import pika
 import queue
-import socket
 
 class RabbitMQ():
     def __init__(self, host, username, password, exchange=''):
@@ -15,14 +14,11 @@ class RabbitMQ():
         self._local_queue = queue.Queue()
 
     def start_connection(self):
-        try:
-            if not self._connection or not self._connection.is_open:
-                self.create_channel()
-                self.create_exchange()
-                logging.info("Channel created...")
-        except (pika.exceptions.AMQPConnectionError, socket.gaierror) as e:
-            logging.info("Failed to connect to RabbitMQ.")
-            # raise e
+        if not self._connection or not self._connection.is_open:
+            self.create_channel()
+            self.create_exchange()
+            logging.info("Channel created...")
+        
 
 
     def create_channel(self):
@@ -64,11 +60,13 @@ class RabbitMQ():
     def publish(self, routing_key, message={}):
         try:
             self.start_connection()
+            logging.info(f'Size of queue: {self._local_queue.qsize()}')
             while not self._local_queue.empty():
                 local_message, local_routing_key = self._local_queue.get()
+                logging.info(local_message)
                 self._basic_publish(local_message, local_routing_key)
             self._basic_publish(message, routing_key)
-        except (pika.exceptions.AMQPConnectionError, socket.gaierror):
+        except (pika.exceptions.AMQPError, OSError):
             logging.error("Failed to connect to RabbitMQ, adding message to local queue...")
             self._local_queue.put((message, routing_key))
         except Exception as e:
@@ -76,6 +74,8 @@ class RabbitMQ():
         finally:
             if self._connection and self._connection.is_open:
                 self._connection.close()
+
+
 
     def _basic_publish(self, message, routing_key):
         self._channel.basic_publish(

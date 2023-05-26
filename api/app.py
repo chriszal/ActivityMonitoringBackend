@@ -49,7 +49,7 @@ rabbitMQ_instance = RabbitMQ(
 
 # cors = CORS(allow_origins_list=['http://0.0.0.0:3000'],allow_headers_list=['Content-Type'])
 # ,AuthHandler(),RoleBasedPolicy(constants.policy_config)
-app = falcon.API(middleware=[Cors(),MultipartMiddleware()])
+app = falcon.App(middleware=[Cors(),MultipartMiddleware()])
 
 study = StudyResource()
 user = UserResource()
