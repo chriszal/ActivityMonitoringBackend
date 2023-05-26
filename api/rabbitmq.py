@@ -3,6 +3,7 @@ import logging
 import time
 import pika
 import queue
+import socket
 
 class RabbitMQ():
     def __init__(self, host, username, password, exchange=''):
@@ -19,9 +20,10 @@ class RabbitMQ():
                 self.create_channel()
                 self.create_exchange()
                 logging.info("Channel created...")
-        except pika.exceptions.AMQPConnectionError as e:
-            logging.info("Failed to connect to RabbitMQ. The message will be saved in the local queue.")
-            raise e
+        except (pika.exceptions.AMQPConnectionError, socket.gaierror) as e:
+            logging.info("Failed to connect to RabbitMQ.")
+            # raise e
+
 
     def create_channel(self):
         credentials = pika.PlainCredentials(username=self._username, password=self._password)
@@ -66,7 +68,7 @@ class RabbitMQ():
                 local_message, local_routing_key = self._local_queue.get()
                 self._basic_publish(local_message, local_routing_key)
             self._basic_publish(message, routing_key)
-        except pika.exceptions.AMQPConnectionError:
+        except (pika.exceptions.AMQPConnectionError, socket.gaierror):
             logging.error("Failed to connect to RabbitMQ, adding message to local queue...")
             self._local_queue.put((message, routing_key))
         except Exception as e:
