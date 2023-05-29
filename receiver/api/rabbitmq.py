@@ -15,6 +15,8 @@ class RabbitMQReceiver():
         host,
         username,
         password,
+        routing_keys,
+        queue,
         exchange='',
         influx_host='',
         influx_port='',
@@ -22,8 +24,8 @@ class RabbitMQReceiver():
         influx_org='',
         influx_bucket=''
     ):
-        self._routing_keys = ['smartwatch.accelerometer', 'smartwatch.gyroscope'] 
-        self.queue_name = 'testing_queue'
+        self._routing_keys = routing_keys
+        self.queue_name = queue
         self._host = host
         self._exchange = exchange
         self._username = username
@@ -71,11 +73,10 @@ class RabbitMQReceiver():
 
             sensor_type = message.get('type')
             chunk_id = message.get('chunk_id')
-
-            if sensor_type in ['a', 'g']:
+            if self.queue_name=="bites_queue":
                 self.data_processor.process_bites(sensor_type, chunk_id, channel, method)
-            else:
-                logging.error(f'Cant proccess <<{sensor_type}>> type of data here. This shouldnt have been routed here!')
+            elif self.queue_name=="steps_queue":
+                self.data_processor.process_steps(chunk_id, channel, method)
 
         except Exception as e:
             logging.error(f'Error while processing message: {e}')
