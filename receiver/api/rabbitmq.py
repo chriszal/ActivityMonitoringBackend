@@ -69,7 +69,7 @@ class RabbitMQReceiver():
     def callback(self, channel, method, properties, body):
         try:
             message = json.loads(body.decode())
-            logging.info(f'Received message: {message}')
+            logging.info(f'Queue: {self.queue_name} received message: {message}')
 
             sensor_type = message.get('type')
             chunk_id = message.get('chunk_id')
@@ -79,12 +79,12 @@ class RabbitMQReceiver():
                 self.data_processor.process_steps(chunk_id, channel, method)
 
         except Exception as e:
-            logging.error(f'Error while processing message: {e}')
+            logging.error(f'Error while processing message of {self.queue_name}: {e}')
    
 
     def get_messages(self):
         try:
-            logging.info("Starting the receiver...")
+            logging.info(f'Starting the {self.queue_name} receiver...')
             self._channel.basic_consume(
                 queue=self.queue_name,
                 on_message_callback=self.callback,  
