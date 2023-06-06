@@ -17,8 +17,8 @@ RUN pip install --upgrade pip && \
 # Copy only the necessary files for the application
 COPY . /usr/api
 
-# Change ownership of the directory
-RUN chown -R root:root /usr/api
+# # Change ownership of the directory
+# RUN chown -R root:root /usr/api
 
 # Copy the supervisor configuration
 COPY ./deployment/gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
