@@ -15,7 +15,7 @@ from resource.register_participant_resource import RegisterParticipantResource
 from resource.study_resource import StudyResource
 from resource.user_resource import UserResource
 from resource.meal_resource import MealResource
-from rabbitmq import RabbitMQ
+from services.rabbitmq import RabbitMQ
 
 
 
