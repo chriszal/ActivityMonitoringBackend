@@ -13,19 +13,8 @@ aiohttp
 falcon-multipart
 falcon_auth[backend-jwt]
 python-decouple
-influxdb-client
 bcrypt
 falcon-policy
 pretend
-pandas
 python-dotenv
-falcon-apispec
-apispec
-google-api-python-client 
-google-auth-httplib2 
-google-auth-oauthlib
 pika
-# gridfs
-# numpy
-# functools
-#falcon_auth2[jwt]

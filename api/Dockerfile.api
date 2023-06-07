@@ -1,7 +1,7 @@
-FROM python:3.6
+FROM python:3.8
 
 RUN mkdir -p /usr/api/logs
-WORKDIR /usr/api
+WORKDIR /usr/api/app
 
 # Install system dependencies and clean up the package manager cache
 RUN apt-get update && \
@@ -10,21 +10,16 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies separately to optimize caching
-COPY requirements.txt /usr/api/
+COPY requirements.txt /usr/api/app/
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
 # Copy only the necessary files for the application
-COPY . /usr/api
-
-# # Change ownership of the directory
-# RUN chown -R root:root /usr/api
+COPY app /usr/api/app
 
 # Copy the supervisor configuration
-COPY ./deployment/gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
+COPY deployment/gunicorn.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8081
-
-VOLUME /usr/api
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -2,8 +2,8 @@ import falcon
 import json
 import jwt
 from datetime import datetime, timedelta
-from api.common.constants import SECRET
-from api.services.register_participant_service import RegisterParticipantService
+from common.constants import SECRET
+from services.register_participant_service import RegisterParticipantService
 
 
 class RegisterParticipantResource(object):

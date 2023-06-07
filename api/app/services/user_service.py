@@ -1,5 +1,5 @@
-from api.model.user import User
-from api.model.registration_token import RegistrationToken
+from model.user import User
+from model.registration_token import RegistrationToken
 
 class UserService:
 

@@ -1,6 +1,6 @@
 import falcon, json
-from api.common.constants import ALLOWED_EXTENSIONS
-from api.model.meal import Meal
+from common.constants import ALLOWED_EXTENSIONS
+from model.meal import Meal
 
 def allowed_file(filename):
         return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS

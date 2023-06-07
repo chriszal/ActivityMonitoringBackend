@@ -73,16 +73,15 @@ services:
   falcon-api:
     container_name: falcon-api-container
     build:
-      context: ./
-      dockerfile: ./Dockerfile.api
+      context: ./api
+      dockerfile: Dockerfile.api
     ports:
       - '8081:8081'
     networks:
       - tick
     volumes:
-      - ./:/usr/api
-      - ./logs/:/usr/api/logs
-      - ./credentials.json:/usr/api/credentials.json
+      - ./api/app:/usr/api/app
+      - ./api/logs:/usr/api/logs
 
     depends_on:
       - mongodb
@@ -107,7 +106,7 @@ services:
     container_name: nginx-container
     image: nginx:latest
     volumes:
-      - ./assets/nginx/nginx.http.config:/etc/nginx/nginx.conf
+      - ./nginx/nginx.http.config:/etc/nginx/nginx.conf
       #- ./assets/nginx/certs:/etc/nginx/certs
       # - ./webapp/build:/usr/share/nginx/html
     ports:

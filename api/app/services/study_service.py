@@ -1,5 +1,5 @@
-from api.model.study import Study
-from api.model.participant import Participant
+from model.study import Study
+from model.participant import Participant
 import random
 import string
 from mongoengine.queryset.visitor import Q

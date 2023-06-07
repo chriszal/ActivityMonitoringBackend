@@ -1,9 +1,9 @@
 import falcon, json
 
-from api.model.user import User
-from api.services.participant_service import ParticipantService
-from api.model.participant import Participant
-from api.model.study import Study
+from model.user import User
+from services.participant_service import ParticipantService
+from model.participant import Participant
+from model.study import Study
 
 class ParticipantResource(object):
 

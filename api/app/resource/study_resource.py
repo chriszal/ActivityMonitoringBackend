@@ -1,7 +1,7 @@
 import falcon
 import json
-from api.services.study_service import StudyService
-from api.model.study import Study
+from services.study_service import StudyService
+from model.study import Study
 
 
 class StudyResource(object):

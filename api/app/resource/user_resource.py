@@ -3,10 +3,10 @@ import json
 
 import jwt
 import datetime
-from api.model.user import User
-from api.model.registration_token import RegistrationToken
-from api.services.user_service import UserService
-from api.common.constants import REGISTRATION_SECRET
+from model.user import User
+from model.registration_token import RegistrationToken
+from services.user_service import UserService
+from common.constants import REGISTRATION_SECRET
 # from googleapiclient.discovery import build
 # from googleapiclient.errors import HttpError
 # from google.oauth2.credentials import Credentials

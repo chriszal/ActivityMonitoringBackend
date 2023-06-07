@@ -1,8 +1,8 @@
 import falcon
 import jwt
-from api.model.user import User
-from api.model.participant import Participant
-from api.common.constants import SECRET
+from model.user import User
+from model.participant import Participant
+from common.constants import SECRET
 
 
 class AuthHandler:

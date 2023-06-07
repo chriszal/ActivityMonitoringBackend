@@ -1,22 +1,22 @@
 import falcon
 import mongoengine as mongo
 from falcon_multipart.middleware import MultipartMiddleware
-import api.common.constants as constants
-from api.common.auth_handler import AuthHandler
-from api.common.role_handler import RoleBasedPolicy
-from api.common.cors import Cors
-from api.common.handlers import ExceptionHandler as handler
-from api.common.json_translator import JSONTranslator
-from api.common.require_json import RequireJSON
-from api.resource.login_resource import LoginResource
-from api.resource.measurements_resource import MeasurementResource
-from api.resource.participant_resource import ParticipantResource
-from api.resource.register_participant_resource import RegisterParticipantResource
-from api.resource.study_resource import StudyResource
-from api.resource.user_resource import UserResource
-from api.resource.meal_resource import MealResource
-import json 
-from api.rabbitmq import RabbitMQ
+from common import constants
+from common.auth_handler import AuthHandler
+from common.role_handler import RoleBasedPolicy
+from common.cors import Cors
+from common.handlers import ExceptionHandler as handler
+from common.json_translator import JSONTranslator
+from common.require_json import RequireJSON
+from resource.login_resource import LoginResource
+from resource.measurements_resource import MeasurementResource
+from resource.participant_resource import ParticipantResource
+from resource.register_participant_resource import RegisterParticipantResource
+from resource.study_resource import StudyResource
+from resource.user_resource import UserResource
+from resource.meal_resource import MealResource
+from rabbitmq import RabbitMQ
+
 
 
 from falcon_swagger_ui import register_swaggerui_app

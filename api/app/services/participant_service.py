@@ -1,4 +1,4 @@
-from api.model.participant import Participant
+from model.participant import Participant
 from datetime import datetime
 # modify participant register field by participant id
 # modify user study id when creating new study

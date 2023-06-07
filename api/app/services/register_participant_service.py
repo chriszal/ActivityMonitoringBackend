@@ -1,5 +1,5 @@
-from api.model.participant import Participant
-from api.model.study import Study
+from model.participant import Participant
+from model.study import Study
 import json
 #modify participant register field by participant id
 #modify user study id when creating new study

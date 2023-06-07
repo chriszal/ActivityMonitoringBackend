@@ -1,28 +1,39 @@
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+
+# Logs
+*.log
+
+# Virtual environment
 .venv
-client/node_modules
-client/.next
-logs/main.log
+
+# Environments variables
 .env
-supervisord.log
-init-mongodb/data/data.json
 
-# dependencies
-/.pnp
-.pnp.js
+# NPM related
+client/node_modules/
+client/.next/
 
-# testing
+# Testing
 /coverage
 
-# production
-client/build
-client/out
+# Production
+client/build/
+client/out/
 
-# misc
+# Misc
 .DS_Store
 client/.eslintcache
-.idea
+.idea/
 
+# Debug logs
 client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
-credentials.json
+
+# Data
+init-mongodb/data/data.json
+

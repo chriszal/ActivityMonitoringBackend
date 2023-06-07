@@ -2,9 +2,9 @@ import falcon
 import json
 import jwt
 from datetime import datetime, timedelta
-from api.common.constants import SECRET
+from common.constants import SECRET
 
-from api.services.user_service import UserService
+from services.user_service import UserService
 
 
 class LoginResource:
