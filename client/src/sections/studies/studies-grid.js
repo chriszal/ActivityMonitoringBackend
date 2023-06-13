@@ -17,12 +17,19 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 
 import NextLink from 'next/link';
 import { CircularProgress } from '@mui/material';
-import LoadingWaveComponent from 'src/components/loading-component';
+import NewtonsCradleComponent from 'src/components/newtons-cradle-component';
 const studyTypes = ['owned', 'coordinating', 'assisting'];
 
 
-const StudyCard = ({ study }) => {
-    const type = studyTypes[Math.floor(Math.random() * studyTypes.length)]; // randomly select a studyType
+const StudyCard = ({ study, userId }) => {
+    let type;
+    if (study.owners.includes(userId)) {
+        type = 'owned';
+    } else if (study.study_coordinators.includes(userId)) {
+        type = 'coordinating';
+    } else if (study.study_assistants.includes(userId)) {
+        type = 'assisting';
+    }
     const backgroundColor = type === 'owned' ? '#03c9a9' : type === 'coordinating' ? '#f64747' : '#4871f7'; // determine the background color based on the studyType
     const fadedBackgroundColor = `${backgroundColor}23`;// determine the faded background color based on the studyType
     const trimmedDescription = study.description.length > 200 ? study.description.slice(0, 200) + "..." : study.description;
@@ -66,7 +73,7 @@ StudyCard.propTypes = {
     study: PropTypes.object.isRequired
 };
 
-const StudiesGrid = ({ studies, isLoading, error }) => {
+const StudiesGrid = ({ studies, isLoading, error ,userId}) => {
     const test = [];
     return (
         <Grid container spacing={2}>
@@ -80,7 +87,7 @@ const StudiesGrid = ({ studies, isLoading, error }) => {
                         flexGrow: 1
                     }}
                 >
-                    <LoadingWaveComponent />
+                    <NewtonsCradleComponent />
                 </Box>
             )
                 : (error !== "" ? (
@@ -90,7 +97,7 @@ const StudiesGrid = ({ studies, isLoading, error }) => {
                     : (studies.length > 0 ? (
                         studies.map((study) => (
                             <Grid item xs={12} sm={6} md={4} key={study.study_id}>
-                                <StudyCard study={study} />
+                                <StudyCard study={study} userId={userId}/>
                             </Grid>
                         ))
                     ) : (
@@ -111,7 +118,7 @@ const StudiesGrid = ({ studies, isLoading, error }) => {
                         >
                             <Typography variant="h4" sx={{ fontSize: '1.5rem' }}>No studies found</Typography>
                             <Typography variant="body1">It looks like you haven't created any studies yet.</Typography>
-                            <Button component={NextLink}
+                            <Button component={NextLink} sx={{mt:2}}
                                 href="/dashboard/studies/create" variant="contained" color="primary" size="large">Create a new study</Button>
                         </Box>
                     )))}

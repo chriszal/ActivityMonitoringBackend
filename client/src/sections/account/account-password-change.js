@@ -13,8 +13,42 @@ import {
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CheckIcon from '@heroicons/react/24/solid/CheckIcon';
-import { useCallback, useState } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
+import { useContext } from 'react';
+
+
 export const AccountPasswordChange = () => {
+
+  const { openDialog, closeDialog } = useContext(DialogContext);
+  const { showAlert } = useContext(AlertContext);
+
+  const onSubmit = async (values) => {
+    const dialogText = 'Are you sure you want to change your password?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button variant="contained" autoFocus 
+          onClick={async () => {
+            closeDialog();
+            try {
+              // const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              // console.log(response.data);
+              showAlert('Your password was updated successfully!', 'success');
+              formik.resetForm(); 
+            } catch (error) {
+              console.error("There was an error updating the user password", error.response.data.message);
+              showAlert(error.response.data.message, 'error');
+            }
+          }} >
+          Save
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
+  };
     const validationSchema = Yup.object({
       password: Yup.string()
         .min(8, 'Password must be at least 8 characters long.')
@@ -30,9 +64,7 @@ export const AccountPasswordChange = () => {
         confirm_password: '',
       },
       validationSchema,
-      onSubmit: (values) => {
-        // Handle form submission logic here
-      },
+      onSubmit
     });
   
     return (
@@ -89,7 +121,7 @@ export const AccountPasswordChange = () => {
           </CardContent>
           <Divider />
           <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Button variant="contained" type="submit">
+            <Button variant="contained" type="submit" disabled={!formik.dirty}>
               Update
             </Button>
           </CardActions>

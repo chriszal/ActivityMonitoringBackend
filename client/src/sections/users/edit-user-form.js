@@ -76,7 +76,7 @@ export const EditUserForm = (props) => {
               showAlert('User updated successfully!', 'success');
               router.back();
             } catch (error) {
-              console.error("There was an error updating the user", error.response.data.message);
+              console.log("There was an error updating the user", error.response.data.message);
               showAlert(error.response.data.message, 'error');
             }
           }} >
@@ -91,7 +91,7 @@ export const EditUserForm = (props) => {
       first_name: first_name,
       last_name: last_name,
       email: email,
-      roles: roles[0],
+      roles: [roles[0]],
     },
     validationSchema,
     onSubmit
@@ -132,7 +132,7 @@ export const EditUserForm = (props) => {
   return (
     <div>
       <form autoComplete="off" noValidate onSubmit={formik.handleSubmit}>
-        <Card sx={{ maxWidth: '1160px' }}>
+        <Card >
           <CardHeader
             title="Edit user"
           />
@@ -227,7 +227,7 @@ export const EditUserForm = (props) => {
               direction="row"
               spacing={1}
             >
-              <Button variant="contained" type="submit" >
+              <Button variant="contained" type="submit" disabled={!formik.dirty}>
                 Update
               </Button>
 

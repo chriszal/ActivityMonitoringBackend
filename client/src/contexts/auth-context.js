@@ -89,7 +89,7 @@ export const AuthProvider = (props) => {
     if (isAuthenticated) {
       // const user= window.sessionStorage.getItem('token');
       const user = {
-        id: '5e86809283e28b96d2d38537',
+        id: '6485bb59001f0dc662c94d04',
         avatar: '/assets/avatars/avatar-anika-visser.png',
         name: 'Chris Zalachoris',
         email: 'chriszal@gmail.com',
@@ -165,7 +165,7 @@ export const AuthProvider = (props) => {
       console.error(err);
     }
     const user = {
-      id: '5e86809283e28b96d2d38537',
+      id: '6485bb59001f0dc662c94d04',
       avatar: '/assets/avatars/avatar-anika-visser.png',
       name: 'Chris Zalachoris',
         email: 'chriszal@gmail.com',

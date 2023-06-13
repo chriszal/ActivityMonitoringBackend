@@ -12,10 +12,10 @@ class StudyResource(object):
         try:
             studies = self.study_service.list_studies()
             resp.status = falcon.HTTP_200
-            resp.body = studies.to_json()
+            resp.body = json.dumps(studies)
         except Exception as e:
             raise falcon.HTTPConflict("Study list conflict", str(e))
-
+            
     def on_post(self, req, resp):
         # study_data["study_coordinators"] = [req.context.userid]
         try:
@@ -33,16 +33,8 @@ class StudyResource(object):
     def on_get_id(self, req, resp, study_id):
         try:
             study_obj = self.study_service.get_study(study_id)
-
-            if "participant" in req.context.roles:
-                if self.study_service.check_participant_in_study(study_id, req.context.userid):
-                    resp.body = study_obj.to_json()
-                else:
-                    raise falcon.HTTPUnauthorized(
-                        "Unauthorized", "Study can't be accessed")
-            else:
-                resp.body = study_obj.to_json()
-
+            resp.body = study_obj.to_json()
+            
             resp.status = falcon.HTTP_200
 
         except falcon.HTTPUnauthorized as e:

@@ -7,29 +7,33 @@ import { StudiesSearch } from 'src/sections/studies/studies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import axios from 'axios';
 import { StudiesGrid } from 'src/sections/studies/studies-grid';
-
+import { useAuth } from 'src/hooks/use-auth';
 
 
 
 const Page = () => {
+  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
-
+  console.log(user.id);
 
   const useStudies = (page, rowsPerPage) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      axios.get('http://0.0.0.0:8081/api/v1/studies/user/')
+      axios.get(`http://0.0.0.0:8081/api/v1/studies/user/${user.id}`)
         .then(response => {
           if (response.status == 200) {
             setData(response.data);
+            console.log(response.data);
+
             setIsLoading(false);
           } else {
             setIsLoading(false);
+            console.log(response.message);
             setError(response.message)
           }
 
@@ -161,7 +165,7 @@ const Page = () => {
               </Stack>
             </Stack>
             <StudiesSearch onSearch={handleSearch} />
-            <StudiesGrid studies={filteredStudies} isLoading={isLoading} error={error} />
+            <StudiesGrid studies={filteredStudies} isLoading={isLoading} error={error} userId={user.id} />
           </Stack>
         </Container>
       </Box>

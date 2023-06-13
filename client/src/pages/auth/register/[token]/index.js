@@ -201,7 +201,7 @@ const Page = () => {
                   sx={{ mt: 3 }}
                   variant="contained"
                 >
-                  Go to dashboard
+                  Go back
                 </Button>
 
               </Box>

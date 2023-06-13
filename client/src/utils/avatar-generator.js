@@ -1,40 +1,40 @@
 export function generateAvatar(name, size = 64, textColor = '#fff') {
-  const initials = name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+  const words = name.split(' ');
+  const initials = words[0].charAt(0).toUpperCase();
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
   const context = canvas.getContext('2d');
   
   // set background color based on name length
-  const secondWord = name.split(' ')[1] || '';
   let backgroundColor = '';
-  if (secondWord.length === 1) {
+  if (words[0].length === 1) {
     backgroundColor = '#FFD700'; // gold
-  } else if (secondWord.length === 2) {
+  } else if (words[0].length === 2) {
     backgroundColor = '#F8961E'; // orange
-  } else if (secondWord.length === 3) {
+  } else if (words[0].length === 3) {
     backgroundColor = '#F9C74F'; // yellow
-  } else if (secondWord.length === 4) {
+  } else if (words[0].length === 4) {
     backgroundColor = '#90BE6D'; // green
-  } else if (secondWord.length === 5) {
+  } else if (words[0].length === 5) {
     backgroundColor = '#43AA8B'; // teal
-  } else if (secondWord.length === 6) {
+  } else if (words[0].length === 6) {
     backgroundColor = '#577590'; // blue-gray
-  } else if (secondWord.length === 7) {
+  } else if (words[0].length === 7) {
     backgroundColor = '#2A9D8F'; // seafoam
-  } else if (secondWord.length === 8) {
+  } else if (words[0].length === 8) {
     backgroundColor = '#8A5E58'; // burgundy
-  } else if (secondWord.length === 9) {
+  } else if (words[0].length === 9) {
     backgroundColor = '#FFC0CB'; // pink
-  }else if (secondWord.length === 10) {
+  } else if (words[0].length === 10) {
     backgroundColor = '#9370DB'; // purple
-  }else if (secondWord.length === 11) {
+  } else if (words[0].length === 11) {
     backgroundColor = '#F94144'; // red
-  }else if (secondWord.length === 12) {
+  } else if (words[0].length === 12) {
     backgroundColor = '#00BFFF'; // sky blue
-  }else if (secondWord.length === 13) {
+  } else if (words[0].length === 13) {
     backgroundColor = '#FFA07A'; // salmon
-  }else {
+  } else {
     backgroundColor = '#4D4D4D'; // gray
   }
   

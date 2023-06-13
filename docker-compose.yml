@@ -82,7 +82,6 @@ services:
     volumes:
       - ./api/app:/usr/api/app
       - ./api/logs:/usr/api/logs
-
     depends_on:
       - mongodb
       - rabbitmqServer

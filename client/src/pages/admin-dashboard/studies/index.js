@@ -22,12 +22,15 @@ const Page = () => {
 
   const useStudies = (page, rowsPerPage) => {
     const [data, setData] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
+
 
     useEffect(() => {
       axios.get('http://0.0.0.0:8081/api/v1/studies')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);
+            setTotalCount(response.data.length);
             setIsLoading(false);
           } else {
             setIsLoading(false);
@@ -41,40 +44,31 @@ const Page = () => {
         });
     }, []);
 
-    return useMemo(
-      () => {
-        return applyPagination(data, page, rowsPerPage);
-      },
-      [page, rowsPerPage, data]
-    );
+    return useMemo(() => {
+      return {
+        data: applyPagination(data, page, rowsPerPage),
+        totalCount // return total count
+      };
+    }, [page, rowsPerPage, data]);
+    
   };
   
-  const useStudyIds = (studies) => {
-    return useMemo(
-      () => {
-        return studies.map((study) => study.study_id);
-      },
-      [studies]
-    );
-  };
-  
-  const studies = useStudies(page, rowsPerPage);
-  const studiesIds = useStudyIds(studies);
-  const studiesSelection = useSelection(studiesIds);
-
 
   
+  const { data: studies, totalCount } = useStudies(page, rowsPerPage);
+
 
   const handlePageChange = useCallback(
-    (event) => {
-      setPage(event.target.value);
+    (event, newPage) => {
+      setPage(newPage);
     },
     []
   );
-
+  
   const handleRowsPerPageChange = useCallback(
     (event) => {
-      setRowsPerPage(event.target.value);
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0); 
     },
     []
   );
@@ -141,17 +135,12 @@ const Page = () => {
             <StudiesTable
               error={error}
               isLoading={isLoading}
-              count={filteredStudies.length}
+              count={totalCount}
               items={filteredStudies}
-              onDeselectAll={studiesSelection.handleDeselectAll}
-              onDeselectOne={studiesSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={studiesSelection.handleSelectAll}
-              onSelectOne={studiesSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={studiesSelection.selected}
             />
           </Stack>
         </Container>

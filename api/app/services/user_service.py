@@ -28,7 +28,11 @@ class UserService:
         user.delete()
 
     def get_user_by_id(self, id):
-        return User.objects.get(id=id)
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            return None
+
 
     def get_user_id_by_email(self, email):
         return User.objects.get(email=email)

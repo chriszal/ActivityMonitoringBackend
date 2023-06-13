@@ -10,34 +10,39 @@ import axios from 'axios';
 import Skeleton from '@mui/material/Skeleton';
 
 const Page = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const { study_id } = router.query;
   useEffect(() => {
-    axios.get(`https://api-generator.retool.com/L8N5dY/studies?study_id=${study_id}`)
-      .then(response => {
-        if (response.status == 200) {
-          setData(response.data);
-          setIsLoading(false);
-        } else {
-        }
+    if (router.isReady) {
+      const { study_id } = router.query;
+      
+      axios.get(`http://0.0.0.0:8081/api/v1/study/${study_id}`)
+        .then(response => {
+          if (response.status == 200) {
+            setData(response.data);
+            setIsLoading(false);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }, [router.isReady, router.query]);
+  
 
-      })
-      .catch(error => {
-      });
-
+  useEffect(() => {
     const handleBeforeUnload = (e) => {
       e.preventDefault();
       e.returnValue = '';
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
-
+  
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
+
   return (
     <>
       <Head>
@@ -125,7 +130,7 @@ const Page = () => {
             <Stack spacing={3}>
               <div>
                 <Typography variant="h4">
-                  {study_id}
+                  {data.study_id}
                 </Typography>
               </div>
               <div>
@@ -134,13 +139,14 @@ const Page = () => {
                   spacing={3}
                 >
                   <EditStudyForm
-                    study_id={data[0].study_id}
-                    title={data[0].title}
-                    description={data[0].description}
-                    authors={[data[0].authors]}
-                    no_participants={data[0].no_participants}
-                    study_coordinators={[data[0].study_coordinators]}
-                    study_assistants={[data[0].study_assistants]} />
+                    study_id={data.study_id}
+                    title={data.title}
+                    description={data.description}
+                    authors={data.authors}
+                    no_participants={data.no_participants}
+                    study_owners={data.owners}
+                    study_coordinators={data.study_coordinators}
+                    study_assistants={data.study_assistants} />
                 </Grid>
               </div>
             </Stack>

@@ -8,7 +8,7 @@ export const AlertProvider = ({ children }) => {
   
     const showAlert = (message, severity = 'success') => {
       setAlert({ open: true, message, severity });
-      setTimeout(() => setAlert({ open: false, message: '', severity: 'success' }), 5000); 
+      setTimeout(() => setAlert({ open: false, message: '', severity: 'success' }), 6000); 
     };
   
     const closeAlert = () => {

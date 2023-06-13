@@ -6,11 +6,11 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'; 
 
 const Page = () => {
-    const router = useRouter(); // Add this line
+    const router = useRouter(); 
 
   const handleStudiesLinkClick = (e) => {
     e.preventDefault();
-    router.back(); // Use the `back` method to redirect the user to the previous page
+    router.back(); 
   };
     return(
   <>

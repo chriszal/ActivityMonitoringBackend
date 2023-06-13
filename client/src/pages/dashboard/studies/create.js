@@ -6,7 +6,8 @@ import NextLink from 'next/link'
 import { useRouter } from 'next/router'; 
 
 const Page = () => {
-    const router = useRouter(); // Add this line
+    const router = useRouter(); 
+    
 
   const handleStudiesLinkClick = (e) => {
     e.preventDefault();

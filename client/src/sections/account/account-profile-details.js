@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect } from 'react';
+import { useCallback, useState, useRef, useEffect,useContext } from 'react';
 
 import {
   Box,
@@ -22,6 +22,8 @@ import { keyframes } from '@emotion/react';
 import { LoadingButton } from '@mui/lab';
 import { useAuth } from 'src/hooks/use-auth';
 import { generateAvatar } from 'src/utils/avatar-generator'
+import { DialogContext } from 'src/contexts/dialog-context';
+import { AlertContext } from 'src/contexts/alert-context';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -84,17 +86,45 @@ const validationSchema = Yup.object({
 
 
 export const AccountProfileDetails = () => {
-
   const { user } = useAuth();
   const [firstName, lastName] = user.name.split(" ");
   const role = user.role;
   const email = user.email;
   const avatarUrl = generateAvatar(user.name);
   const inputRef = useRef(null);
-
+  const { openDialog, closeDialog } = useContext(DialogContext);
+  const { showAlert } = useContext(AlertContext);
   const [avatarSrc, setAvatarSrc] = useState(avatarUrl);
   const [isEditingAvatar, setIsEditingAvatar] = useState(false);
 
+
+
+  const onSubmit = async (values) => {
+    const dialogText = 'Are you sure you want to change your details?';
+    const dialogActions = (
+      <>
+        <Button autoFocus onClick={closeDialog}>
+          Back
+        </Button>
+        <Button variant="contained" autoFocus 
+          onClick={async () => {
+            closeDialog();
+            try {
+              const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              console.log(response.data);
+              showAlert('Your information was updated successfully!', 'success');
+              formik.resetForm(); 
+            } catch (error) {
+              console.error("There was an error updating the user", error.response.data.message);
+              showAlert(error.response.data.message, 'error');
+            }
+          }} >
+          Save
+        </Button>
+      </>
+    );
+    openDialog('Confirmation', dialogText, dialogActions);
+  };
 
   const handleAvatarChange = useCallback(
     (event) => {
@@ -115,9 +145,7 @@ export const AccountProfileDetails = () => {
       role: role
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
-    }
+    onSubmit
   });
 
 
@@ -237,7 +265,7 @@ export const AccountProfileDetails = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">
+          <Button variant="contained" type="submit" disabled={!formik.dirty}>
             Save details
           </Button>
         </CardActions>

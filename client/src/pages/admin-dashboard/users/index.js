@@ -1,11 +1,7 @@
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
-import { subDays, subHours } from 'date-fns';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
-import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { UsersTable } from 'src/sections/users/users-table';
 import { UsersSearch } from 'src/sections/users/users-search';
@@ -13,74 +9,66 @@ import { applyPagination } from 'src/utils/apply-pagination';
 import NextLink from 'next/link';
 import axios from 'axios';
 
-const now = new Date();
-
-
-
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  
+
   const useUsers = (page, rowsPerPage) => {
     const [data, setData] = useState([]);
-
+    const [totalCount, setTotalCount] = useState(0);
+  
     useEffect(() => {
       axios.get('http://0.0.0.0:8081/api/v1/users')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);
+            setTotalCount(response.data.length);
             setIsLoading(false);
           } else {
             setIsLoading(false);
             setError(response.message)
           }
-
         })
         .catch(error => {
           setIsLoading(false);
           setError(error.message);
         });
     }, []);
-
-    return useMemo(
-      () => {
-        return applyPagination(data, page, rowsPerPage);
-      },
-      [page, rowsPerPage, data]
-    );
+  
+    return useMemo(() => {
+      return {
+        data: applyPagination(data, page, rowsPerPage),
+        totalCount // return total count
+      };
+    }, [page, rowsPerPage, data]);
+    
   };
+  
 
-  const useUserIds = (users) => {
-    return useMemo(
-      () => {
-        return users.map((user) => user.username);
-      },
-      [users]
-    );
-  };
-
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const users = useUsers(page, rowsPerPage);
-  const usersIds = useUserIds(users);
-  const usersSelection = useSelection(usersIds);
+  const { data: users, totalCount } = useUsers(page, rowsPerPage); 
+  
 
 
   const handlePageChange = useCallback(
-    (event, value) => {
-      setPage(event.target.value);
+    (event, newPage) => {
+      setPage(newPage);
     },
     []
   );
-
+  
   const handleRowsPerPageChange = useCallback(
     (event) => {
-      setRowsPerPage(event.target.value);
+      setRowsPerPage(parseInt(event.target.value, 10));
+      setPage(0); 
     },
     []
   );
+  
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -144,17 +132,12 @@ const Page = () => {
             <UsersTable
               error={error}
               isLoading={isLoading}
-              count={filteredUsers.length}
+              count={totalCount}
               items={filteredUsers}
-              onDeselectAll={usersSelection.handleDeselectAll}
-              onDeselectOne={usersSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={usersSelection.handleSelectAll}
-              onSelectOne={usersSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={usersSelection.selected}
             />
           </Stack>
         </Container>

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useContext } from 'react';
 import { DialogContext } from 'src/contexts/dialog-context';
 import { AlertContext } from 'src/contexts/alert-context';
@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Card,
-  IconButton,
   Stack,
   CardActions,
   CardContent,
@@ -22,7 +21,7 @@ import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
-import { useRouter } from 'next/router'; 
+import { useRouter } from 'next/router';
 
 
 const validationSchema = Yup.object({
@@ -30,8 +29,7 @@ const validationSchema = Yup.object({
   title: Yup.string().required('Title is required').max(100, 'Title must be less than 100 characters long'),
   description: Yup.string().required('Description is required').max(1000, 'Description must be less than 1000 characters long'),
   authors: Yup.string().required('Authors is required'),
-  no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100'),
-  study_ownersInput: Yup.string().required('Owner input is required')
+  no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100')
 });
 
 
@@ -39,11 +37,15 @@ export const CreateStudyForm = () => {
   const [coordinator_loading, setCoordinatorLoading] = useState(false);
   const [assistant_loading, setAssistantLoading] = useState(false);
   const [owner_loading, setOwnerLoading] = useState(false);
+  const [coordinatorEmails, setCoordinatorEmails] = useState([]);
+  const [assistantEmails, setAssistantEmails] = useState([]);
+  const [ownerEmails, setOwnerEmails] = useState([]);
+
 
   const { openDialog, closeDialog } = useContext(DialogContext);
   const { showAlert } = useContext(AlertContext);
   const router = useRouter();
-  
+
 
   const onSubmit = async (values) => {
     const dialogText = 'Are you sure you want to create this study?';
@@ -53,18 +55,21 @@ export const CreateStudyForm = () => {
           Back
         </Button>
         <Button onClick={async () => {
-            const { study_coordinatorInput, study_assistantsInput,study_ownersInput, ...postData } = values;
+          const { study_coordinatorsInput, study_assistantsInput, study_ownersInput, ...postData } = values;
+          postData.study_coordinators = values.study_coordinators.map(coordinator => coordinator.id);
+          postData.study_assistants = values.study_assistants.map(assistant => assistant.id);
+          postData.study_owners = values.study_owners.map(owner => owner.id);
+          postData.authors = values.authors.split(',').map(author => author.trim());
           closeDialog();
-          console.log('Submitted',postData);
+          console.log('Submitted', postData);
           try {
-            const response = await axios.post('http://0.0.0.0:8081/api/v1/studies', postData);         
+            const response = await axios.post('http://0.0.0.0:8081/api/v1/studies', postData);
             console.log(response.data);
             showAlert('Study created successfully!', 'success');
             router.back()
           } catch (error) {
             console.error("There was an error creating the study", error.response.data.message);
             showAlert(error.response.data.message, 'error');
-            // handle errors
           }
         }} autoFocus>
           Create
@@ -72,7 +77,7 @@ export const CreateStudyForm = () => {
       </>
     );
     openDialog('Confirmation', dialogText, dialogActions);
-};
+  };
 
 
   const formik = useFormik({
@@ -83,7 +88,7 @@ export const CreateStudyForm = () => {
       authors: '',
       no_participants: '',
       study_owners: [],
-      study_ownersInput:"",
+      study_ownersInput: "",
       study_coordinators: [],
       study_coordinatorsInput: "",
       study_assistants: [],
@@ -92,7 +97,7 @@ export const CreateStudyForm = () => {
     validationSchema,
     onSubmit
   });
-  
+
 
 
 
@@ -101,23 +106,28 @@ export const CreateStudyForm = () => {
     if (!coordinatorEmail) {
       return;
     }
-    console.log(formik.values.study_assistants+" "+formik.values.study_ownersInput);
-    //Check if email already exists as a chip in any of the fields
-    if (formik.values.study_ownersInput.includes(coordinatorEmail) || formik.values.study_assistantsInput.includes(coordinatorEmail)) {
-      formik.setFieldError('study_coordinatorsInput', "Email already exists as a owner or assistant.");
+
+    if (ownerEmails.includes(coordinatorEmail) || assistantEmails.includes(coordinatorEmail)) {
+      formik.setFieldError('study_coordinatorsInput', "Email already exists as an owner or assistant.");
       return;
     }
-  
+
     try {
       setCoordinatorLoading(true);
       const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${coordinatorEmail}`);
       const coordinatorExists = Object.keys(response.data).length > 0;
-      console.log(response.data.id)
       if (coordinatorExists) {
-        if (!formik.values.study_coordinators.includes(coordinatorEmail)) {
-          formik.setValues(prevValues => ({ ...prevValues, study_coordinators: [...prevValues.study_coordinators, response.data.id] }));
+        if (!formik.values.study_coordinators.find(coordinator => coordinator.email === coordinatorEmail)) {
+          formik.setValues(prevValues => ({
+            ...prevValues,
+            study_coordinators: [
+              ...prevValues.study_coordinators,
+              { id: response.data.id, email: coordinatorEmail }
+            ]
+          }));
+          setCoordinatorEmails([...coordinatorEmails, coordinatorEmail]);
           formik.setErrors({ study_coordinatorsInput: "" });
-          document.getElementsByName('study_coordinatorsInput')[0].value = '';
+          formik.setFieldValue('study_coordinatorsInput', '');
         } else {
           formik.setErrors({ study_coordinatorsInput: "Coordinator already exists." });
         }
@@ -131,47 +141,63 @@ export const CreateStudyForm = () => {
       setCoordinatorLoading(false);
     }
   };
-  
+
 
   const handleDeleteCoordinator = (index) => {
     formik.setFieldValue('study_coordinators', formik.values.study_coordinators.filter(
       (value, i) => i !== index
     ));
+    setCoordinatorEmails(coordinatorEmails.filter((email, i) => i !== index));
   };
+
 
   const handleAssistantSearch = async () => {
     const assistantEmail = formik.values.study_assistantsInput.trim();
     if (!assistantEmail) {
       return;
     }
-  
+
+    if (coordinatorEmails.includes(assistantEmail) || ownerEmails.includes(assistantEmail)) {
+      formik.setFieldError('study_assistantsInput', "Email already exists as a coordinator or owner.");
+      return;
+    }
+
     try {
       setAssistantLoading(true);
       const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${assistantEmail}`);
       const assistantExists = Object.keys(response.data).length > 0;
       if (assistantExists) {
-        // Check if assistant already exists in the array
-        if (!formik.values.study_assistants.includes(assistantEmail)) {
-          formik.setFieldValue('study_assistants', [...formik.values.study_assistants, assistantEmail]);
-          formik.setFieldValue('study_assistantsInput', "");
+        if (!formik.values.study_assistants.find(assistant => assistant.email === assistantEmail)) {
+          formik.setValues(prevValues => ({
+            ...prevValues,
+            study_assistants: [
+              ...prevValues.study_assistants,
+              { id: response.data.id, email: assistantEmail }
+            ]
+          }));
+          setAssistantEmails([...assistantEmails, assistantEmail]);
+          formik.setErrors({ study_assistantsInput: "" });
+          formik.setFieldValue('study_assistantsInput', '');
         } else {
-          formik.setFieldError('study_assistantsInput', "Assistant already exists.");
+          formik.setErrors('study_assistantsInput', "Assistant already exists.");
         }
       } else {
-        formik.setFieldError('study_assistantsInput', "Assistant not found.");
+        formik.setErrors('study_assistantsInput', "Assistant not found.");
       }
     } catch (error) {
-      console.error(error);
-      formik.setFieldError('study_assistantsInput', error.toString());
+      const errorMessage = error.response?.data?.message || "An error occurred while searching for the assistant.";
+      formik.setErrors({ study_assistantsInput: errorMessage });
     } finally {
       setAssistantLoading(false);
     }
   };
+  
 
   const handleDeleteAssistant = (index) => {
     formik.setFieldValue('study_assistants', formik.values.study_assistants.filter(
       (value, i) => i !== index
     ));
+    setAssistantEmails(assistantEmails.filter((email, i) => i !== index));
   };
 
   const handleOwnerSearch = async () => {
@@ -179,25 +205,36 @@ export const CreateStudyForm = () => {
     if (!ownerEmail) {
       return;
     }
-  
+
+    if (coordinatorEmails.includes(ownerEmail) || assistantEmails.includes(ownerEmail)) {
+      formik.setFieldError('study_ownersInput', "Email already exists as an assistant or coordinator.");
+      return;
+    }
     try {
       setOwnerLoading(true);
       const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${ownerEmail}`);
       const ownerExists = Object.keys(response.data).length > 0;
       if (ownerExists) {
-        // Check if assistant already exists in the array
-        if (!formik.values.study_owners.includes(ownerEmail)) {
-          formik.setFieldValue('study_owners', [...formik.values.study_owners, ownerEmail]);
+        if (!formik.values.study_owners.find(owner => owner.email === ownerEmail)) {
+          formik.setValues(prevValues => ({
+            ...prevValues,
+            study_owners: [
+              ...prevValues.study_owners,
+              { id: response.data.id, email: ownerEmail }
+            ]
+          }));
+          setOwnerEmails([...ownerEmails, ownerEmail]);
+          formik.setErrors({ study_ownersInput: "" });
           formik.setFieldValue('study_ownersInput', "");
         } else {
-          formik.setFieldError('study_ownersInput', "Owner already exists.");
+          formik.setErrors('study_ownersInput', "Owner already exists.");
         }
       } else {
-        formik.setFieldError('study_ownersInput', "Owner not found.");
+        formik.setErrors('study_ownersInput', "Owner not found.");
       }
     } catch (error) {
-      console.error(error);
-      formik.setFieldError('study_ownersInput', error.toString());
+      const errorMessage = error.response?.data?.message || "An error occurred while searching for the owner.";
+      formik.setErrors({ study_ownersInput: errorMessage });
     } finally {
       setOwnerLoading(false);
     }
@@ -207,8 +244,9 @@ export const CreateStudyForm = () => {
     formik.setFieldValue('study_owners', formik.values.study_owners.filter(
       (value, i) => i !== index
     ));
+    setOwnerEmails(ownerEmails.filter((email, i) => i !== index));
   };
-
+  
   return (
     <div>
       <form
@@ -341,11 +379,11 @@ export const CreateStudyForm = () => {
                         </LoadingButton>
                       ),
                       startAdornment: (
-                        Array.isArray(formik.values.study_coordinators) && formik.values.study_coordinators.map((coordinator, index) => (
+                        coordinatorEmails.map((email, index) => (
                           <Chip
                             key={index}
                             size="small"
-                            label={coordinator}
+                            label={email}
                             onDelete={() => handleDeleteCoordinator(index)}
                             sx={{ m: 0.5, marginTop: "20px" }}
                           />
@@ -358,7 +396,7 @@ export const CreateStudyForm = () => {
                     value={formik.values.study_coordinatorsInput}
                     error={formik.touched.study_coordinatorsInput && Boolean(formik.errors.study_coordinatorsInput)}
                     helperText={formik.touched.study_coordinatorsInput && formik.errors.study_coordinatorsInput}
-                    
+
                   />
                 </Grid>
 
@@ -387,11 +425,11 @@ export const CreateStudyForm = () => {
                         </LoadingButton>
                       ),
                       startAdornment: (
-                        Array.isArray(formik.values.study_assistants) && formik.values.study_assistants.map((assistant, index) => (
+                        assistantEmails.map((email, index) => (
                           <Chip
                             key={index}
                             size="small"
-                            label={assistant}
+                            label={email}
                             onDelete={() => handleDeleteAssistant(index)}
                             sx={{ m: 0.5, marginTop: "20px" }}
                           />
@@ -404,7 +442,7 @@ export const CreateStudyForm = () => {
                     value={formik.values.study_assistantsInput}
                     error={formik.touched.study_assistantsInput && Boolean(formik.errors.study_assistantsInput)}
                     helperText={formik.touched.study_assistantsInput && formik.errors.study_assistantsInput}
-                    
+
                   />
                 </Grid>
                 <Grid
@@ -432,11 +470,11 @@ export const CreateStudyForm = () => {
                         </LoadingButton>
                       ),
                       startAdornment: (
-                        Array.isArray(formik.values.study_owners) && formik.values.study_owners.map((owner, index) => (
+                        ownerEmails.map((email, index) => (
                           <Chip
                             key={index}
                             size="small"
-                            label={owner}
+                            label={email}
                             onDelete={() => handleDeleteOwner(index)}
                             sx={{ m: 0.5, marginTop: "20px" }}
                           />
@@ -449,7 +487,7 @@ export const CreateStudyForm = () => {
                     value={formik.values.study_ownersInput}
                     error={formik.touched.study_ownersInput && Boolean(formik.errors.study_ownersInput)}
                     helperText={formik.touched.study_ownersInput && formik.errors.study_ownersInput}
-                    
+
                   />
                 </Grid>
               </Grid>

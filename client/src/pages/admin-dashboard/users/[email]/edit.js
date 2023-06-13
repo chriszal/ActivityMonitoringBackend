@@ -56,10 +56,10 @@ const Page = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
           <Button sx={{ color: 'black', marginLeft: -2, marginBottom: 3 }}
             component={NextLink}
             href="/admin-dashboard/users"
@@ -72,8 +72,8 @@ const Page = () => {
           </Button>
           {isLoading ? (
             <>
-              <Stack >
-                <Skeleton variant="text" sx={{ fontSize: '2.2rem', marginBottom: "-10px" }} width="34%" />
+              <Stack  >
+                <Skeleton variant="text" sx={{ fontSize: '1.8rem'}} width="30%" />
                 <Skeleton variant="text" sx={{ fontSize: '1.3rem', marginBottom: "10px" }} width="20%" />
               </Stack>
               <Card>
@@ -136,7 +136,7 @@ const Page = () => {
             </>) : (
             <Stack spacing={3}>
               <div>
-                <Typography variant="h4">
+                <Typography variant="h4" sx={{mb:2}}>
                   {data.email}
                 </Typography>
                 <Typography fontWeight={500} fontSize={"0.825rem"} lineHeight={1.57}>
@@ -148,12 +148,15 @@ const Page = () => {
                   container
                   spacing={3}
                 >
+                  <Grid item xs={12}>
                   <EditUserForm 
                     first_name={data.first_name}
                     last_name={data.last_name}
                     email={data.email}
                     roles={data.roles}
                   />
+                  </Grid>
+                 
                 </Grid>
               </div>
             </Stack>

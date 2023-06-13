@@ -34,19 +34,11 @@ export const UsersTable = (props) => {
     isLoading = true,
     count = 0,
     items = [],
-    onDeselectAll,
-    onDeselectOne,
     onPageChange,
     onRowsPerPageChange,
-    onSelectAll,
-    onSelectOne,
     page = 0,
-    rowsPerPage = 0,
-    selected = []
+    rowsPerPage = 0
   } = props;
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
-
   return (
     <Card>
       <Scrollbar>
@@ -97,7 +89,6 @@ export const UsersTable = (props) => {
                   </TableRow>)
                   : (items.length > 0 ? (
                     items.map((user) => {
-                      const isSelected = selected.includes(user.id);
                       const createdAt = format(new Date(user.created_at.split(' ')[0]), 'dd/MM/yyyy');
                       let chipColor;
                       if (user.roles.includes('admin') && user.roles.includes('member')) {
@@ -114,7 +105,6 @@ export const UsersTable = (props) => {
                         <TableRow
                           hover
                           key={user.id}
-                          selected={isSelected}
                         >
 
                           <TableCell>
@@ -171,14 +161,9 @@ UsersTable.propTypes = {
   isLoading: PropTypes.bool,
   count: PropTypes.number,
   items: PropTypes.array,
-  onDeselectAll: PropTypes.func,
-  onDeselectOne: PropTypes.func,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
-  onSelectAll: PropTypes.func,
-  onSelectOne: PropTypes.func,
   page: PropTypes.number,
-  rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  rowsPerPage: PropTypes.number
 };
 
