@@ -307,7 +307,6 @@ export const CreateStudyForm = () => {
                     name="description"
                     multiline
                     rows={3}
-                    inputProps={{ maxLength: 12 }}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     required

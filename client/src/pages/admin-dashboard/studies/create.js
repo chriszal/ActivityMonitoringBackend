@@ -29,11 +29,9 @@ const Page = () => {
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <div>
-            <Typography variant="h4">
+            <Typography variant="h4" sx={{mb:1}}>
               Create a new study
             </Typography>
-          </div>
-          <div>
             <Breadcrumbs separator="•" aria-label="breadcrumb">
               <Link component={NextLink}
                 underline="hover"
@@ -46,7 +44,6 @@ const Page = () => {
               <Typography color="text.primary">Create</Typography>
             </Breadcrumbs>
           </div>
-
           <div>
             <Grid
               container
