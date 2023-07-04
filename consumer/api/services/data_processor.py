@@ -1,8 +1,11 @@
 import pandas as pd
-from api.model.accel_processed import AccelProcessed
+from api.model.processed_steps import ProcessedSteps
 import requests
 import logging
 import os
+from scipy.signal import find_peaks
+from scipy.signal import savgol_filter 
+
 
 class DataProcessor:
     def __init__(self, influx_host, influx_port, influx_token, influx_org, influx_bucket):
@@ -12,9 +15,10 @@ class DataProcessor:
         self._influx_org = influx_org
         self._influx_bucket = influx_bucket
 
-    def process_steps(self, chunk_id,channel,method):
+    def process_steps(self, message, channel, method):
+        chunk_id = message.get('chunk_id')
         response = self.fetch_data(chunk_id)
-        
+
         if response.status_code == 200:
             if response.headers.get('Content-Encoding', '') == 'gzip':
                 try:
@@ -25,36 +29,48 @@ class DataProcessor:
                         logging.info(f'File {chunk_id}.csv is empty.')
                     else:
                         df = pd.read_csv(f'{chunk_id}.csv')
-                        df = df.pivot(index='_time', columns='_field', values='_value')
+                        df = df.pivot(
+                            index='_time', columns='_field', values='_value')
                         logging.info(df.head())
                         # Now i can access 'x', 'y', and 'z' as columns directly
                         x_values = df['x']
                         y_values = df['y']
                         z_values = df['z']
 
-                         # Convert the '_time' index to datetime
+                        # calculate magnitude of accelerometer vector
+                        magnitude = (x_values**2 + y_values**2 + z_values**2)**0.5
+
+                        # smoothing the magnitude with a Savitzky-Golay filter
+                        # adjusted window_length and polyorder (these values may still need tuning)
+                        magnitude_smooth = savgol_filter(magnitude, window_length=101, polyorder=2)
+
+                        # detect peaks which will be considered as steps. 1g is considered as a threshold
+                        # added prominence and distance parameters to find_peaks (these values may still need tuning)
+                        peaks, _ = find_peaks(magnitude_smooth, height=1, prominence=0.5, distance=50)
+
+                        step_count = len(peaks)
+                        logging.info(step_count)
+                        # Convert the '_time' index to datetime
                         df.index = pd.to_datetime(df.index, errors='coerce')
 
                         # Get the start and end dates
                         start_date = df.index.min()
                         end_date = df.index.max()
 
-                        accel_processed = AccelProcessed(chunk_id=chunk_id, start_date=start_date, end_date=end_date)
-                        accel_processed.save()
+                        processed_steps = ProcessedSteps(
+                            chunk_id=chunk_id, start_date=start_date, end_date=end_date, steps_count=step_count) # Added steps_count
+                        processed_steps.save()
                 except Exception as e: 
                     logging.error(f'Failed to process data for chunk_id: {e}')
-
-
             else:
-               logging.info(f'The chunk_id: {chunk_id}, was not found in InfluxDB.')
-
+                logging.info(f'The chunk_id: {chunk_id}, was not found in InfluxDB.')
         else:
             logging.error('Failed to fetch data from InfluxDB')
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
-
-    def process_bites(self, sensor_type, chunk_id, channel, method):
-        
+    def process_bites(self,message, channel, method):
+        sensor_type = message.get('type')
+        chunk_id = message.get('chunk_id')
         # Replace 'a' with 'g' and vice versa in the chunk_id
         other_type = 'a' if sensor_type == 'g' else 'g'
         other_chunk_id = other_type + chunk_id[1:]
@@ -69,6 +85,9 @@ class DataProcessor:
             logging.info(f'Corresponding <<{other_type}>> type of data for {chunk_id} was not found. Waiting for the data to arrive.')
         channel.basic_ack(delivery_tag=method.delivery_tag)
     
+
+
+
     def fetch_data(self, chunk_id):
         data = f'from(bucket:"{self._influx_bucket}") |> range(start:-1000000h) |> filter(fn: (r) => r.chunk_id == "{chunk_id}")'
         response = requests.post(

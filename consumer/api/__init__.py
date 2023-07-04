@@ -1,7 +1,7 @@
 import logging
 import mongoengine as mongo
 from api.enum import EnvironmentVariables
-from api.rabbitmq import RabbitMQReceiver
+from api.rabbitmq import RabbitMQConsumer
 import threading
 
 def main():
@@ -18,7 +18,7 @@ def main():
         password=EnvironmentVariables.MONGO_INITDB_ROOT_PASSWORD.get_env()
     )
 
-    receiver_bites = RabbitMQReceiver(
+    consumer_bites = RabbitMQConsumer(
         host=EnvironmentVariables.RABBITMQ_HOST.get_env(),
         username=EnvironmentVariables.RABBITMQ_USERNAME.get_env(),
         password=EnvironmentVariables.RABBITMQ_PASSWORD.get_env(),
@@ -32,7 +32,7 @@ def main():
         influx_bucket=EnvironmentVariables.DOCKER_INFLUXDB_INIT_BUCKET.get_env(),
     )
 
-    receiver_steps = RabbitMQReceiver(
+    consumer_steps = RabbitMQConsumer(
         host=EnvironmentVariables.RABBITMQ_HOST.get_env(),
         username=EnvironmentVariables.RABBITMQ_USERNAME.get_env(),
         password=EnvironmentVariables.RABBITMQ_PASSWORD.get_env(),
@@ -47,8 +47,8 @@ def main():
         
     
     )
-    thread1 = threading.Thread(target=receiver_bites.get_messages)
-    thread2 = threading.Thread(target=receiver_steps.get_messages)
+    thread1 = threading.Thread(target=consumer_bites.get_messages)
+    thread2 = threading.Thread(target=consumer_steps.get_messages)
 
     thread1.start()
     thread2.start()

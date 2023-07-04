@@ -3,7 +3,7 @@ FROM python:3.8
 RUN apt-get update && apt-get install -y netcat-openbsd && apt-get clean
 
 # Make a directory for our app
-WORKDIR /receiver
+WORKDIR /consumer
 
 # Install dependencies
 COPY requirements.txt .
@@ -13,8 +13,8 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY /api ./api
 
 # Copy the wait-for-rabbitmq script
-COPY receiver_entrypoint.sh .
-RUN chmod +x receiver_entrypoint.sh
+COPY consumer_entrypoint.sh .
+RUN chmod +x consumer_entrypoint.sh
 
 # Run the application
-CMD ["./receiver_entrypoint.sh", "rabbitmqServer", "python", "-m", "api"]
+CMD ["./consumer_entrypoint.sh", "rabbitmqServer", "python", "-m", "api"]

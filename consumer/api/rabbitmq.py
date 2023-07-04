@@ -4,7 +4,7 @@ import pika
 from api.services.data_processor import DataProcessor
 # import subprocess
 
-class RabbitMQReceiver():
+class RabbitMQConsumer():
     """
     Consumer component that will receive messages and handle
     connection and channel interactions with RabbitMQ.
@@ -37,7 +37,7 @@ class RabbitMQReceiver():
         self.create_channel()
         self.create_exchange()
         self.create_bind()
-        logging.info("Receiver Channel created...")
+        logging.info("Consumer Channel created...")
 
     def create_channel(self):
         credentials = pika.PlainCredentials(username=self._username, password=self._password)
@@ -69,14 +69,13 @@ class RabbitMQReceiver():
     def callback(self, channel, method, properties, body):
         try:
             message = json.loads(body.decode())
-            logging.info(f'Queue: {self.queue_name} received message: {message}')
+            logging.info(f'Queue: {self.queue_name} consumed message: {message}')
 
-            sensor_type = message.get('type')
-            chunk_id = message.get('chunk_id')
+            
             if self.queue_name=="bites_queue":
-                self.data_processor.process_bites(sensor_type, chunk_id, channel, method)
+                self.data_processor.process_bites(message, channel, method)
             elif self.queue_name=="steps_queue":
-                self.data_processor.process_steps(chunk_id, channel, method)
+                self.data_processor.process_steps(message, channel, method)
 
         except Exception as e:
             logging.error(f'Error while processing message of {self.queue_name}: {e}')
@@ -84,7 +83,7 @@ class RabbitMQReceiver():
 
     def get_messages(self):
         try:
-            logging.info(f'Starting the {self.queue_name} receiver...')
+            logging.info(f'Starting the {self.queue_name} consumer...')
             self._channel.basic_consume(
                 queue=self.queue_name,
                 on_message_callback=self.callback,  

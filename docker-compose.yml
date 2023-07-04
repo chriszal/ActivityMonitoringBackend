@@ -34,11 +34,11 @@ services:
     networks:
       - tick
 
-  receiver:
-    container_name: receiver
+  consumer:
+    container_name: consumer
     build:
-      context: ./receiver
-      dockerfile: Dockerfile.receiver
+      context: ./consumer
+      dockerfile: Dockerfile.consumer
     restart: always
     depends_on:
       - rabbitmqServer

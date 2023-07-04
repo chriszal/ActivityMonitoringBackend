@@ -1,8 +1,9 @@
 from mongoengine import *
 import datetime
 
-class AccelProcessed(Document):
+class ProcessedSteps(Document):
     chunk_id = StringField(required=True)
+    steps_count = IntField()
     start_date = DateTimeField()
     end_date = DateTimeField()
     processed_at = DateTimeField(default=datetime.datetime.utcnow)
