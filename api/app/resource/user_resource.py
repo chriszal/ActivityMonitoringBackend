@@ -7,14 +7,12 @@ from model.user import User
 from model.registration_token import RegistrationToken
 from services.user_service import UserService
 from common.constants import REGISTRATION_SECRET
-# from googleapiclient.discovery import build
-# from googleapiclient.errors import HttpError
-# from google.oauth2.credentials import Credentials
-import base64
-from email.mime.text import MIMEText
+from common.constants import GMAIL_PASS
+from common.constants import GMAIL_USER
+import smtplib
 from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
+from email.mime.text import MIMEText
+import os
 
 class UserResource(object):
 
@@ -24,6 +22,8 @@ class UserResource(object):
         """
         self.user_service = UserService()
         self.secret_key = REGISTRATION_SECRET
+        self.gmail = GMAIL_USER
+        self.gmail_pass = GMAIL_PASS
         # self.creds = Credentials.from_authorized_user_file('/usr/api/credentials.json')
 
 
@@ -166,64 +166,72 @@ class UserResource(object):
             token_data = req.media
             recipient = token_data['email']
             expires_at = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+            
             # Generate the token using the user email, role, and expiration date
             token = jwt.encode({
                 'email': token_data['email'],
                 'role': token_data['role'],
                 'exp': expires_at
             }, self.secret_key, algorithm='HS256')
+            
             # Save the token in the database
             token_obj = self.user_service.create_token(token=token)
-            body_html = """
-                        <html>
-                            <body>
+            
+            smtp = smtplib.SMTP('smtp.gmail.com', 587)
+            smtp.starttls()
+            smtp.login(self.gmail, self.gmail_pass)
+            
+            body_html = f"""
+                    <html>
+                        <head>
+                            <style>
+                                .email-content {{
+                                    font-family: Arial, sans-serif;
+                                    max-width: 600px;
+                                    margin: 20px auto;
+                                    border: 1px solid #e0e0e0;
+                                    padding: 20px;
+                                    border-radius: 8px;
+                                }}
+                                .button {{
+                                    display: inline-block;
+                                    padding: 10px 20px;
+                                    margin: 20px 0;
+                                    color: #ffffff;
+                                    background-color: #007BFF;
+                                    border: none;
+                                    border-radius: 4px;
+                                    text-decoration: none;
+                                }}
+                            </style>
+                        </head>
+                        <body>
+                            <div class="email-content">
                                 <p>Hello!</p>
-                                <p>We would like to invite you to register for our system, which offers the following benefits:</p>
-                                <ul>
-                                    <li>Feature 1</li>
-                                    <li>Feature 2</li>
-                                    <li>Feature 3</li>
-                                </ul>
-                                <p>To register, simply click the button below:</p>
-                            </body>
-                        </html>
-                        """
+                                <p>We would like to invite you to register for our system. Click the button below to continue:</p>
+                                <a href="http://0.0.0.0:3000/auth/register/{token}" class="button">Register Now</a>
+                            </div>
+                        </body>
+                    </html>
+                    """
 
-            # Send token with to email recipient
-            # try:
-            #     service = build('gmail', 'v1', credentials=self.creds)
-
-            #     message = MIMEMultipart()
-            #     html = MIMEText(body_html, 'html')
-            #     message.attach(html)
-
-            #     message['to'] = recipient
-            #     message['subject'] = "Activity Monitoring Registration"
-
-            #     # Create the HTML button with a link
-            #     button_html = '<br><a href="https://your-registration-page-link"><button style="background-color: blue; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px;">Register Now</button></a><br>'
-            #     button = MIMEText(button_html, 'html')
-            #     message.attach(button)
-
-            #     create_message = {'raw': base64.urlsafe_b64encode(message.as_bytes()).decode()}
-            #     send_message = (service.users().messages().send(userId="me", body=create_message).execute())
-            #     print(F'sent message to {recipient} Message Id: {send_message["id"]}')
-            # except HttpError as error:
-            #     print(F'An error occurred: {error}')
-            #     send_message = None
+            
+            msg = MIMEMultipart()
+            msg['From'] = GMAIL_USER
+            msg['To'] = recipient
+            msg['Subject'] = 'Activity Monitoring Registration'
+            
+            msg.attach(MIMEText(body_html, 'html'))
+            smtp.sendmail(GMAIL_USER, recipient, msg.as_string())
+            smtp.quit()
 
             resp.status = falcon.HTTP_201
             resp.body = json.dumps({
-                'message': 'Registration Email successfully Sent!',
-                'status': 201,
-                'data': {}
-            })
-            resp.status = falcon.HTTP_201
-            resp.body = json.dumps({
-                'message': 'Token successfully created!',
+                'message': 'Token successfully created and Registration Email successfully Sent!',
                 'status': 201,
                 'data': {'token': token}
             })
+        
         except Exception as e:
             resp.status = falcon.HTTP_409
             resp.body = json.dumps({

@@ -3,6 +3,10 @@ import os
 SECRET = os.environ.get('JWT_SECRET')
 REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
 
+GMAIL_USER = os.environ.get("GMAIL_USER")
+GMAIL_PASS = os.environ.get("GMAIL_PASS")
+            
+
 MONGO = {
     'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
     'HOST': 'mongodb',
