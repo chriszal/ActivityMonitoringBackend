@@ -8,7 +8,7 @@ import { applyPagination } from 'src/utils/apply-pagination';
 import axios from 'axios';
 import { StudiesGrid } from 'src/sections/studies/studies-grid';
 import { useAuth } from 'src/hooks/use-auth';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 
 const Page = () => {
@@ -24,7 +24,7 @@ const Page = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      axios.get(`http://0.0.0.0:8081/api/v1/studies/user/${user.id}`)
+      axiosInstance.get(`/studies/user/${user.id}`)
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

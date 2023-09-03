@@ -80,10 +80,10 @@ export const StudiesTable = (props) => {
                   Owners
                 </TableCell>
                 <TableCell>
-                  Study Coordinators
+                   Coordinators
                 </TableCell>
                 <TableCell>
-                  Study Assistants
+                   Assistants
                 </TableCell>
                 <TableCell>
                   Actions

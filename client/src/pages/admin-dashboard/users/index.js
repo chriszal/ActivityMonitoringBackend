@@ -8,6 +8,7 @@ import { UsersSearch } from 'src/sections/users/users-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import NextLink from 'next/link';
 import axios from 'axios';
+import axiosInstance from 'src/utils/axios-instance';
 
 const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +24,7 @@ const Page = () => {
     const [totalCount, setTotalCount] = useState(0);
   
     useEffect(() => {
-      axios.get('http://0.0.0.0:8081/api/v1/users')
+      axiosInstance.get('/users')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

@@ -89,10 +89,10 @@ export const AuthProvider = (props) => {
     if (isAuthenticated) {
       // const user= window.sessionStorage.getItem('token');
       const user = {
-        id: '6485bb59001f0dc662c94d04',
+        id: '64f4b7ffacd493df54dc8350',
         avatar: '/assets/avatars/avatar-anika-visser.png',
         name: 'Chris Zalachoris',
-        email: 'chriszal@gmail.com',
+        email: 'christoszal@gmail.com',
         role:'admin'
       };
 
@@ -154,7 +154,7 @@ export const AuthProvider = (props) => {
   // };
 
   const signIn = async (email, password) => {
-    if (email !== 'chriszal@gmail.com' || password !== '1234') {
+    if (email !== 'christoszal@gmail.com' || password !== '1234') {
       throw new Error('Please check your email and password');
     }
 
@@ -165,10 +165,10 @@ export const AuthProvider = (props) => {
       console.error(err);
     }
     const user = {
-      id: '6485bb59001f0dc662c94d04',
+      id: '64f4b7ffacd493df54dc8350',
       avatar: '/assets/avatars/avatar-anika-visser.png',
       name: 'Chris Zalachoris',
-        email: 'chriszal@gmail.com',
+        email: 'christoszal@gmail.com',
       role:'admin'
     };
     if (user.role=="admin") {

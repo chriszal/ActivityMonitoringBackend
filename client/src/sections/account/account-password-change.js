@@ -16,7 +16,7 @@ import CheckIcon from '@heroicons/react/24/solid/CheckIcon';
 import { DialogContext } from 'src/contexts/dialog-context';
 import { AlertContext } from 'src/contexts/alert-context';
 import { useContext } from 'react';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 export const AccountPasswordChange = () => {
 
@@ -34,7 +34,7 @@ export const AccountPasswordChange = () => {
           onClick={async () => {
             closeDialog();
             try {
-              // const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              // const response = await axiosInstance.put(`/users/${email}`, values);
               // console.log(response.data);
               showAlert('Your password was updated successfully!', 'success');
               formik.resetForm(); 

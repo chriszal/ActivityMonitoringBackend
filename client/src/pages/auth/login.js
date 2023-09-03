@@ -37,7 +37,7 @@ const Page = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: 'chriszal@gmail.com',
+      email: 'christoszal@gmail.com',
       password: '1234',
       submit: null
     },

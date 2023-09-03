@@ -4,7 +4,7 @@ networks:
     
 services:
   influxdb:
-    container_name: influxdb-container
+    container_name: influxdb
     image: influxdb:2.4
     networks:
       - tick
@@ -59,8 +59,8 @@ services:
   #     - ./client:/app/client
   #   restart: unless-stopped
   mongodb:
-    container_name: mongodb-container
-    image: mongo
+    container_name: mongodb
+    image: mongo:latest
     ports:
       - "27017:27017"
     networks:
@@ -69,9 +69,11 @@ services:
     volumes:
       - ./init-mongodb:/docker-entrypoint-initdb.d
       - ./init-mongodb/data:/tmp/data
+    env_file:
+      - .env
       
   falcon-api:
-    container_name: falcon-api-container
+    container_name: falcon-api
     build:
       context: ./api
       dockerfile: Dockerfile.api
@@ -101,22 +103,22 @@ services:
   #   ports:
   #     - 8080:8080
       
-  nginx:
-    container_name: nginx-container
-    image: nginx:latest
-    volumes:
-      - ./nginx/nginx.http.config:/etc/nginx/nginx.conf
-      #- ./assets/nginx/certs:/etc/nginx/certs
-      # - ./webapp/build:/usr/share/nginx/html
-    ports:
-      - "81:81"
-    depends_on:
-      - falcon-api
-      - client
-    networks:
-      - tick
-    restart:
-      unless-stopped
+  # nginx:
+  #   container_name: nginx-container
+  #   image: nginx:latest
+  #   volumes:
+  #     - ./nginx/nginx.http.config:/etc/nginx/nginx.conf
+  #     #- ./assets/nginx/certs:/etc/nginx/certs
+  #     # - ./webapp/build:/usr/share/nginx/html
+  #   ports:
+  #     - "81:81"
+  #   depends_on:
+  #     - falcon-api
+  #     - client
+  #   networks:
+  #     - tick
+  #   restart:
+  #     unless-stopped
 
 
 volumes:

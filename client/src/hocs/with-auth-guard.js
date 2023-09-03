@@ -12,11 +12,14 @@ const roles = {
   "/admin-dashboard/studies": ADMIN_ROLES,
   "/admin-dashboard/studies/create": ADMIN_ROLES,
   "/admin-dashboard/studies/[study_id]/edit": ADMIN_ROLES,
+  "/admin-dashboard/studies/[study_id]/view": ADMIN_ROLES,
+  "/admin-dashboard/account": ADMIN_ROLES,
   "/dashboard": MEMBER_ROLES,
   "/dashboard/account": MEMBER_ROLES,
   "/dashboard/notifications": MEMBER_ROLES,
   "/dashboard/studies": MEMBER_ROLES,
   "/dashboard/studies/create": MEMBER_ROLES,
+  "/dashboard/studies/[study_id]/view": MEMBER_ROLES,
   "/404": MEMBER_ROLES
 };
 

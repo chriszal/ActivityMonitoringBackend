@@ -8,6 +8,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Skeleton from '@mui/material/Skeleton';
+import axiosInstance from 'src/utils/axios-instance';
 
 const Page = () => {
   const [data, setData] = useState(null);
@@ -18,7 +19,7 @@ const Page = () => {
       const { email } = router.query;
       console.log(email)
       
-      axios.get(`http://0.0.0.0:8081/api/v1/users/${email}`)
+      axiosInstance.get(`/users/${email}`)
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

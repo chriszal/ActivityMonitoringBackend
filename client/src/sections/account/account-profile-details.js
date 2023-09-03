@@ -27,6 +27,8 @@ import { AlertContext } from 'src/contexts/alert-context';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import axiosInstance from 'src/utils/axios-instance';
+
 
 const AvatarContainer = styled(Box)({
   position: 'relative',
@@ -110,7 +112,7 @@ export const AccountProfileDetails = () => {
           onClick={async () => {
             closeDialog();
             try {
-              const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              const response = await axiosInstance.put(`/users/${email}`, values);
               console.log(response.data);
               showAlert('Your information was updated successfully!', 'success');
               formik.resetForm(); 

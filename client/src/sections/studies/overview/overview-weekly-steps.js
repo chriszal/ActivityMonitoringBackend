@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types';
 import ArrowPathIcon from '@heroicons/react/24/solid/ArrowPathIcon';
+import CalendarIcon from '@heroicons/react/24/solid/CalendarIcon';
+
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import {
   Button,
+  IconButton,
   Card,
   CardActions,
   CardContent,
   CardHeader,
+  Typography,
   Divider,
   SvgIcon
 } from '@mui/material';
@@ -47,8 +51,19 @@ const useChartOptions = () => {
       }
     },
     legend: {
-      show: false
-    },
+      show: true, 
+      position: 'right',
+      floating: false,
+      fontSize: '14px',
+      fontWeight: 400,
+      labels: {
+          colors: theme.palette.text.secondary
+      },
+      markers: {
+          width: 14,
+          height: 14,
+      },
+  },
     plotOptions: {
       bar: {
         columnWidth: '40px'
@@ -72,18 +87,13 @@ const useChartOptions = () => {
         show: true
       },
       categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+        'Sun'
       ],
       labels: {
         offsetY: 5,
@@ -94,7 +104,7 @@ const useChartOptions = () => {
     },
     yaxis: {
       labels: {
-        formatter: (value) => (value > 0 ? `${value}K` : `${value}`),
+        formatter: (value) => (value > 0 ? `${value}` : `${value}`),
         offsetX: -10,
         style: {
           colors: theme.palette.text.secondary
@@ -112,19 +122,22 @@ export const OverviewSales = (props) => {
     <Card sx={sx}>
       <CardHeader
         action={(
-          <Button
+          <IconButton
             color="inherit"
-            size="small"
-            startIcon={(
-              <SvgIcon fontSize="small">
-                <ArrowPathIcon />
-              </SvgIcon>
-            )}
+            size="medium"
+            // startIcon={(
+            //   <SvgIcon fontSize="medium">
+            //     <CalendarDaysIcon />
+            //   </SvgIcon>
+            // )}
           >
-            Sync
-          </Button>
+             <SvgIcon fontSize="medium">
+                <CalendarIcon />
+              </SvgIcon>
+            {/* Sync */}
+          </IconButton>
         )}
-        title="Sales"
+        title="Last Week Steps"
       />
       <CardContent>
         <Chart
@@ -135,7 +148,7 @@ export const OverviewSales = (props) => {
           width="100%"
         />
       </CardContent>
-      <Divider />
+      {/* <Divider />
       <CardActions sx={{ justifyContent: 'flex-end' }}>
         <Button
           color="inherit"
@@ -148,7 +161,7 @@ export const OverviewSales = (props) => {
         >
           Overview
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

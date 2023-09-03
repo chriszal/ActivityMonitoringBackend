@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format , isValid} from 'date-fns';
 import PropTypes from 'prop-types';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import {
@@ -19,30 +19,46 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
 
 const statusMap = {
-  pending: 'warning',
-  delivered: 'success',
-  refunded: 'error'
+  'not registered': 'warning',
+  registered: 'success',
+  unregistered: 'error'
 };
+const formatDate = (value) => {
+  // First, check if the value is numeric
+  const timestamp = parseInt(value, 10);
 
-export const OverviewLatestOrders = (props) => {
-  const { orders = [], sx } = props;
+  // If the parsed value is a valid number and not NaN, then format it
+  if (!isNaN(timestamp) && isValid(new Date(timestamp))) {
+    return format(new Date(timestamp), 'dd/MM/yyyy');
+  }
+
+  return 'None'; 
+};
+export const OverviewParticipants = (props) => {
+  const { participants = [], sx } = props;
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Study Participants" />
       <Scrollbar sx={{ flexGrow: 1 }}>
         <Box sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>
-                  Order
+                  ID
                 </TableCell>
                 <TableCell>
-                  Customer
+                  Gender
                 </TableCell>
                 <TableCell sortDirection="desc">
-                  Date
+                  Date of Birth
+                </TableCell>
+                <TableCell>
+                  Height (cm)
+                </TableCell>
+                <TableCell>
+                  Weight (kg)
                 </TableCell>
                 <TableCell>
                   Status
@@ -50,26 +66,32 @@ export const OverviewLatestOrders = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => {
-                const createdAt = format(order.createdAt, 'dd/MM/yyyy');
+              {participants.map((participant) => {
+                const createdAt = formatDate(participant.createdAt);
 
                 return (
                   <TableRow
                     hover
-                    key={order.id}
+                    key={participant.id}
                   >
                     <TableCell>
-                      {order.ref}
+                      {participant.id}
                     </TableCell>
                     <TableCell>
-                      {order.customer.name}
+                      {participant.gender}
                     </TableCell>
                     <TableCell>
                       {createdAt}
                     </TableCell>
                     <TableCell>
-                      <SeverityPill color={statusMap[order.status]}>
-                        {order.status}
+                      {participant.height}
+                    </TableCell>
+                    <TableCell>
+                      {participant.weight}
+                    </TableCell>
+                    <TableCell>
+                      <SeverityPill color={statusMap[participant.status]}>
+                        {participant.status}
                       </SeverityPill>
                     </TableCell>
                   </TableRow>
@@ -98,7 +120,7 @@ export const OverviewLatestOrders = (props) => {
   );
 };
 
-OverviewLatestOrders.prototype = {
+OverviewParticipants.prototype = {
   orders: PropTypes.array,
   sx: PropTypes.object
 };

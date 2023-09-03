@@ -9,7 +9,7 @@ import { StudiesSearch } from 'src/sections/studies/studies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import NextLink from 'next/link';
 import axios from 'axios';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 
 const Page = () => {
@@ -26,7 +26,7 @@ const Page = () => {
 
 
     useEffect(() => {
-      axios.get('http://0.0.0.0:8081/api/v1/studies')
+      axiosInstance.get('/studies')
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

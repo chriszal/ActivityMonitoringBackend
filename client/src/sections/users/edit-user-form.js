@@ -20,7 +20,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 export const EditUserForm = (props) => {
   const router = useRouter();
@@ -71,7 +71,7 @@ export const EditUserForm = (props) => {
           onClick={async () => {
             closeDialog();
             try {
-              const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
+              const response = await axiosInstance.put(`/users/${email}`, values);
               console.log(response.data);
               showAlert('User updated successfully!', 'success');
               router.back();
@@ -116,13 +116,21 @@ export const EditUserForm = (props) => {
           onClick={async () => {
             closeDialog();
             try {
-              const response = await axios.delete(`http://0.0.0.0:8081/api/v1/users/${email}`);
+              const response = await axiosInstance.delete(`/users/${email}`);
               console.log(response.data);
               showAlert('User deleted successfully!', 'success');
               router.back();
-            } catch (error) {
-              console.error("There was an error updating the user", error);
-              showAlert(error.response.data.message, 'error');
+            }  catch (error) {
+              console.error("There was an error deleting the user.", error);
+              
+              // Check if error response exists
+              if (error.response) {
+                // Application-level error returned by the server
+                showAlert(error.response.data.message || 'An error occurred while trying to delete the study.', 'error');
+              } else {
+                // Network error or issue reaching the server
+                showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+              }
             }
           }} >
           Delete

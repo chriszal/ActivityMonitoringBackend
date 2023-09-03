@@ -39,7 +39,7 @@ const Page = () => {
           setDecodedToken(payload);
         }
 
-        const response = await fetch(`http://0.0.0.0:8081/api/v1/is-token-valid/${token}`);
+        const response = await fetch(`http://localhost:8081/api/v1/is-token-valid/${token}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -98,7 +98,7 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const response = await fetch(`http://0.0.0.0:8081/api/v1/user/register/${token}`, {
+        const response = await fetch(`http://localhost:8081/api/v1/user/register/${token}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

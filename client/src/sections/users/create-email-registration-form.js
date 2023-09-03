@@ -32,9 +32,10 @@ const validationSchema = Yup.object({
     email: Yup.string()
         .email('Invalid email address.')
         .required('Email is required.'),
-    role: Yup.array()
-        .min(1, 'At least one role is required.')
+    role: Yup.string()
+        .required('Role is required.')
 });
+
 
 
 export const CreateEmailRegistrationForm = () => {
@@ -62,7 +63,7 @@ export const CreateEmailRegistrationForm = () => {
                             try {
                                 console.log(values)
                                 const response = await fetch(
-                                    `http://0.0.0.0:8081/api/v1/user/register`,
+                                    `http://localhost:8081/api/v1/user/register`,
                                     {
                                         method: "POST",
                                         headers: {
@@ -139,8 +140,9 @@ export const CreateEmailRegistrationForm = () => {
                                             value={formik.values.role}
                                             onBlur={formik.handleBlur}
                                             onChange={(e) => {
-                                                formik.setFieldValue("role", [e.target.value]);
+                                                formik.setFieldValue("role", e.target.value);
                                             }}
+                                            
                                             inputProps={{
                                                 name: "role",
                                                 id: "role",

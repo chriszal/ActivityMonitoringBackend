@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import axiosInstance from 'src/utils/axios-instance';
 const rolesOptions = [
   {
     value: 'admin',
@@ -67,7 +68,7 @@ export const CreateUserForm = () => {
           closeDialog();
           console.log('Submitted', values);
           try {
-            const response = await axios.post('http://0.0.0.0:8081/api/v1/users', values);
+            const response = await axiosInstance.post('/users', values);
             console.log(response.data);
             showAlert('User created successfully!', 'success');
             router.back()

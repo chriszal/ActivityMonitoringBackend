@@ -22,7 +22,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 const validationSchema = Yup.object({
   study_id: Yup.string().required('Study ID is required').max(10, 'Study ID must be less than 10 characters long').matches(/^[a-zA-Z0-9]+$/, 'Study ID can only contain alphanumerics'),
@@ -63,7 +63,7 @@ export const CreateStudyForm = () => {
           closeDialog();
           console.log('Submitted', postData);
           try {
-            const response = await axios.post('http://0.0.0.0:8081/api/v1/studies', postData);
+            const response = await axiosInstance.post('/studies', postData);
             console.log(response.data);
             showAlert('Study created successfully!', 'success');
             router.back()
@@ -122,7 +122,7 @@ export const CreateStudyForm = () => {
 
     try {
       setCoordinatorLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${coordinatorEmail}`);
+      const response = await axiosInstance.get(`/user/id/${coordinatorEmail}`);
       const coordinatorExists = Object.keys(response.data).length > 0;
       if (coordinatorExists) {
         if (!formik.values.study_coordinators.find(coordinator => coordinator.email === coordinatorEmail)) {
@@ -172,7 +172,7 @@ export const CreateStudyForm = () => {
 
     try {
       setAssistantLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${assistantEmail}`);
+      const response = await axiosInstance.get(`/user/id/${assistantEmail}`);
       const assistantExists = Object.keys(response.data).length > 0;
       if (assistantExists) {
         if (!formik.values.study_assistants.find(assistant => assistant.email === assistantEmail)) {
@@ -220,7 +220,7 @@ export const CreateStudyForm = () => {
     }
     try {
       setOwnerLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${ownerEmail}`);
+      const response = await axiosInstance.get(`/user/id/${ownerEmail}`);
       const ownerExists = Object.keys(response.data).length > 0;
       if (ownerExists) {
         if (!formik.values.study_owners.find(owner => owner.email === ownerEmail)) {
@@ -329,7 +329,7 @@ export const CreateStudyForm = () => {
                 >
                   <TextField
                     fullWidth
-                    label="Authors"
+                    label="Names of Authors (seperated with commas)"
                     name="authors"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}

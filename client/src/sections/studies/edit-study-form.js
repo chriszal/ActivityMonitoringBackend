@@ -22,7 +22,7 @@ import { DialogContext } from 'src/contexts/dialog-context';
 import { AlertContext } from 'src/contexts/alert-context';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
+import axiosInstance from 'src/utils/axios-instance';
 
 export const EditStudyForm = (props) => {
   const router = useRouter();
@@ -83,7 +83,7 @@ export const EditStudyForm = (props) => {
             closeDialog();
             console.log('Submitted', postData);
             try {
-              const response = await axios.put(`http://0.0.0.0:8081/api/v1/study/${study_id}`, postData);
+              const response = await axiosInstance.put(`/study/${study_id}`, postData);
               console.log(response.data);
               showAlert('Study updated successfully!', 'success');
               router.back();
@@ -135,13 +135,21 @@ export const EditStudyForm = (props) => {
           onClick={async () => {
             closeDialog();
             try {
-              const response = await axios.delete(`http://0.0.0.0:8081/api/v1/study/${study_id}`);
+              const response = await axiosInstance.delete(`/study/${study_id}`);
               console.log(response.data);
               showAlert('Study deleted successfully!', 'success');
               router.back();
             } catch (error) {
-              console.error("There was an error updating the study", error);
-              showAlert(error.response.data.message, 'error');
+              console.error("There was an error deleting the study.", error);
+              
+              // Check if error response exists
+              if (error.response) {
+                // Application-level error returned by the server
+                showAlert(error.response.data.message || 'An error occurred while trying to delete the study.', 'error');
+              } else {
+                // Network error or issue reaching the server
+                showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+              }
             }
           }} >
           Delete
@@ -164,7 +172,7 @@ export const EditStudyForm = (props) => {
 
     try {
       setCoordinatorLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${coordinatorEmail}`);
+      const response = await axiosInstance.get(`/user/id/${coordinatorEmail}`);
       const coordinatorExists = Object.keys(response.data).length > 0;
       if (coordinatorExists) {
         if (!formik.values.study_coordinators.find(coordinator => coordinator.email === coordinatorEmail)) {
@@ -214,7 +222,7 @@ export const EditStudyForm = (props) => {
 
     try {
       setAssistantLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${assistantEmail}`);
+      const response = await axiosInstance.get(`/user/id/${assistantEmail}`);
       const assistantExists = Object.keys(response.data).length > 0;
       if (assistantExists) {
         if (!formik.values.study_assistants.find(assistant => assistant.email === assistantEmail)) {
@@ -262,7 +270,7 @@ export const EditStudyForm = (props) => {
     }
     try {
       setOwnerLoading(true);
-      const response = await axios.get(`http://0.0.0.0:8081/api/v1/user/id/${ownerEmail}`);
+      const response = await axiosInstance.get(`/user/id/${ownerEmail}`);
       const ownerExists = Object.keys(response.data).length > 0;
       if (ownerExists) {
         if (!formik.values.study_owners.find(owner => owner.email === ownerEmail)) {

@@ -8,7 +8,7 @@ import ArrowLeft from '@heroicons/react/24/solid/ArrowLeftIcon';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Skeleton from '@mui/material/Skeleton';
-
+import axiosInstance from 'src/utils/axios-instance';
 const Page = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,7 +17,7 @@ const Page = () => {
     if (router.isReady) {
       const { study_id } = router.query;
       
-      axios.get(`http://0.0.0.0:8081/api/v1/study/${study_id}`)
+      axiosInstance.get(`/study/${study_id}`)
         .then(response => {
           if (response.status == 200) {
             setData(response.data);

@@ -18,7 +18,7 @@ import { useAuth } from 'src/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
-
+import axiosInstance from 'src/utils/axios-instance';
 export const AccountProfileDeletion = () => {
 
   const router = useRouter();
@@ -46,7 +46,7 @@ export const AccountProfileDeletion = () => {
           onClick={async () => {
             closeDialog();
             try {
-              const response = await axios.delete(`http://0.0.0.0:8081/api/v1/users/${email}`);
+              const response = await axiosInstance.delete(`/users/${email}`);
               console.log(response.data);
               showAlert('Your account was deleted successfully!', 'success');
               handleSignOut();
