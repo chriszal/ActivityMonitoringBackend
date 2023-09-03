@@ -88,8 +88,16 @@ export const EditStudyForm = (props) => {
               showAlert('Study updated successfully!', 'success');
               router.back();
             } catch (error) {
-              console.log("There was an error updating the study", error);
-              showAlert(error.response.data.message, 'error');
+              console.error("There was an error editing the study.", error);
+              
+              // Check if error response exists
+              if (error.response) {
+                // Application-level error returned by the server
+                showAlert(error.response.data.message || 'An error occurred while trying to edit the study.', 'error');
+              } else {
+                // Network error or issue reaching the server
+                showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+              }
             }
           }} >
           Update

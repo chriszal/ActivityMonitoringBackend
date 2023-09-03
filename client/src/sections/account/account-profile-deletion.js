@@ -16,14 +16,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from 'src/hooks/use-auth';
 import { useRouter } from 'next/navigation';
-
+import axios from 'axios';
 
 
 export const AccountProfileDeletion = () => {
 
   const router = useRouter();
   const auth = useAuth();
-
+  const email = auth.user.email;
   const handleSignOut = useCallback(
     () => {
       auth.signOut();
@@ -46,13 +46,21 @@ export const AccountProfileDeletion = () => {
           onClick={async () => {
             closeDialog();
             try {
-              // const response = await axios.put(`http://0.0.0.0:8081/api/v1/users/${email}`, values);
-              // console.log(response.data);
+              const response = await axios.delete(`http://0.0.0.0:8081/api/v1/users/${email}`);
+              console.log(response.data);
               showAlert('Your account was deleted successfully!', 'success');
               handleSignOut();
-            } catch (error) {
-              console.error("There was an error deleting the user", error.response.data.message);
-              showAlert(error.response.data.message, 'error');
+            }  catch (error) {
+              console.error("There was an error deleting the user.", error);
+              
+              // Check if error response exists
+              if (error.response) {
+                // Application-level error returned by the server
+                showAlert(error.response.data.message || 'An error occurred while trying to delete your account.', 'error');
+              } else {
+                // Network error or issue reaching the server
+                showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+              }
             }
           }} >
           Delete Account

@@ -72,9 +72,16 @@ export const CreateUserForm = () => {
             showAlert('User created successfully!', 'success');
             router.back()
           } catch (error) {
-            console.error("There was an error creating the user", error.response.data.message);
-            showAlert(error.response.data.message, 'error');
-            // handle errors
+            console.error("There was an error creating the user.", error);
+            
+            // Check if error response exists
+            if (error.response) {
+              // Application-level error returned by the server
+              showAlert(error.response.data.message || 'An error occurred while trying to create your user.', 'error');
+            } else {
+              // Network error or issue reaching the server
+              showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+            }
           }
         }} autoFocus>
           Create

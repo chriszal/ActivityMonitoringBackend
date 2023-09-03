@@ -39,8 +39,16 @@ export const AccountPasswordChange = () => {
               showAlert('Your password was updated successfully!', 'success');
               formik.resetForm(); 
             } catch (error) {
-              console.error("There was an error updating the user password", error.response.data.message);
-              showAlert(error.response.data.message, 'error');
+              console.error("There was an error updating the user password", error);
+              
+              // Check if error response exists
+              if (error.response) {
+                // Application-level error returned by the server
+                showAlert(error.response.data.message || 'An error occurred while updating the password.', 'error');
+              } else {
+                // Network error or issue reaching the server
+                showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
+              }
             }
           }} >
           Save

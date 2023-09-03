@@ -102,11 +102,31 @@ export const StudiesTable = (props) => {
                 : (error !== "" ? (
                   <TableRow>
                     <TableCell align="center" colSpan={8} >
-                      <div style={{ display: 'flex', justifyContent: 'center' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          mb: 3,
+                        }}
+                      >
+                        <img
+                          alt="Server Issue"
+                          src="/assets/errors/error-500.png"
+                          style={{
+                            display: 'block', 
+                            maxWidth: '100%',
+                            width: 300,
+                          }}
+                        />
                         <Alert
-                          severity="error" style={{ textAlign: "center", backgroundColor: "white" }}>{error}
+                          severity="error"
+                          style={{ textAlign: "center", backgroundColor: "white",fontWeight: "bold" }}
+                        >
+                          {error}
                         </Alert>
-                      </div>
+                      </Box>
                     </TableCell>
 
                   </TableRow>)

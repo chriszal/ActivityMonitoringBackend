@@ -73,7 +73,7 @@ StudyCard.propTypes = {
     study: PropTypes.object.isRequired
 };
 
-const StudiesGrid = ({ studies, isLoading, error ,userId}) => {
+const StudiesGrid = ({ studies, isLoading, error, userId }) => {
     const test = [];
     return (
         <Grid container spacing={2}>
@@ -91,13 +91,41 @@ const StudiesGrid = ({ studies, isLoading, error ,userId}) => {
                 </Box>
             )
                 : (error !== "" ? (
-                    <Alert
-                        severity="error" style={{ textAlign: "center" }}>{error}
-                    </Alert>)
+                    <Grid item xs={12}>
+  <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: '180px',
+      height: '100%',  // take the full height
+      width: '100%',   // take the full width
+    }}
+  >
+    <img
+      alt="Server Issue"
+      src="/assets/errors/error-500.png"
+      style={{
+        display: 'block',
+        maxWidth: '100%',
+        width: 300,
+      }}
+    />
+    <Alert
+      severity="error"
+      style={{ textAlign: "center", backgroundColor: "white" ,fontWeight: "bold"}}
+    >
+      {error}
+    </Alert>
+  </Box>
+</Grid>
+
+                )
                     : (studies.length > 0 ? (
                         studies.map((study) => (
                             <Grid item xs={12} sm={6} md={4} key={study.study_id}>
-                                <StudyCard study={study} userId={userId}/>
+                                <StudyCard study={study} userId={userId} />
                             </Grid>
                         ))
                     ) : (
@@ -118,7 +146,7 @@ const StudiesGrid = ({ studies, isLoading, error ,userId}) => {
                         >
                             <Typography variant="h4" sx={{ fontSize: '1.5rem' }}>No studies found</Typography>
                             <Typography variant="body1">It looks like you haven't created any studies yet.</Typography>
-                            <Button component={NextLink} sx={{mt:2}}
+                            <Button component={NextLink} sx={{ mt: 2 }}
                                 href="/dashboard/studies/create" variant="contained" color="primary" size="large">Create a new study</Button>
                         </Box>
                     )))}

@@ -45,11 +45,17 @@ function a11yProps(index) {
 
 const Page = () => {
   const [value, setValue] = React.useState(0);
+  document.body.style.overflowY = 'scroll';
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  React.useEffect(() => {
+    document.body.style.overflowY = 'scroll';
+    return () => {
+      document.body.style.overflowY = 'auto'; // reset to default when component unmounts
+    };
+  }, []);
 
   return (
     <>

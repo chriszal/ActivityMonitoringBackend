@@ -1,9 +1,12 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
 import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
 
-const Page = () => (
+const Page = () => {
+  const router = useRouter();
+return (
   <>
     <Head>
       <title>
@@ -59,8 +62,7 @@ const Page = () => (
             Whichever it is, try using the navigation
           </Typography>
           <Button
-            component={NextLink}
-            href="/"
+            onClick={() => router.back()}
             startIcon={(
               <SvgIcon fontSize="small">
                 <ArrowLeftIcon />
@@ -76,5 +78,6 @@ const Page = () => (
     </Box>
   </>
 );
+}
 
 export default Page;

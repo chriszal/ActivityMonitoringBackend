@@ -317,17 +317,24 @@ function normalizeColor(hexCode) {
             this.conf.playing = false
         }), e(this, "play", () => {
             requestAnimationFrame(this.animate), this.conf.playing = true
-        }), e(this,"initGradient", (selector) => {
-          this.el = document.querySelector(selector);
-          this.el.style.width = '100%';
-          this.el.style.height = '100%';
-          this.el.style.setProperty('--gradient-color-1', '#043D5D');
-          this.el.style.setProperty('--gradient-color-2', '#032E46');
-          this.el.style.setProperty('--gradient-color-3', '#23B684');
-          this.el.style.setProperty('--gradient-color-4', '#0F595E');
-          this.connect();
-          return this;
-        })
+        }), e(this,"initGradient", (input) => {
+            if (typeof input === 'string') {
+              this.el = document.querySelector(input);
+            } else {
+              this.el = input;
+            }
+          
+            this.el.style.width = '100%';
+            this.el.style.height = '100%';
+            this.el.style.setProperty('--gradient-color-1', '#B0C8D1');
+            this.el.style.setProperty('--gradient-color-2', '#AABDC4');
+            this.el.style.setProperty('--gradient-color-3', '#A2D6C2');
+            this.el.style.setProperty('--gradient-color-4', '#92B2B5');
+          
+            this.connect();
+            return this;
+          })
+          
     }
     async connect() {
         this.shaderFiles = {

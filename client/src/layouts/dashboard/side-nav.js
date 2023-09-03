@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
-import { items as adminItems} from './admin-config';
-import { items as memberItems} from './member-config';
+import { items as adminItems } from './admin-config';
+import { items as memberItems,supportItem} from './member-config';
 import { SideNavItem } from './side-nav-item';
 import { usePopover } from 'src/hooks/use-popover';
 import { OptionsPopover } from './options-popover';
@@ -165,6 +165,33 @@ export const SideNav = (props) => {
             })}
           </Stack>
         </Box>
+        <Box flexGrow={1} />  {/* This spacer pushes the next Box to the bottom */}
+<Box
+  component="nav"
+  sx={{
+    px: 2,
+    py: 3
+  }}
+>
+  <Stack
+    component="ul"
+    spacing={0.5}
+    sx={{
+      listStyle: 'none',
+      p: 0,
+      m: 0
+    }}
+  >
+    <SideNavItem
+      active={pathname === supportItem.path}
+      icon={supportItem.icon}
+      path={supportItem.path}
+      title={supportItem.title}
+      onClick={handleClick}
+    />
+  </Stack>
+</Box>
+
       </Box>
     </Scrollbar>
   );
