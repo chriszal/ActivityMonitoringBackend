@@ -111,7 +111,7 @@ export const EditStudyForm = (props) => {
       study_id: study_id,
       title: title,
       description: description,
-      authors: authors,
+      authors: authors.join(", "),
       no_participants: no_participants,
       study_owners: study_owners,
       study_ownersInput: "",

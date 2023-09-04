@@ -166,6 +166,8 @@ class UserResource(object):
             token_data = req.media
             recipient = token_data['email']
             expires_at = datetime.datetime.utcnow() + datetime.timedelta(days=7)
+
+            current_year = datetime.datetime.now().year
             
             # Generate the token using the user email, role, and expiration date
             token = jwt.encode({
@@ -180,18 +182,29 @@ class UserResource(object):
             smtp = smtplib.SMTP('smtp.gmail.com', 587)
             smtp.starttls()
             smtp.login(self.gmail, self.gmail_pass)
-            
             body_html = f"""
                     <html>
                         <head>
                             <style>
-                                .email-content {{
+                                body {{
                                     font-family: Arial, sans-serif;
+                                    background-color: #f2f2f2;
+                                    margin: 0;
+                                    padding: 0;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    height: 100vh;
+                                }}
+                                .email-content {{
+                                    background-color: #ffffff;
                                     max-width: 600px;
-                                    margin: 20px auto;
+                                    width: 100%;
+                                    margin: 20px;
                                     border: 1px solid #e0e0e0;
-                                    padding: 20px;
+                                    padding: 40px 20px;
                                     border-radius: 8px;
+                                    text-align: center;
                                 }}
                                 .button {{
                                     display: inline-block;
@@ -203,13 +216,25 @@ class UserResource(object):
                                     border-radius: 4px;
                                     text-decoration: none;
                                 }}
+                                .footer {{
+                                    font-size: 12px;
+                                    text-align: center;
+                                    margin-top: 20px;
+                                }}
                             </style>
                         </head>
                         <body>
                             <div class="email-content">
-                                <p>Hello!</p>
-                                <p>We would like to invite you to register for our system. Click the button below to continue:</p>
-                                <a href="http://0.0.0.0:3000/auth/register/{token}" class="button">Register Now</a>
+                                <div>
+                                    <!-- Space for Email Illustration, you can replace with an img tag or any content -->
+                                    <img src="path_to_your_image" alt="Email Illustration" style="max-width: 100%; height: auto;"/>
+                                </div>
+                                <p>Hi {recipient},</p>
+                                <p>We would like to invite you to register on the Beam dashboard. Click the button below to continue:</p>
+                                <a href="http://localhost:3000/auth/register/{token}" class="button">Register Now</a>
+                                <div class="footer">
+                                    Beam © {current_year} All rights reserved.
+                                </div>
                             </div>
                         </body>
                     </html>

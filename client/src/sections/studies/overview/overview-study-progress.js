@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import ListBulletIcon from '@heroicons/react/24/solid/ListBulletIcon';
+import ArrowTrendingUpIcon from '@heroicons/react/24/solid/ArrowTrendingUpIcon';
 import {
   Avatar,
   Box,
@@ -11,7 +11,7 @@ import {
   Typography
 } from '@mui/material';
 
-export const OverviewTasksProgress = (props) => {
+export const OverviewStudyProgress = (props) => {
   const { value, sx } = props;
 
   return (
@@ -29,7 +29,7 @@ export const OverviewTasksProgress = (props) => {
               gutterBottom
               variant="overline"
             >
-              Task Progress
+              Study Progress
             </Typography>
             <Typography variant="h4">
               {value}%
@@ -37,13 +37,13 @@ export const OverviewTasksProgress = (props) => {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'warning.main',
+              backgroundColor: 'info.main',
               height: 56,
               width: 56
             }}
           >
             <SvgIcon>
-              <ListBulletIcon />
+              <ArrowTrendingUpIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -58,7 +58,7 @@ export const OverviewTasksProgress = (props) => {
   );
 };
 
-OverviewTasksProgress.propTypes = {
+OverviewStudyProgress.propTypes = {
   value: PropTypes.number.isRequired,
   sx: PropTypes.object
 };

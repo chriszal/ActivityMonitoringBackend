@@ -74,7 +74,7 @@ export const StudiesTable = (props) => {
                   Description
                 </TableCell>
                 <TableCell>
-                  No. Participants
+                  Generated Participants
                 </TableCell>
                 <TableCell>
                   Owners

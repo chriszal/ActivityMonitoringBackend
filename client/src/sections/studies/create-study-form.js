@@ -345,7 +345,7 @@ export const CreateStudyForm = () => {
                 >
                   <TextField
                     fullWidth
-                    label="Number of Participants to Generate"
+                    label="Number of Participants to be Generated"
                     name="no_participants"
                     type="number"
                     onBlur={formik.handleBlur}

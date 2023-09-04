@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
-import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
+import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewBudget = (props) => {
+export const OverviewRegisteredParticipants = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -21,7 +21,7 @@ export const OverviewBudget = (props) => {
               color="text.secondary"
               variant="overline"
             >
-              Budget
+              Reg. Participants
             </Typography>
             <Typography variant="h4">
               {value}
@@ -35,7 +35,7 @@ export const OverviewBudget = (props) => {
             }}
           >
             <SvgIcon>
-              <CurrencyDollarIcon />
+              <UsersIcon />
             </SvgIcon>
           </Avatar>
         </Stack>
@@ -52,13 +52,13 @@ export const OverviewBudget = (props) => {
               spacing={0.5}
             >
               <SvgIcon
-                color={positive ? 'success' : 'error'}
+                color={positive ? 'error' : 'success'}
                 fontSize="small"
               >
-                {positive ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                {positive ? <ArrowDownIcon /> : <ArrowUpIcon />}
               </SvgIcon>
               <Typography
-                color={positive ? 'success.main' : 'error.main'}
+                color={positive ? 'error.main' : 'success.main'}
                 variant="body2"
               >
                 {difference}%
@@ -77,9 +77,10 @@ export const OverviewBudget = (props) => {
   );
 };
 
-OverviewBudget.prototypes = {
+OverviewRegisteredParticipants.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
-  sx: PropTypes.object,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  sx: PropTypes.object
 };
+
