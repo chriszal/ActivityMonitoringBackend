@@ -184,67 +184,69 @@ class UserResource(object):
             smtp.login(self.gmail, self.gmail_pass)
             body_html = f"""
                     <html>
-                        <head>
-                            <style>
-                                body {{
-                                    font-family: Arial, sans-serif;
-                                    background-color: #f2f2f2;
-                                    margin: 0;
-                                    padding: 0;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    height: 100vh;
-                                }}
-                                .email-content {{
-                                    background-color: #ffffff;
-                                    max-width: 600px;
-                                    width: 100%;
-                                    margin: 20px;
-                                    border: 1px solid #e0e0e0;
-                                    padding: 40px 20px;
-                                    border-radius: 8px;
-                                    text-align: center;
-                                }}
-                                .button {{
-                                    display: inline-block;
-                                    padding: 10px 20px;
-                                    margin: 20px 0;
-                                    color: #ffffff;
-                                    background-color: #007BFF;
-                                    border: none;
-                                    border-radius: 4px;
-                                    text-decoration: none;
-                                }}
-                                .footer {{
-                                    font-size: 12px;
-                                    text-align: center;
-                                    margin-top: 20px;
-                                }}
-                            </style>
-                        </head>
-                        <body>
-                            <div class="email-content">
-                                <div>
-                                    <!-- Space for Email Illustration, you can replace with an img tag or any content -->
-                                    <img src="path_to_your_image" alt="Email Illustration" style="max-width: 100%; height: auto;"/>
-                                </div>
-                                <p>Hi {recipient},</p>
-                                <p>We would like to invite you to register on the Beam dashboard. Click the button below to continue:</p>
-                                <a href="http://localhost:3000/auth/register/{token}" class="button">Register Now</a>
-                                <div class="footer">
-                                    Beam © {current_year} All rights reserved.
-                                </div>
-                            </div>
-                        </body>
-                    </html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title></title>
+    </head>
+    <body style="width: 100%; margin: 0; -webkit-text-size-adjust: none; font-family: Helvetica, Arial, sans-serif; background-color: #EAEAEA;">
+        <span style="display: none !important; visibility: hidden; mso-hide: all; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden;">You hm.</span>
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+                <td align="center">
+                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                        <tr>
+                            <td width="100%">
+                                <table align="center" width="570" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #FFFFFF; border-radius: 8px; padding: 20px;">
+                                    <tr>
+                                        <td style="padding: 35px;">
+                                            <h1>Hi, {recipient}!</h1>
+                                            <p>We would like to invite you to register on the Beam dashboard. Use the button below to set up your account and get started:</p>
+                                            <table align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td align="center" style="padding: 15px;">
+                                                        <a href="http://localhost:3000/auth/register/{token}" style="background-color: #3869D4; color: #FFF; text-decoration: none; border-radius: 3px; padding: 10px 18px;">Set up account</a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <p>You have 7 days to register before the link expires. If you have any questions , you can reply to this email. </p>
+                                            <p>Welcome aboard,<br>The Beam Team</p>
+                                            <hr style="border-top: 1px solid #ccc;">
+                                            <p style="font-size: 14px;"><strong>P.S.</strong> Need help getting started? Check out our <a href="https://github.com/chriszal/ActivityMonitoringBackend/blob/main/README.md">help documentation</a>.</p>
+                                            <p style="font-size: 14px;">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
+                                            <p style="font-size: 14px;">http://localhost:3000/auth/register/{token}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 15px;">
+                                <table align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                                    <tr>
+                                        <td align="center">
+                                            <p style="font-size: 14px;">&copy; {current_year} Beam. All rights reserved.</p>
+                                            <p style="font-size: 14px;">Harokopio University</p>
+                                            <p style="font-size: 14px;">9 Omirou Street,</p>
+                                            <p style="font-size: 14px;">Tavros Attica 177 78</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
                     """
 
             
             msg = MIMEMultipart()
             msg['From'] = GMAIL_USER
             msg['To'] = recipient
-            msg['Subject'] = 'Activity Monitoring Registration'
+            msg['Subject'] = 'Beam Platform Invitation'
             
             msg.attach(MIMEText(body_html, 'html'))
             smtp.sendmail(GMAIL_USER, recipient, msg.as_string())
