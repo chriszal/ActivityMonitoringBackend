@@ -38,13 +38,14 @@ const Page = () => {
             <Breadcrumbs separator="•" aria-label="breadcrumb">
               <Link component={NextLink}
                 underline="hover"
+                variant="subtitle2"
                 color="inherit"
                 onClick={handleStudiesLinkClick}
                 href="/"
               >
                 Studies
               </Link>
-              <Typography color="text.primary">Create</Typography>
+              <Typography variant="subtitle2" color="text.primary">Create</Typography>
             </Breadcrumbs>
           </div>
 

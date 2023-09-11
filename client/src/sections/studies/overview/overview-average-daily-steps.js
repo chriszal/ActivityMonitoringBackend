@@ -30,7 +30,7 @@ export const OverviewAverageDailySteps = (props) => {
           </Stack>
           <Avatar
             sx={{
-              backgroundColor: 'success.main',
+              backgroundColor: 'warning.main',
               height: 56,
               width: 56
             }}

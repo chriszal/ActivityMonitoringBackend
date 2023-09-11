@@ -13,13 +13,17 @@ export const DescriptionPopover = (props) => {
       }}
       onClose={onClose}
       open={open}
-      PaperProps={{ 
-        sx: {  
-          maxWidth: 600, 
-          p: 2 
-        } 
-      }} 
+      PaperProps={{
+        sx: {
+          maxWidth: 600,
+          p: 2,
+          border: (theme) => `2px solid ${theme.palette.primary.main}`
+        }
+      }}
     >
+      <Typography variant="subtitle1" gutterBottom>
+        Detailed Description
+      </Typography>
       <Typography variant="caption">
         {description}
       </Typography>

@@ -35,9 +35,7 @@ export const Layout = (props) => {
             component={NextLink}
             href="/"
             sx={{
-              display: 'inline-flex',
-              height: 32,
-              width: 32
+              display: 'inline-flex'
             }}
           >
             <Logo />

@@ -107,7 +107,7 @@ export const CreateEmailRegistrationForm = () => {
         <div>
             <form autoComplete="off" noValidate onSubmit={formik.handleSubmit}>
                 <Card sx={{ maxWidth: 1300 }}>
-                    <CardHeader subheader="Please fill out the email and role to send a registration email." title="Register User By Email" />
+                    <CardHeader subheader="Please fill out the email and role to send a registration email." title="Register User By Email Invitation" />
                     <CardContent sx={{ pt: 0 }}>
                         <Box sx={{ m: -1.5 }}>
                             <Grid container spacing={3}>

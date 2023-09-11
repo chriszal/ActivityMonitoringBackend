@@ -1,101 +1,89 @@
 import PropTypes from 'prop-types';
 import {
+  Avatar,
+  SvgIcon,
   Box,
   Button,
   Card,
-  CardActions,
   CardHeader,
   Divider,
   IconButton,
   List,
   ListItem,
   ListItemText,
-  TextField
+  TextField,
+  Tabs,
+  Tab,
+  CardContent
 } from '@mui/material';
 import React, { useState } from 'react';
-
 import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import AcademicCapIcon from '@heroicons/react/24/solid/AcademicCapIcon';
+import DetailsTab from './tabs/details-tab';
+import RoleTabContent from './tabs/role-tab';
 
 export const StudyDetails = (props) => {
   const { study, sx } = props;
-  const [editingField, setEditingField] = useState(null);
+  const [tabValue, setTabValue] = useState(0); // for managing active tab
 
-  const handleEditClick = (field) => {
-    setEditingField(field);
-  };
 
-  const handleUpdateClick = () => {
-    // Add API call or state update here
-    setEditingField(null);
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
   };
 
   return (
     <Card sx={sx}>
-      <CardHeader title={study.id} />
-      <List>
-        <ListItem>
-          <IconButton edge="start" onClick={() => handleEditClick('description')}>
-            <PencilIcon />
-          </IconButton>
-          {editingField === 'description'
-            ? <TextField fullWidth multiline defaultValue={study.description} />
-            : <ListItemText primary="Description" secondary={study.description} />
-          }
-        </ListItem>
-
-        <ListItem>
-          <IconButton edge="start" onClick={() => handleEditClick('authors')}>
-            <PencilIcon />
-          </IconButton>
-          {editingField === 'authors'
-            ? <TextField fullWidth defaultValue={study.authors.join(', ')} />
-            : <ListItemText primary="Authors" secondary={study.authors.join(', ')} />
-          }
-        </ListItem>
-
-        <ListItem>
-          <IconButton edge="start" onClick={() => handleEditClick('ownerEmail')}>
-            <PencilIcon />
-          </IconButton>
-          <ListItemText primary="Owner Email" secondary={study.ownerEmail} />
-        </ListItem>
-
-        <ListItem>
-          <IconButton edge="start" onClick={() => handleEditClick('coordinators')}>
-            <PencilIcon />
-          </IconButton>
-          {editingField === 'coordinators'
-            ? <TextField fullWidth defaultValue={study.coordinators.join(', ')} />
-            : <ListItemText primary="Coordinators" secondary={study.coordinators.join(', ')} />
-          }
-        </ListItem>
-
-        <ListItem>
-          <IconButton edge="start" onClick={() => handleEditClick('assistants')}>
-            <PencilIcon />
-          </IconButton>
-          {editingField === 'assistants'
-            ? <TextField fullWidth defaultValue={study.assistants.join(', ')} />
-            : <ListItemText primary="Assistants" secondary={study.assistants.join(', ')} />
-          }
-        </ListItem>
-
-        {editingField && (
-          <>
-            <Divider />
-            <CardActions>
-              <Button color="primary" variant="contained" onClick={handleUpdateClick}>
-                Update
-              </Button>
-            </CardActions>
-          </>
+      <CardHeader
+        avatar={
+          <Avatar
+            sx={{
+              backgroundColor: 'success.main',
+              height: 36,
+              width: 36,
+              borderRadius: '8px', // rounded square
+            }}>
+            <SvgIcon>
+              <AcademicCapIcon />
+            </SvgIcon>
+          </Avatar>
+        }
+        title={study.id}
+      />
+      <Divider />
+      <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginLeft: 3 }}>
+        <Tab label="Details" />
+        <Tab label="Owners" />
+        <Tab label="Cordinators" />
+        <Tab label="Assistants" />
+      </Tabs>
+      <Divider />
+      <CardContent>
+        {tabValue === 0 && (
+          <DetailsTab study={study} onUpdate={(updatedData) => {
+            // Handle the update here e.g. API call or local state update
+            console.log("Updated Data:", updatedData);
+          }} />
         )}
-      </List>
+
+        {tabValue === 1 && (
+            <RoleTabContent roleData={{ roleName: 'Owner', data: study.owners }} />
+
+        )}
+        {tabValue === 2 && (
+            <RoleTabContent roleData={{ roleName: 'Coordinator', data: study.coordinators }} />
+
+        )}
+        {tabValue === 3 && (
+           <RoleTabContent roleData={{ roleName: 'Assistant', data: study.assistants }} />
+
+        )}
+      </CardContent>
     </Card>
   );
 };
 
 StudyDetails.propTypes = {
   study: PropTypes.object.isRequired,
-  sx: PropTypes.object
+  sx: PropTypes.object,
 };

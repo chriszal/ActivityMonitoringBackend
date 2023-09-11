@@ -27,7 +27,7 @@ export const items = [
 ];
 export const supportItem = {
   title: 'Contact Support',
-  path: '/dashboard/support',
+  path: '/dashboard/contact-support',
   icon: (
     <SvgIcon fontSize="small">
       <QuestionMarkCircleIcon />

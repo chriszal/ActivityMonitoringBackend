@@ -37,22 +37,24 @@ const Page = () => {
                   component={NextLink}
                   underline="hover"
                   color="inherit"
+                  variant="subtitle2"
                   href="/"
                   onClick={() => router.back()}
                 >
                   Users
                 </Link>
-                <Typography color="text.primary">Create</Typography>
+                <Typography variant="subtitle2" color="text.primary">Create</Typography>
               </Breadcrumbs>
             </div>
             <div>
               <Grid container spacing={3}>
+              <Grid item xs={12}>
+                  <CreateEmailRegistrationForm />
+                </Grid>
                 <Grid item xs={12}>
                   <CreateUserForm />
                 </Grid>
-                <Grid item xs={12}>
-                  <CreateEmailRegistrationForm />
-                </Grid>
+               
               </Grid>
             </div>
           </Stack>

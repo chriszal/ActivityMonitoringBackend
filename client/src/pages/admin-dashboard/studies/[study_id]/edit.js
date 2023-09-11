@@ -60,6 +60,7 @@ const Page = () => {
         <Container maxWidth="lg">
           <Button sx={{ color: 'black', marginLeft: -2, marginBottom: 2.1 }}
             component={NextLink}
+            variant="subtitle2"
             href="/admin-dashboard/studies"
             startIcon={(
               <SvgIcon fontSize="small">

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
+  Chip,
   Avatar,
   Box,
   Card,
@@ -60,34 +61,14 @@ export const StudiesTable = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-
-                <TableCell >
-                  Study ID
-                </TableCell>
-                <TableCell>
-                  Title
-                </TableCell>
-                <TableCell>
-                  Authors
-                </TableCell>
-                <TableCell>
-                  Description
-                </TableCell>
-                <TableCell>
-                  Generated Participants
-                </TableCell>
-                <TableCell>
-                  Owners
-                </TableCell>
-                <TableCell>
-                   Coordinators
-                </TableCell>
-                <TableCell>
-                   Assistants
-                </TableCell>
-                <TableCell>
-                  Actions
-                </TableCell>
+                <TableCell>Study ID</TableCell>
+                <TableCell>Title & Description</TableCell>
+                <TableCell>Authors</TableCell>
+                <TableCell>Generated Participants</TableCell>
+                <TableCell>Owners</TableCell>
+                <TableCell>Coordinators</TableCell>
+                <TableCell>Assistants</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -115,14 +96,14 @@ export const StudiesTable = (props) => {
                           alt="Server Issue"
                           src="/assets/errors/error-500.png"
                           style={{
-                            display: 'block', 
+                            display: 'block',
                             maxWidth: '100%',
                             width: 300,
                           }}
                         />
                         <Alert
                           severity="error"
-                          style={{ textAlign: "center", backgroundColor: "white",fontWeight: "bold" }}
+                          style={{ textAlign: "center", backgroundColor: "white", fontWeight: "bold" }}
                         >
                           {error}
                         </Alert>
@@ -138,53 +119,53 @@ export const StudiesTable = (props) => {
                           key={study.study_id}
                           sx={{ "&:nth-of-type(even)": { backgroundColor: "action.hover" } }}
                         >
-
                           <TableCell>
                             <Typography color="primary" variant="subtitle2">
                               {study.study_id}
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="caption">
+                            <Typography variant="h6" gutterBottom>
                               {study.title}
                             </Typography>
-
+                            {study.description.length > 124
+                              ? <>
+                                <span style={{ display: 'inline', fontSize: '0.8125rem', color: 'rgba(0, 0, 0, 0.54)' }}>
+                                  {`${study.description.slice(0, 124)}...`}
+                                </span>
+                                <Button
+                                  size="small"
+                                  sx={{
+                                    p: 0.2,
+                                    fontSize: '0.7rem',
+                                    textTransform: 'none',
+                                    display: 'inline',
+                                    marginLeft: '0.5rem'
+                                  }}
+                                  color="primary"
+                                  onClick={(event) => handleDescriptionPopoverOpen(event, study.description)}
+                                >
+                                  Read More
+                                </Button>
+                              </>
+                              : <Typography variant="caption">{study.description}</Typography>
+                            }
                           </TableCell>
+
                           <TableCell>
                             <Typography variant="caption">
                               {study.authors.join(', ')}
                             </Typography>
-
                           </TableCell>
-                          <TableCell>
-                            <Typography variant="caption">
-                              {study.description.length > 124
-                                ? <>
-                                  {`${study.description.slice(0, 124)}...`}
-                                  <Button
-                                    size="small"
-                                    sx={{
-                                      p: 0.5,
-                                      fontSize: '0.875rem',
-                                      textTransform: 'none'
-                                    }}
-                                    color="primary"
-                                    onClick={(event) => handleDescriptionPopoverOpen(event, study.description)}
-                                  >
-                                    Read More
-                                  </Button>
-
-                                </>
-                                : study.description}
-                            </Typography>
-
+                          <TableCell align="center" >
+                            <Chip
+                              label={study.no_participants}
+                              variant="outlined"
+                              size="small"
+                              color="error"
+                            />
                           </TableCell>
-                          <TableCell>
-                            <Typography variant="caption">
-                              {study.no_participants}
-                            </Typography>
 
-                          </TableCell>
                           <TableCell>
 
                             {study.owners.map((user, index, arr) => (

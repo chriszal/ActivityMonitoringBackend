@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import Image from 'next/image';
 
 import { usePathname } from 'next/navigation';
 import PropTypes from 'prop-types';
@@ -70,7 +71,8 @@ export const SideNav = (props) => {
               width: 32
             }}
           >
-            <Logo />
+            <Image src="/favicon-32x32.png" alt="Favicon" width={32} height={32} />
+
           </Box>
           <Box
             sx={{
@@ -182,13 +184,15 @@ export const SideNav = (props) => {
       m: 0
     }}
   >
-    <SideNavItem
-      active={pathname === supportItem.path}
-      icon={supportItem.icon}
-      path={supportItem.path}
-      title={supportItem.title}
-      onClick={handleClick}
-    />
+    { role === 'member' && ( // Only render the following for 'member' role
+      <SideNavItem
+        active={pathname === supportItem.path}
+        icon={supportItem.icon}
+        path={supportItem.path}
+        title={supportItem.title}
+        onClick={handleClick}
+      />
+    )}
   </Stack>
 </Box>
 

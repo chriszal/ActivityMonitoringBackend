@@ -16,7 +16,7 @@ import { OverviewStudyProgress } from 'src/sections/studies/overview/overview-st
 import { OverviewRegisteredParticipants } from 'src/sections/studies/overview/overview-registered-participants';
 import { OverviewAgeRadar } from 'src/sections/studies/overview/overview-age-radar';
 
-import {ParticipantsSummaryCard} from 'src/sections/studies/overview/participant-summary'
+import { ParticipantsSummaryCard } from 'src/sections/studies/overview/participant-summary'
 
 const now = new Date();
 
@@ -55,12 +55,13 @@ const Page = () => {
                 <Link component={NextLink}
                   underline="hover"
                   color="inherit"
+                  variant="subtitle2"
                   onClick={() => router.back()}
                   href="/"
                 >
                   Studies
                 </Link>
-                <Typography color="text.primary">Overview</Typography>
+                <Typography variant="subtitle2" color="text.primary">Overview</Typography>
               </Breadcrumbs>
             </div>
             <div>
@@ -79,12 +80,44 @@ const Page = () => {
               <StudyDetails
                 study={{
                   id: 'HUA',
-                  title: 'Test random study',
-                  description: 'dhewgdiue duiegd iuweg d',
+                  title: 'Software system for recording signals',
+                  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id dolor placerat, placerat lorem a, molestie eros. Aenean volutpat, est id congue dignissim, urna leo tincidunt tortor, quis tristique massa nisi nec leo. In iaculis pharetra quam. Aliquam erat volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut suscipit magna eu neque facilisis, at gravida nulla feugiat. Cras dignissim sollicitudin diam id iaculis. Suspendisse ac turpis placerat, porta ex eget, consequat risus. Donec vitae rutrum erat.',
                   authors: ['Christos Zalachoris', 'Peter Smeichel'],
-                  ownerEmail: 'owner@example.com',
-                  coordinators: ['coordinator1@example.com', 'coordinator2@example.com'],
-                  assistants: ['assistant1@example.com', 'assistant2@example.com']
+                  owners: [
+                    {
+                      fullName: 'Owner Name',
+                      email: 'owner@example.com'
+                    }
+                  ],
+                  coordinators: [
+                    {
+                      fullName: 'Coordinator One',
+                      email: 'coordinator1@example.com'
+                    },
+                    {
+                      fullName: 'Coordinator Two',
+                      email: 'coordinator2@example.com'
+                    }
+                  ],
+                  assistants: [
+                    {
+                      fullName: 'Assistant One',
+                      email: 'assistant1@example.com'
+                    },
+                    {
+                      fullName: 'Assistant Two',
+                      email: 'assistant2@example.com'
+                    }, {
+                      fullName: 'Assistant Two',
+                      email: 'assistant2@example.com'
+                    }, {
+                      fullName: 'Assistant Two',
+                      email: 'assistant2@example.com'
+                    } ,{
+                      fullName: 'Assistant Two',
+                      email: 'assistant2@example.com'
+                    }
+                  ]
                 }}
                 sx={{ height: '100%' }}
               />

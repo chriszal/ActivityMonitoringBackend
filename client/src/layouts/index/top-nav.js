@@ -114,15 +114,10 @@ export const TopNav = (props) => {
           <Box
             sx={{
               display: 'inline-flex',
-              height: 42,
-              width: 42
             }}
           >
             <Logo onClick={toggleHome} />
           </Box>
-          <Typography variant="h5" component="div" sx={{ ml: 2 }}>
-            Beam
-          </Typography>
         </Box>
 
         {!smDown && (

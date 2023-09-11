@@ -86,11 +86,14 @@ const Page = () => {
         .string()
         .max(255)
         .required('Last Name is required'),
-      password: Yup
+        password: Yup
         .string()
-        .matches(/^[a-zA-Z0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/, 'Password can only contain alphanumeric characters and symbols')
-        .min(8, 'Password must be at least 8 characters long')
-        .required('Password is required'),
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9_.-]+$/,
+          'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+        )
+        .min(8, 'Passwords must be more than 8 characters long.')
+        .required('Password is required.'),
       confirm_password: Yup
         .string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match')
