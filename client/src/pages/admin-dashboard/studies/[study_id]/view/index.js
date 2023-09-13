@@ -85,39 +85,63 @@ const Page = () => {
                   authors: ['Christos Zalachoris', 'Peter Smeichel'],
                   owners: [
                     {
-                      fullName: 'Owner Name',
-                      email: 'owner@example.com'
+                      fullName: 'Ella Thompson',
+                      email: 'ella.thompson@example.com'
                     }
                   ],
                   coordinators: [
                     {
-                      fullName: 'Coordinator One',
-                      email: 'coordinator1@example.com'
+                      fullName: 'Mason White',
+                      email: 'mason.white@example.com'
                     },
                     {
-                      fullName: 'Coordinator Two',
-                      email: 'coordinator2@example.com'
+                      fullName: 'Olivia Green',
+                      email: 'olivia.green@example.com'
                     }
                   ],
                   assistants: [
                     {
-                      fullName: 'Assistant One',
-                      email: 'assistant1@example.com'
+                      fullName: 'Ethan Johnson',
+                      email: 'ethan.johnson@example.com'
                     },
                     {
-                      fullName: 'Assistant Two',
-                      email: 'assistant2@example.com'
-                    }, {
-                      fullName: 'Assistant Two',
-                      email: 'assistant2@example.com'
-                    }, {
-                      fullName: 'Assistant Two',
-                      email: 'assistant2@example.com'
-                    } ,{
-                      fullName: 'Assistant Two',
-                      email: 'assistant2@example.com'
+                      fullName: 'Sophia Martin',
+                      email: 'sophia.martin@example.com'
+                    },
+                    {
+                      fullName: 'Jackson Clark',
+                      email: 'jackson.clark@example.com'
+                    },
+                    {
+                      fullName: 'Ava Turner',
+                      email: 'ava.turner@example.com'
+                    },
+                    {
+                      fullName: 'Liam Hall',
+                      email: 'liam.hall@example.com'
+                    },
+                    {
+                      fullName: 'Charlotte Scott',
+                      email: 'charlotte.scott@example.com'
+                    },
+                    {
+                      fullName: 'Noah Wright',
+                      email: 'noah.wright@example.com'
+                    },
+                    {
+                      fullName: 'Isabella Lewis',
+                      email: 'isabella.lewis@example.com'
+                    },
+                    {
+                      fullName: 'Aiden Walker',
+                      email: 'aiden.walker@example.com'
+                    },
+                    {
+                      fullName: 'Mia King',
+                      email: 'mia.king@example.com'
                     }
                   ]
+                  
                 }}
                 sx={{ height: '100%' }}
               />

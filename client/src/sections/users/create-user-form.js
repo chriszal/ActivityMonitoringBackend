@@ -46,13 +46,14 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email address.')
     .required('Email is required.'),
-  password: Yup.string()
+    password: Yup.string()
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9_.-]+$/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()])[a-zA-Z0-9!@#$%^&*()]+$/,
+      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one of the symbols ! @#$%^&*().'
     )
     .min(8, 'Passwords must be more than 8 characters long.')
     .required('Password is required.'),
+
   roles: Yup.array()
     .min(1, 'At least one role is required.')
 });

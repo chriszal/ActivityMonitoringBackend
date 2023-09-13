@@ -1,4 +1,5 @@
 export function generateAvatar(name, size = 64, textColor = '#fff') {
+  console.log(name);
   const words = name.split(' ');
   const initials = words[0].charAt(0).toUpperCase();
   const canvas = document.createElement('canvas');

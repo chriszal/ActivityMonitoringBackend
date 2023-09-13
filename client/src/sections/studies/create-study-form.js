@@ -1,52 +1,111 @@
-import { useState } from 'react';
+import { useState,useRef } from 'react';
 import { useContext } from 'react';
 import { DialogContext } from 'src/contexts/dialog-context';
 import { AlertContext } from 'src/contexts/alert-context';
+import { UserSearch } from 'src/components/study-roles/user-search';
+import { handleSearch } from 'src/components/study-roles/handle-search';
+import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
+import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
+import { UsersList } from './study-users-list';
 import {
+  Avatar,
   Box,
   Button,
   Card,
   Stack,
   CardActions,
-  CardContent,
+  CardContent, Select, MenuItem,
   Chip,
-  SvgIcon,
+  SvgIcon, Slider,
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
+  Unstable_Grid2 as Grid, Popover,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography
 } from '@mui/material';
-import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { LoadingButton } from '@mui/lab';
 import { useRouter } from 'next/router';
 import axiosInstance from 'src/utils/axios-instance';
+import { generateAvatar } from 'src/utils/avatar-generator';
+
 
 const validationSchema = Yup.object({
-  study_id: Yup.string().required('Study ID is required').max(10, 'Study ID must be less than 10 characters long').matches(/^[a-zA-Z0-9]+$/, 'Study ID can only contain alphanumerics'),
-  title: Yup.string().required('Title is required').max(100, 'Title must be less than 100 characters long'),
-  description: Yup.string().required('Description is required').max(1000, 'Description must be less than 1000 characters long'),
+  study_id: Yup.string().required('Study ID is required').max(20, 'Study ID must be less than 20 characters long').matches(/^[a-zA-Z0-9]+$/, 'Study ID can only contain alphanumerics and no spaces'),
+  title: Yup.string().required('Title is required').max(500, 'Title must be less than 500 characters long'),
+  description: Yup.string().required('Description is required').max(4000, 'Description must be less than 4000 characters long'),
   authors: Yup.string().required('Authors is required'),
   no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100')
 });
 
 
 export const CreateStudyForm = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
   const [coordinator_loading, setCoordinatorLoading] = useState(false);
   const [assistant_loading, setAssistantLoading] = useState(false);
   const [owner_loading, setOwnerLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [searchedEmails, setSearchedEmails] = useState([]);
+  const [roleToAdd, setRoleToAdd] = useState('');
   const [coordinatorEmails, setCoordinatorEmails] = useState([]);
   const [assistantEmails, setAssistantEmails] = useState([]);
   const [ownerEmails, setOwnerEmails] = useState([]);
+  const searchBarRef = useRef(null);
+
+  const [usersWithRoles, setUsersWithRoles] = useState([]);
 
 
   const { openDialog, closeDialog } = useContext(DialogContext);
   const { showAlert } = useContext(AlertContext);
   const router = useRouter();
+  const [userSearchResult, setUserSearchResult] = useState(null);
 
+  const handleUnifiedSearch = async (inputValue, target) => {
+    console.log(inputValue);
+    if (!inputValue.trim()) {
+      setLoading(false);
+      setUserSearchResult(null);
+      return;
+    }
 
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(`/user/id/${inputValue.trim()}`);
+      if (response.data && Object.keys(response.data).length > 0) {
+        setUserSearchResult({
+          email: inputValue.trim(),
+          id: response.data.id
+        });
+      } else {
+        setUserSearchResult({
+          error: "No user found"
+        });
+      }
+    } catch (error) {
+      setUserSearchResult({
+        error: "An error occurred while searching."
+      });
+    } finally {
+      setLoading(false);
+    }
+    setAnchorEl(target);
+  };
+
+  const addUserWithRole = (user, role) => {
+    const newUser = {
+      email: user,
+      role: role
+    };
+    setUsersWithRoles([...usersWithRoles, newUser]);
+  };
+
+  const closePopover = () => {
+    setAnchorEl(null);
+  };
   const onSubmit = async (values) => {
     const dialogText = 'Are you sure you want to create this study?';
     const dialogActions = (
@@ -69,7 +128,7 @@ export const CreateStudyForm = () => {
             router.back()
           } catch (error) {
             console.error("There was an error creating the study.", error);
-            
+
             // Check if error response exists
             if (error.response) {
               // Application-level error returned by the server
@@ -108,153 +167,12 @@ export const CreateStudyForm = () => {
 
 
 
-
-  const handleCoordinatorSearch = async () => {
-    const coordinatorEmail = formik.values.study_coordinatorsInput.trim();
-    if (!coordinatorEmail) {
-      return;
-    }
-
-    if (ownerEmails.includes(coordinatorEmail) || assistantEmails.includes(coordinatorEmail)) {
-      formik.setFieldError('study_coordinatorsInput', "Email already exists as an owner or assistant.");
-      return;
-    }
-
-    try {
-      setCoordinatorLoading(true);
-      const response = await axiosInstance.get(`/user/id/${coordinatorEmail}`);
-      const coordinatorExists = Object.keys(response.data).length > 0;
-      if (coordinatorExists) {
-        if (!formik.values.study_coordinators.find(coordinator => coordinator.email === coordinatorEmail)) {
-          formik.setValues(prevValues => ({
-            ...prevValues,
-            study_coordinators: [
-              ...prevValues.study_coordinators,
-              { id: response.data.id, email: coordinatorEmail }
-            ]
-          }));
-          setCoordinatorEmails([...coordinatorEmails, coordinatorEmail]);
-          formik.setErrors({ study_coordinatorsInput: "" });
-          formik.setFieldValue('study_coordinatorsInput', '');
-        } else {
-          formik.setErrors({ study_coordinatorsInput: "Coordinator already exists." });
-        }
-      } else {
-        formik.setErrors({ study_coordinatorsInput: "Coordinator not found." });
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred while searching for the coordinator.";
-      formik.setErrors({ study_coordinatorsInput: errorMessage });
-    } finally {
-      setCoordinatorLoading(false);
-    }
+  const handleDelete = (index) => {
+    const updatedEmails = [...searchedEmails];
+    updatedEmails.splice(index, 1);
+    setSearchedEmails(updatedEmails);
   };
 
-
-  const handleDeleteCoordinator = (index) => {
-    formik.setFieldValue('study_coordinators', formik.values.study_coordinators.filter(
-      (value, i) => i !== index
-    ));
-    setCoordinatorEmails(coordinatorEmails.filter((email, i) => i !== index));
-  };
-
-
-  const handleAssistantSearch = async () => {
-    const assistantEmail = formik.values.study_assistantsInput.trim();
-    if (!assistantEmail) {
-      return;
-    }
-
-    if (coordinatorEmails.includes(assistantEmail) || ownerEmails.includes(assistantEmail)) {
-      formik.setFieldError('study_assistantsInput', "Email already exists as a coordinator or owner.");
-      return;
-    }
-
-    try {
-      setAssistantLoading(true);
-      const response = await axiosInstance.get(`/user/id/${assistantEmail}`);
-      const assistantExists = Object.keys(response.data).length > 0;
-      if (assistantExists) {
-        if (!formik.values.study_assistants.find(assistant => assistant.email === assistantEmail)) {
-          formik.setValues(prevValues => ({
-            ...prevValues,
-            study_assistants: [
-              ...prevValues.study_assistants,
-              { id: response.data.id, email: assistantEmail }
-            ]
-          }));
-          setAssistantEmails([...assistantEmails, assistantEmail]);
-          formik.setErrors({ study_assistantsInput: "" });
-          formik.setFieldValue('study_assistantsInput', '');
-        } else {
-          formik.setErrors('study_assistantsInput', "Assistant already exists.");
-        }
-      } else {
-        formik.setErrors('study_assistantsInput', "Assistant not found.");
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred while searching for the assistant.";
-      formik.setErrors({ study_assistantsInput: errorMessage });
-    } finally {
-      setAssistantLoading(false);
-    }
-  };
-  
-
-  const handleDeleteAssistant = (index) => {
-    formik.setFieldValue('study_assistants', formik.values.study_assistants.filter(
-      (value, i) => i !== index
-    ));
-    setAssistantEmails(assistantEmails.filter((email, i) => i !== index));
-  };
-
-  const handleOwnerSearch = async () => {
-    const ownerEmail = formik.values.study_ownersInput.trim();
-    if (!ownerEmail) {
-      return;
-    }
-
-    if (coordinatorEmails.includes(ownerEmail) || assistantEmails.includes(ownerEmail)) {
-      formik.setFieldError('study_ownersInput', "Email already exists as an assistant or coordinator.");
-      return;
-    }
-    try {
-      setOwnerLoading(true);
-      const response = await axiosInstance.get(`/user/id/${ownerEmail}`);
-      const ownerExists = Object.keys(response.data).length > 0;
-      if (ownerExists) {
-        if (!formik.values.study_owners.find(owner => owner.email === ownerEmail)) {
-          formik.setValues(prevValues => ({
-            ...prevValues,
-            study_owners: [
-              ...prevValues.study_owners,
-              { id: response.data.id, email: ownerEmail }
-            ]
-          }));
-          setOwnerEmails([...ownerEmails, ownerEmail]);
-          formik.setErrors({ study_ownersInput: "" });
-          formik.setFieldValue('study_ownersInput', "");
-        } else {
-          formik.setErrors('study_ownersInput', "Owner already exists.");
-        }
-      } else {
-        formik.setErrors('study_ownersInput', "Owner not found.");
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "An error occurred while searching for the owner.";
-      formik.setErrors({ study_ownersInput: errorMessage });
-    } finally {
-      setOwnerLoading(false);
-    }
-  };
-
-  const handleDeleteOwner = (index) => {
-    formik.setFieldValue('study_owners', formik.values.study_owners.filter(
-      (value, i) => i !== index
-    ));
-    setOwnerEmails(ownerEmails.filter((email, i) => i !== index));
-  };
-  
   return (
     <div>
       <form
@@ -262,258 +180,277 @@ export const CreateStudyForm = () => {
         noValidate
         onSubmit={formik.handleSubmit}
       >
-        <Card>
-          <CardHeader
-            subheader="Please fill out all the information"
-            title="Study"
-          />
-          <CardContent sx={{ pt: 0 }}>
-            <Box sx={{ m: -1.5 }}>
-              <Grid
-                container
-                spacing={3}
-              >
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Specify a Unique Study ID"
-                    name="study_id"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.study_id}
-                    error={formik.touched.study_id && Boolean(formik.errors.study_id)}
-                    helperText={formik.touched.study_id && formik.errors.study_id}
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Title"
-                    name="title"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.title}
-                    error={formik.touched.title && Boolean(formik.errors.title)}
-                    helperText={formik.touched.title && formik.errors.title}
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={12}
-                >
-                  <TextField
-                    fullWidth
-                    label="Description"
-                    name="description"
-                    multiline
-                    rows={3}
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.description}
-                    error={formik.touched.description && Boolean(formik.errors.description)}
-                    helperText={formik.touched.description && formik.errors.description}
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Names of Authors (seperated with commas)"
-                    name="authors"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.authors}
-                    error={formik.touched.authors && Boolean(formik.errors.authors)}
-                    helperText={formik.touched.authors && formik.errors.authors}
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Number of Participants to be Generated"
-                    name="no_participants"
-                    type="number"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.no_participants}
-                    error={formik.touched.no_participants && Boolean(formik.errors.no_participants)}
-                    helperText={formik.touched.no_participants && formik.errors.no_participants}
-                    InputProps={{
-                      inputProps: {
-                        max: 100, min: 1
-                      }
-                    }}
-                  />
-                </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Type the email of a Coordinator"
-                    name="study_coordinatorsInput"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' || e.key === " ") {
-                        e.preventDefault();
-                        handleCoordinatorSearch();
-                      }
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <LoadingButton
-                          loading={coordinator_loading}
-                          onClick={handleCoordinatorSearch}
-                          sx={{ color: 'grey.500', marginRight: "-12px", }}
-                        >
-                          <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
-                        </LoadingButton>
-                      ),
-                      startAdornment: (
-                        coordinatorEmails.map((email, index) => (
-                          <Chip
-                            key={index}
-                            size="small"
-                            label={email}
-                            onDelete={() => handleDeleteCoordinator(index)}
-                            sx={{ m: 0.5, marginTop: "20px" }}
-                          />
-                        ))
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.study_coordinatorsInput}
-                    error={formik.touched.study_coordinatorsInput && Boolean(formik.errors.study_coordinatorsInput)}
-                    helperText={formik.touched.study_coordinatorsInput && formik.errors.study_coordinatorsInput}
+        <Stack spacing={3}>
+          {/* Basic Details Card */}
+          <Card>
+            <CardContent>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="h6">Basic Details</Typography>
 
-                  />
-                </Grid>
-
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Type the email of a Assistant"
-                    name="study_assistantsInput"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' || e.key === " ") {
-                        e.preventDefault();
-                        handleAssistantSearch();
-                      }
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <LoadingButton
-                          loading={assistant_loading}
-                          onClick={handleAssistantSearch}
-                          sx={{ color: 'grey.500', marginRight: "-12px", }}
-                        >
-                          <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
-                        </LoadingButton>
-                      ),
-                      startAdornment: (
-                        assistantEmails.map((email, index) => (
-                          <Chip
-                            key={index}
-                            size="small"
-                            label={email}
-                            onDelete={() => handleDeleteAssistant(index)}
-                            sx={{ m: 0.5, marginTop: "20px" }}
-                          />
-                        ))
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.study_assistantsInput}
-                    error={formik.touched.study_assistantsInput && Boolean(formik.errors.study_assistantsInput)}
-                    helperText={formik.touched.study_assistantsInput && formik.errors.study_assistantsInput}
-
-                  />
                 </Grid>
                 <Grid
                   xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Type the email of the user you want for owner"
-                    name="study_ownersInput"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter' || e.key === " ") {
-                        e.preventDefault();
-                        handleOwnerSearch();
-                      }
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <LoadingButton
-                          loading={owner_loading}
-                          onClick={handleOwnerSearch}
-                          sx={{ color: 'grey.500', marginRight: "-12px", }}
-                        >
-                          <SvgIcon><MagnifyingGlassIcon /></SvgIcon>
-                        </LoadingButton>
-                      ),
-                      startAdornment: (
-                        ownerEmails.map((email, index) => (
-                          <Chip
-                            key={index}
-                            size="small"
-                            label={email}
-                            onDelete={() => handleDeleteOwner(index)}
-                            sx={{ m: 0.5, marginTop: "20px" }}
-                          />
-                        ))
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.study_ownersInput}
-                    error={formik.touched.study_ownersInput && Boolean(formik.errors.study_ownersInput)}
-                    helperText={formik.touched.study_ownersInput && formik.errors.study_ownersInput}
+                  md={8}
 
-                  />
+                >
+                  <Stack spacing={3}>
+                    <TextField
+                      fullWidth
+                      label="Specify a Unique Study ID"
+                      name="study_id"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      required
+                      value={formik.values.study_id}
+                      error={formik.touched.study_id && Boolean(formik.errors.study_id)}
+                      helperText={formik.touched.study_id && formik.errors.study_id}
+                    />
+                    <Box position="relative" paddingBottom={2}>
+                      <TextField
+                        fullWidth
+                        label="Title"
+                        name="title"
+                        onBlur={formik.handleBlur}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 500) {
+                            formik.handleChange(e);
+                          }
+                        }}
+                        required
+                        value={formik.values.title}
+                        error={formik.touched.title && Boolean(formik.errors.title)}
+                        helperText={formik.touched.title && formik.errors.title}
+                      />
+                      <Typography
+                        variant="caption"
+                        style={{
+                          position: 'absolute',
+                          bottom: 5,
+                          right: 10,
+                          color: formik.values.title.length >= 500 ? 'red' : undefined,
+                          backgroundColor: 'rgba(255, 255, 255, 0.7)', // this ensures legibility
+                          padding: '0 2px', // little padding for aesthetics
+                        }}
+                      >
+                        {`${formik.values.title.length}/500`}
+                      </Typography>
+                    </Box>
+
+                    <Box position="relative" paddingBottom={2}>
+                      <TextField
+                        fullWidth
+                        label="Description"
+                        name="description"
+                        multiline
+                        rows={3}
+                        onBlur={formik.handleBlur}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 4000) {
+                            formik.handleChange(e);
+                          }
+                        }}
+                        required
+                        value={formik.values.description}
+                        error={formik.touched.description && Boolean(formik.errors.description)}
+                        helperText={formik.touched.description && formik.errors.description}
+                      />
+                      <Typography
+                        variant="caption"
+                        style={{
+                          position: 'absolute',
+                          bottom: 5,
+                          right: 10,
+                          color: formik.values.description.length >= 4000 ? 'red' : undefined,
+                          backgroundColor: 'rgba(255, 255, 255, 0.7)', // this ensures legibility
+                          padding: '0 2px', // little padding for aesthetics
+                        }}
+                      >
+                        {`${formik.values.description.length}/4000`}
+                      </Typography>
+                    </Box>
+
+                    <TextField
+                      fullWidth
+                      label="Names of Authors (seperated with commas)"
+                      name="authors"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      required
+                      value={formik.values.authors}
+                      error={formik.touched.authors && Boolean(formik.errors.authors)}
+                      helperText={formik.touched.authors && formik.errors.authors}
+                    />
+
+                  </Stack>
+
                 </Grid>
               </Grid>
-            </Box>
-          </CardContent>
-          <Divider />
-          <CardActions sx={{ justifyContent: 'flex-end' }}>
-            <Stack
-              alignItems="center"
-              direction="row"
-              spacing={1}
-            >
-              <Button type='submit' variant="contained" >
-                Create
-              </Button>
-            </Stack>
+            </CardContent>
+          </Card>
 
-          </CardActions>
-        </Card>
+          <Card>
+            <CardContent>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="h6">
+                    Generate Participants
+                  </Typography>
+                  <Typography sx={{ mt: 2 }} variant="body2">
+                    Define the number of participants for your study. Upon creating the study, unique registration codes will be automatically generated for each participant. Distribute these codes to individuals, enabling them to join the research via their mobile devices. If needed, you can later increase the number of participants, but note that removal is not possible after study creation.
+                  </Typography>
+                </Grid>
+                <Grid xs={12} md={8}>
+                  <Box sx={{ mb: 2 }}>
+                    <TextField
+                      fullWidth
+                      label="Number of Participants to be Generated"
+                      name="no_participants"
+                      type="number"
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      required
+                      value={formik.values.no_participants}
+                      error={formik.touched.no_participants && Boolean(formik.errors.no_participants)}
+                      helperText={formik.touched.no_participants && formik.errors.no_participants}
+                      InputProps={{
+                        inputProps: {
+                          max: 100, min: 1
+                        }
+                      }}
+                    />
+                  </Box>
+                  <Slider
+                    value={formik.values.no_participants}
+                    min={1}
+                    max={100}
+                    onChange={(e, newValue) => formik.setFieldValue("no_participants", newValue)}
+                  />
+
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+
+
+          <Card>
+            <CardContent>
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={4}>
+                  <Typography variant="h6">Users & Roles</Typography>
+                  <Typography variant="body2">Description ...</Typography>
+                </Grid>
+                <Grid xs={12} md={8} >
+                  <TextField
+                    ref={searchBarRef}
+                    fullWidth
+                    placeholder="Search User"
+                    onChange={(e) => {
+                      setLoading(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === " ") {
+                        e.preventDefault();
+                        handleUnifiedSearch(e.target.value, e.currentTarget);
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <>
+                          <SvgIcon sx={{ color: 'grey.500' }}><MagnifyingGlassIcon /></SvgIcon>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', marginRight: '8px' }}>
+
+                            {searchedEmails.map((email, index) => (
+                              <Chip
+                                key={index}
+                                size="small"
+                                label={email}
+                                onDelete={() => handleDelete(index)}
+                                sx={{ m: 0.5, marginTop: "20px" }}
+                              />
+                            ))}
+                          </div>
+                        </>
+
+                      )
+                    }}
+                  />
+                  <Popover
+                    open={Boolean(anchorEl)}
+                    anchorEl={anchorEl}
+                    onClose={closePopover}
+                    PaperProps={{
+                      style: {
+                        width: searchBarRef.current ? searchBarRef.current.offsetWidth : undefined
+                      }
+                    }}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'left',
+                    }}
+                  >
+                    {loading ? (
+                      <Typography padding={2}>Loading...</Typography>
+                    ) : userSearchResult && (
+                      userSearchResult.error ? (
+                        <Typography padding={2}>{userSearchResult.error}</Typography>
+                      ) : (
+                        <List component="nav">
+                          <ListItem button onClick={() => {
+                            setSearchedEmails([...searchedEmails, userSearchResult.email]);
+                            setUserSearchResult(null);
+                            closePopover();
+                          }} style={{ cursor: 'pointer' }}>
+                            <ListItemAvatar>
+                              <Avatar style={{ width: '30px', height: '30px', fontSize: '1rem' }}
+                                src={generateAvatar(userSearchResult.email)}>
+                              </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={userSearchResult.email} />
+                          </ListItem>
+                        </List>
+                      )
+                    )}
+                  </Popover>
+                  {searchedEmails.length > 0 && (
+                    <>
+                      <Box mr={2} ml={2}>  {/* Add spacing to the right of the Select component */}
+                        <Select
+                          value={roleToAdd}
+                          onChange={(e) => setRoleToAdd(e.target.value)}
+                        >
+                          <MenuItem value={"owner"}>Owner</MenuItem>
+                          <MenuItem value={"coordinator"}>Coordinator</MenuItem>
+                          <MenuItem value={"assistant"}>Assistant</MenuItem>
+                        </Select>
+                      </Box>
+                      <Button variant="contained" size="large" onClick={() => addUserWithRole(searchedEmails[searchedEmails.length - 1], roleToAdd)}>Add</Button>
+                    </>
+                  )}
+                    {usersWithRoles.length > 0 && ( <UsersList users={usersWithRoles} setUsers={setUsersWithRoles} />
+)}
+
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </Stack>
+        <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
+          <Stack
+            alignItems="center"
+            direction="row"
+            spacing={1}
+          >
+            <Button type='submit' variant="contained" >
+              Create
+            </Button>
+          </Stack>
+
+        </CardActions>
       </form>
 
     </div>

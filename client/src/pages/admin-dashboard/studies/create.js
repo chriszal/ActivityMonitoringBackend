@@ -16,7 +16,7 @@ const Page = () => {
   <>
     <Head>
       <title>
-        Study Create
+        Create a Study
       </title>
     </Head>
     <Box
@@ -46,12 +46,7 @@ const Page = () => {
             </Breadcrumbs>
           </div>
           <div>
-            <Grid
-              container
-              spacing={3}
-            >
               <CreateStudyForm />
-            </Grid>
           </div>
         </Stack>
       </Container>

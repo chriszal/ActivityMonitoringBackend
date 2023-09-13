@@ -9,6 +9,8 @@ import {
 import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
 import CheckIcon from '@heroicons/react/24/solid/CheckIcon';
 import XMarkIcon from '@heroicons/react/24/solid/XMarkIcon';
+import { Scrollbar } from 'src/components/scrollbar';
+
 
 const DetailsTab = ({ study, onUpdate }) => {
     const [editingField, setEditingField] = useState(null);
@@ -57,7 +59,7 @@ const DetailsTab = ({ study, onUpdate }) => {
     };
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box display="flex"  alignItems="center">
                 {editingField === 'title' ? (
                     <TextField
                         fullWidth
@@ -87,7 +89,7 @@ const DetailsTab = ({ study, onUpdate }) => {
             </Box>
 
 
-            <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box display="flex"  alignItems="center">
     {editingField === 'authors' ? (
         <TextField
             fullWidth
@@ -120,7 +122,19 @@ const DetailsTab = ({ study, onUpdate }) => {
 
       <Divider sx={{ my: 2 }} />
 
-      <Box display="flex" justifyContent="space-between" alignItems="start">
+      <Box display="flex" alignItems="start">
+      <Scrollbar
+                            sx={{
+                                maxHeight: '240px', 
+                                width: '100%', 
+                                '& .simplebar-content': {
+                                    height: '100%'
+                                },
+                                '& .simplebar-scrollbar:before': {
+                                    background: 'neutral.400'
+                                }
+                            }}
+                        >
                 {editingField === 'description' ? (
                     <TextField
                         fullWidth
@@ -149,7 +163,9 @@ const DetailsTab = ({ study, onUpdate }) => {
                         </IconButton>
                     </>
                 )}
+                </Scrollbar>
             </Box>
+            
     </Box>
   );
 };

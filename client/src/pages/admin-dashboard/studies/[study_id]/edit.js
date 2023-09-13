@@ -47,7 +47,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Study Edit
+          Edit Study
         </title>
       </Head>
       <Box

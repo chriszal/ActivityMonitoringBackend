@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import jwt_decode from 'jwt-decode';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Link, SvgIcon, Stack,Alert, TextField, Typography } from '@mui/material';
+import { Box, Button, Link, SvgIcon, Stack, Alert, TextField, Typography } from '@mui/material';
 import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 import { useEffect, useState } from 'react';
@@ -50,7 +50,7 @@ const Page = () => {
       } catch (err) {
         // router.push("/404");
         setValidationError("An error occurred while validating the token");
-     
+
 
       }
 
@@ -86,14 +86,14 @@ const Page = () => {
         .string()
         .max(255)
         .required('Last Name is required'),
-        password: Yup
-        .string()
+      password: Yup.string()
         .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9_.-]+$/,
-          'Password must contain at least one uppercase letter, one lowercase letter, and one number.'
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()])[a-zA-Z0-9!@#$%^&*()]+$/,
+          'Password must contain at least one uppercase letter, one lowercase letter, one number, and one of the symbols ! @#$%^&*().'
         )
         .min(8, 'Passwords must be more than 8 characters long.')
         .required('Password is required.'),
+
       confirm_password: Yup
         .string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -136,7 +136,7 @@ const Page = () => {
       <Box
         sx={{
           backgroundColor: "#FBFBFB",
-          borderRadius:'0.75rem',
+          borderRadius: '0.75rem',
           flex: '1 1 auto',
           alignItems: 'center',
           display: 'flex',
@@ -174,7 +174,7 @@ const Page = () => {
                     width: 400
                   }}
                 />
-                <Typography sx={{ mb: 3,textAlign: 'center' }}
+                <Typography sx={{ mb: 3, textAlign: 'center' }}
                   variant="h5">
                   {validationError}
                 </Typography>
@@ -282,7 +282,7 @@ const Page = () => {
                     type="password"
                     value={formik.values.password}
                     InputProps={{
-                      endAdornment: formik.touched.password && !formik.errors.password  && (
+                      endAdornment: formik.touched.password && !formik.errors.password && (
                         <SvgIcon sx={{ color: 'primary.main' }}>
                           <CheckIcon />
                         </SvgIcon>
@@ -309,7 +309,7 @@ const Page = () => {
                     }}
                   />
                 </Stack>
-                
+
                 <Button
                   fullWidth
                   size="large"
@@ -320,10 +320,10 @@ const Page = () => {
                   Register
                 </Button>
                 {formik.errors.submit && (
-                  
-                    <Alert severity="error"
+
+                  <Alert severity="error"
                     sx={{ mt: 3 }}>{formik.errors.submit}</Alert>
-                    
+
                 )}
               </form>
             </div>
