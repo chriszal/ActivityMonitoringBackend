@@ -2,7 +2,7 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { useState } from 'react';
 import { generateAvatar } from 'src/utils/avatar-generator';
 
-import { Avatar, Menu, Button, ListItemText, ListItem, ListItemAvatar, MenuItem, SvgIcon, Typography } from '@mui/material';
+import { Avatar, Menu, Button, ListItemText, ListItem, ListItemAvatar, MenuItem, SvgIcon, Typography, Divider } from '@mui/material';
 
 export const UsersList = ({ users, setUsers }) => {
     const [anchorMenu, setAnchorMenu] = useState(null);
@@ -26,12 +26,20 @@ export const UsersList = ({ users, setUsers }) => {
     };
 
     return (
-        <Scrollbar style={{ maxHeight: '200px' }}>
+        <Scrollbar  sx={{
+            maxHeight: '350px',
+            '& .simplebar-content': {
+                height: '100%'
+            },
+            '& .simplebar-scrollbar:before': {
+                background: 'neutral.400'
+            }
+        }}>
             {users.map((user, index) => (
                 <ListItem
                     key={index}
                     button
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: 'pointer', marginBottom: '5px' }}
                     onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9e9e9'}
                     onMouseOut={(e) => e.currentTarget.style.backgroundColor = ''}
                 >
@@ -45,8 +53,11 @@ export const UsersList = ({ users, setUsers }) => {
                     >
                         <Typography variant="body2">{user.role}</Typography>
                     </Button>
+                    
                 </ListItem>
+                
             ))}
+            
             <Menu
                 anchorEl={anchorMenu}
                 keepMounted
@@ -59,16 +70,15 @@ export const UsersList = ({ users, setUsers }) => {
                 }}
             >
                 <MenuItem onClick={() => changeUserRole('owner')}>
-                    <Typography variant="body2">Owner</Typography>
+                    <Typography variant="body2" >Owner</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => changeUserRole('coordinator')}>
-                    <Typography variant="body2">Coordinator</Typography>
+                    <Typography variant="body2" >Coordinator</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => changeUserRole('assistant')}>
-                    <Typography variant="body2">Assistant</Typography>
+                    <Typography variant="body2" >Assistant</Typography>
                 </MenuItem>
             </Menu>
         </Scrollbar>
     );
 };
-

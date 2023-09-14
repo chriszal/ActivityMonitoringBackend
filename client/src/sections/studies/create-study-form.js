@@ -1,4 +1,4 @@
-import { useState,useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useContext } from 'react';
 import { DialogContext } from 'src/contexts/dialog-context';
 import { AlertContext } from 'src/contexts/alert-context';
@@ -24,7 +24,7 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
+  ListItemText, useTheme,
   Typography
 } from '@mui/material';
 import { useFormik } from 'formik';
@@ -32,6 +32,7 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/router';
 import axiosInstance from 'src/utils/axios-instance';
 import { generateAvatar } from 'src/utils/avatar-generator';
+import NewtonsCradle from 'src/components/newtons-cradle-component';
 
 
 const validationSchema = Yup.object({
@@ -44,16 +45,13 @@ const validationSchema = Yup.object({
 
 
 export const CreateStudyForm = () => {
+  const theme = useTheme();
+
+  const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [coordinator_loading, setCoordinatorLoading] = useState(false);
-  const [assistant_loading, setAssistantLoading] = useState(false);
-  const [owner_loading, setOwnerLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchedEmails, setSearchedEmails] = useState([]);
-  const [roleToAdd, setRoleToAdd] = useState('');
-  const [coordinatorEmails, setCoordinatorEmails] = useState([]);
-  const [assistantEmails, setAssistantEmails] = useState([]);
-  const [ownerEmails, setOwnerEmails] = useState([]);
+  const [roleToAdd, setRoleToAdd] = useState('owner');
   const searchBarRef = useRef(null);
 
   const [usersWithRoles, setUsersWithRoles] = useState([]);
@@ -65,7 +63,8 @@ export const CreateStudyForm = () => {
   const [userSearchResult, setUserSearchResult] = useState(null);
 
   const handleUnifiedSearch = async (inputValue, target) => {
-    console.log(inputValue);
+    setAnchorEl(target);
+
     if (!inputValue.trim()) {
       setLoading(false);
       setUserSearchResult(null);
@@ -92,16 +91,21 @@ export const CreateStudyForm = () => {
     } finally {
       setLoading(false);
     }
-    setAnchorEl(target);
   };
 
-  const addUserWithRole = (user, role) => {
+  const addUserWithRole = (user, role, id) => {
+    console.log("Before adding: ", usersWithRoles);
+
     const newUser = {
       email: user,
-      role: role
+      role: role,
+      id: id
     };
-    setUsersWithRoles([...usersWithRoles, newUser]);
+    setUsersWithRoles(prevUsers => [...prevUsers, newUser]);
+
+    console.log("After adding: ", [...usersWithRoles, newUser]);
   };
+
 
   const closePopover = () => {
     setAnchorEl(null);
@@ -114,10 +118,29 @@ export const CreateStudyForm = () => {
           Back
         </Button>
         <Button onClick={async () => {
-          const { study_coordinatorsInput, study_assistantsInput, study_ownersInput, ...postData } = values;
-          postData.study_coordinators = values.study_coordinators.map(coordinator => coordinator.id);
-          postData.study_assistants = values.study_assistants.map(assistant => assistant.id);
-          postData.study_owners = values.study_owners.map(owner => owner.id);
+          const { ...postData } = values;
+          let study_coordinators = [];
+          let study_assistants = [];
+          let study_owners = [];
+          usersWithRoles.forEach(userWithRole => {
+            switch (userWithRole.role) {
+              case 'coordinator':
+                study_coordinators.push(userWithRole.id);
+                break;
+              case 'assistant':
+                study_assistants.push(userWithRole.id);
+                break;
+              case 'owner':
+                study_owners.push(userWithRole.id);
+                break;
+              default:
+                break;
+            }
+          });
+
+          postData.study_coordinators = study_coordinators;
+          postData.study_assistants = study_assistants;
+          postData.study_owners = study_owners;
           postData.authors = values.authors.split(',').map(author => author.trim());
           closeDialog();
           console.log('Submitted', postData);
@@ -155,11 +178,8 @@ export const CreateStudyForm = () => {
       authors: '',
       no_participants: '',
       study_owners: [],
-      study_ownersInput: "",
       study_coordinators: [],
-      study_coordinatorsInput: "",
       study_assistants: [],
-      study_assistantsInput: ""
     },
     validationSchema,
     onSubmit
@@ -171,7 +191,8 @@ export const CreateStudyForm = () => {
     const updatedEmails = [...searchedEmails];
     updatedEmails.splice(index, 1);
     setSearchedEmails(updatedEmails);
-  };
+};
+
 
   return (
     <div>
@@ -341,98 +362,159 @@ export const CreateStudyForm = () => {
                   <Typography variant="body2">Description ...</Typography>
                 </Grid>
                 <Grid xs={12} md={8} >
-                  <TextField
-                    ref={searchBarRef}
-                    fullWidth
-                    placeholder="Search User"
-                    onChange={(e) => {
-                      setLoading(true);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === " ") {
-                        e.preventDefault();
-                        handleUnifiedSearch(e.target.value, e.currentTarget);
-                      }
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <>
-                          <SvgIcon sx={{ color: 'grey.500' }}><MagnifyingGlassIcon /></SvgIcon>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', marginRight: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                            {searchedEmails.map((email, index) => (
-                              <Chip
-                                key={index}
-                                size="small"
-                                label={email}
-                                onDelete={() => handleDelete(index)}
-                                sx={{ m: 0.5, marginTop: "20px" }}
-                              />
-                            ))}
-                          </div>
-                        </>
+                    <div style={{ flex: '1', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
 
-                      )
-                    }}
-                  />
-                  <Popover
-                    open={Boolean(anchorEl)}
-                    anchorEl={anchorEl}
-                    onClose={closePopover}
-                    PaperProps={{
-                      style: {
-                        width: searchBarRef.current ? searchBarRef.current.offsetWidth : undefined
-                      }
-                    }}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                  >
-                    {loading ? (
-                      <Typography padding={2}>Loading...</Typography>
-                    ) : userSearchResult && (
-                      userSearchResult.error ? (
-                        <Typography padding={2}>{userSearchResult.error}</Typography>
-                      ) : (
+                      <TextField
+                        value={searchValue}
+                        ref={searchBarRef}
+                        fullWidth
+                        type='email'
+                        placeholder="Search Users by Email"
+                        style={{ flexGrow: 1 }}
+                        onChange={(e) => {
+                          setLoading(true);
+                          setSearchValue(e.target.value);
+
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === " ") {
+                            e.preventDefault();
+                            handleUnifiedSearch(e.target.value, e.currentTarget);
+                          }
+                        }}
+                        InputProps={{
+                          startAdornment: (
+                            <>
+                              <SvgIcon sx={{ color: 'grey.500' }}><MagnifyingGlassIcon /></SvgIcon>
+
+                              {searchedEmails.map((user, index) => (
+                                <Chip
+                                  key={index}
+                                  size="small"
+                                  label={user.email}
+                                  onDelete={() => handleDelete(index)}
+                                  sx={{ m: 0.5, marginTop: "20px" }}
+                                />
+                              ))}
+
+
+                            </>
+
+                          )
+                        }}
+                      />
+                    </div>
+                    <Popover
+                      open={Boolean(anchorEl)}
+                      anchorEl={anchorEl}
+                      onClose={closePopover}
+                      PaperProps={{
+                        style: {
+                          width: searchBarRef.current ? searchBarRef.current.offsetWidth : undefined
+                        }
+                      }}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
+                    >
+                      {loading ? (
                         <List component="nav">
-                          <ListItem button onClick={() => {
-                            setSearchedEmails([...searchedEmails, userSearchResult.email]);
-                            setUserSearchResult(null);
-                            closePopover();
-                          }} style={{ cursor: 'pointer' }}>
-                            <ListItemAvatar>
-                              <Avatar style={{ width: '30px', height: '30px', fontSize: '1rem' }}
-                                src={generateAvatar(userSearchResult.email)}>
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={userSearchResult.email} />
+                          <ListItem style={{ justifyContent: 'center' }}>
+                            <NewtonsCradle />
                           </ListItem>
                         </List>
-                      )
+                      ) : userSearchResult && (
+                        userSearchResult.error ? (
+                          <Typography padding={2}>{userSearchResult.error}</Typography>
+                        ) : (
+                          <List component="nav">
+                            <ListItem onClick={() => {
+                              if (!usersWithRoles.some(u => u.email === userSearchResult.email) &&
+                                !searchedEmails.some(u => u.email === userSearchResult.email)) {
+                                setSearchedEmails(prevEmails => [...prevEmails, { email: userSearchResult.email, id: userSearchResult.id }]);
+                                setUserSearchResult(null);
+                                closePopover();
+                                setSearchValue("");
+                              } else {
+                                showAlert('Email already added!', 'warning');
+                              }
+                            }} style={{ cursor: 'pointer' }}>
+
+                              <ListItemAvatar>
+                                <Avatar style={{ width: '30px', height: '30px', fontSize: '1rem' }}
+                                  src={generateAvatar(userSearchResult.email)}>
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText primary={userSearchResult.email} />
+                            </ListItem>
+                          </List>
+                        )
+                      )}
+                    </Popover>
+                    {searchedEmails.length > 0 && (
+                      <>
+                        <Box mx={2} >
+                          <Select
+                            value={roleToAdd}
+                            onChange={(e) => setRoleToAdd(e.target.value)}
+                          >
+
+                            <MenuItem value={"owner"}>Owner</MenuItem>
+                            <MenuItem value={"coordinator"}>Coordinator</MenuItem>
+                            <MenuItem value={"assistant"}>Assistant</MenuItem>
+                          </Select>
+                        </Box>
+                        <Button variant="contained" size="large" onClick={() => {
+                          const newUsers = searchedEmails.filter(email => !usersWithRoles.some(u => u.email === email));
+                          if (newUsers.length === 0) {
+                            showAlert('All emails are already added!', 'warning');
+                          } else {
+                            newUsers.forEach(user => {
+                              addUserWithRole(user.email, roleToAdd, user.id);
+                            });
+                            
+                            setSearchedEmails([]);
+                            setSearchValue("");
+                          }
+                          console.log("Searched Emails: ", searchedEmails);
+                          console.log("New Users to Add: ", newUsers);
+
+                        }}>Add</Button>
+
+                      </>
                     )}
-                  </Popover>
-                  {searchedEmails.length > 0 && (
-                    <>
-                      <Box mr={2} ml={2}>  {/* Add spacing to the right of the Select component */}
-                        <Select
-                          value={roleToAdd}
-                          onChange={(e) => setRoleToAdd(e.target.value)}
-                        >
-                          <MenuItem value={"owner"}>Owner</MenuItem>
-                          <MenuItem value={"coordinator"}>Coordinator</MenuItem>
-                          <MenuItem value={"assistant"}>Assistant</MenuItem>
-                        </Select>
-                      </Box>
-                      <Button variant="contained" size="large" onClick={() => addUserWithRole(searchedEmails[searchedEmails.length - 1], roleToAdd)}>Add</Button>
-                    </>
-                  )}
-                    {usersWithRoles.length > 0 && ( <UsersList users={usersWithRoles} setUsers={setUsersWithRoles} />
-)}
+                  </div>
+                  <Typography variant="subtitle1" style={{ margin: '10px 0', paddingLeft: '16px' }}>Study Members</Typography>
+                  {/* <Divider /> */}
+                  <Box
+                    sx={{
+                      height: '200px',
+                      overflowY: 'auto',
+                      borderRadius: '4px',
+                      border: (theme) => `1px solid ${theme.palette.success.main}`,
+                      marginTop: '16px',
+                      backgroundColor: theme.palette.grey[100],
+                    }}
+                  >
+                    {usersWithRoles.length > 0 ? (
+                      <UsersList users={usersWithRoles} setUsers={setUsersWithRoles} />
+                    ) : (
+                      <div style={{ marginTop: '78px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <SvgIcon><UsersIcon /></SvgIcon>
+
+                        <Typography variant="subtitle2" style={{ marginTop: '8px' }}>No users added.</Typography>
+                      </div>
+                    )}
+                  </Box>
+
+
 
                 </Grid>
               </Grid>
@@ -453,6 +535,6 @@ export const CreateStudyForm = () => {
         </CardActions>
       </form>
 
-    </div>
+    </div >
   );
 };
