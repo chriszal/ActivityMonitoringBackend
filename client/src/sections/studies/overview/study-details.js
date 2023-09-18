@@ -21,6 +21,7 @@ import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
 import AcademicCapIcon from '@heroicons/react/24/solid/AcademicCapIcon';
 import DetailsTab from './tabs/details-tab';
 import RoleTabContent from './tabs/role-tab';
+import ParticipantsTab from './tabs/participants-tab';
 
 export const StudyDetails = (props) => {
   const { study, sx } = props;
@@ -53,6 +54,7 @@ export const StudyDetails = (props) => {
       <Divider />
       <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginLeft: 3 }}>
         <Tab label="Details" />
+        <Tab label="Participants" />
         <Tab label="Owners" />
         <Tab label="Cordinators" />
         <Tab label="Assistants" />
@@ -65,16 +67,20 @@ export const StudyDetails = (props) => {
             console.log("Updated Data:", updatedData);
           }} />
         )}
-
         {tabValue === 1 && (
+           <ParticipantsTab study={study} />
+
+        )}
+
+        {tabValue === 2 && (
             <RoleTabContent roleData={{ roleName: 'Owner', data: study.owners }} />
 
         )}
-        {tabValue === 2 && (
+        {tabValue === 3 && (
             <RoleTabContent roleData={{ roleName: 'Coordinator', data: study.coordinators }} />
 
         )}
-        {tabValue === 3 && (
+        {tabValue === 4 && (
            <RoleTabContent roleData={{ roleName: 'Assistant', data: study.assistants }} />
 
         )}

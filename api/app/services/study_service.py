@@ -20,7 +20,7 @@ class StudyService(object):
 
         for i in range(no_participants):
             Participant(participant_id=study_id+"_"+str(i), reg_code=''.join(random.choice(string.ascii_uppercase + string.digits)
-                        for _ in range(8)), name="", email="", date_of_birth=None, gender=None, weight=None, height=None, register_status="NULL", study=str(study.id)).save()
+                        for _ in range(8)), name="", email="", date_of_birth=None, gender=None, weight=None, height=None, register_status='NONE', study=str(study.id)).save()
 
         return study
 

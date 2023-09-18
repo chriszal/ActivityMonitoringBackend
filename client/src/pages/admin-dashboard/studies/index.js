@@ -8,7 +8,6 @@ import { StudiesTable } from 'src/sections/studies/studies-table';
 import { StudiesSearch } from 'src/sections/studies/studies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import NextLink from 'next/link';
-import axios from 'axios';
 import axiosInstance from 'src/utils/axios-instance';
 
 

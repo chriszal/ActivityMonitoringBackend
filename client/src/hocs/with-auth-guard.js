@@ -13,6 +13,8 @@ const roles = {
   "/admin-dashboard/studies/create": ADMIN_ROLES,
   "/admin-dashboard/studies/[study_id]/edit": ADMIN_ROLES,
   "/admin-dashboard/studies/[study_id]/view": ADMIN_ROLES,
+  "/admin-dashboard/studies/[study_id]/participants": ADMIN_ROLES,
+  "/admin-dashboard/studies/[study_id]/participants/[participant_id]": ADMIN_ROLES,
   "/admin-dashboard/account": ADMIN_ROLES,
   "/dashboard": MEMBER_ROLES,
   "/dashboard/account": MEMBER_ROLES,
@@ -20,6 +22,8 @@ const roles = {
   "/dashboard/studies": MEMBER_ROLES,
   "/dashboard/studies/create": MEMBER_ROLES,
   "/dashboard/studies/[study_id]/view": MEMBER_ROLES,
+  "/dashboard/studies/[study_id]/participants": MEMBER_ROLES,
+  "/dashboard/studies/[study_id]/participants/[participant_id]": MEMBER_ROLES,
   "/404": MEMBER_ROLES
 };
 

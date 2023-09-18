@@ -10,7 +10,7 @@ class Participant(Document):
     gender = StringField(choices=['male', 'female', 'other'])
     weight = IntField( min_value=0)
     height = IntField(min_value=0)
-    register_status = StringField(required=True, choices=['NULL', 'REGISTERED'], default='NULL')
+    register_status = StringField(required=True, choices=['NONE', 'REGISTERED', 'UNREGISTERED','PENDING'], default='NONE')
     study = StringField(required=True)
 
     created_at = DateTimeField(default=datetime.datetime.utcnow)

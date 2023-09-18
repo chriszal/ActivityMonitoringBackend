@@ -40,7 +40,8 @@ const validationSchema = Yup.object({
   title: Yup.string().required('Title is required').max(500, 'Title must be less than 500 characters long'),
   description: Yup.string().required('Description is required').max(4000, 'Description must be less than 4000 characters long'),
   authors: Yup.string().required('Authors is required'),
-  no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100')
+  no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100'),
+
 });
 
 
@@ -111,6 +112,13 @@ export const CreateStudyForm = () => {
     setAnchorEl(null);
   };
   const onSubmit = async (values) => {
+  const ownerExists = usersWithRoles.some(user => user.role === 'owner');
+
+  if (!ownerExists) {
+    showAlert('At least one Owner is required!', 'error');
+    return;
+  }
+
     const dialogText = 'Are you sure you want to create this study?';
     const dialogActions = (
       <>
@@ -148,7 +156,7 @@ export const CreateStudyForm = () => {
             const response = await axiosInstance.post('/studies', postData);
             console.log(response.data);
             showAlert('Study created successfully!', 'success');
-            router.back()
+            router.push(`/admin-dashboard/studies/${encodeURIComponent(postData.study_id)}/view`);
           } catch (error) {
             console.error("There was an error creating the study.", error);
 

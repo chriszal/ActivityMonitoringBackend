@@ -64,24 +64,19 @@ const Page = () => {
                 <Typography variant="subtitle2" color="text.primary">Overview</Typography>
               </Breadcrumbs>
             </div>
-            <div>
-              <Grid
-                container
-                spacing={3}
-              >
-              </Grid>
-            </div>
           </Stack>
           <Grid
             container
             spacing={3}
+            mt={2}
           >
-            <Grid xs={12} md={6} lg={4}>
+            <Grid xs={12} md={6} lg={4.2}>
               <StudyDetails
                 study={{
                   id: 'HUA',
                   title: 'Software system for recording signals',
                   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id dolor placerat, placerat lorem a, molestie eros. Aenean volutpat, est id congue dignissim, urna leo tincidunt tortor, quis tristique massa nisi nec leo. In iaculis pharetra quam. Aliquam erat volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut suscipit magna eu neque facilisis, at gravida nulla feugiat. Cras dignissim sollicitudin diam id iaculis. Suspendisse ac turpis placerat, porta ex eget, consequat risus. Donec vitae rutrum erat.',
+                  no_participants:34,
                   authors: ['Christos Zalachoris', 'Peter Smeichel'],
                   owners: [
                     {
@@ -147,7 +142,7 @@ const Page = () => {
               />
             </Grid>
 
-            <Grid xs={12} md={6} lg={8} container >
+            <Grid xs={12} md={6} lg={7.8} container >
               <Grid
                 xs={12}
                 sm={4}
@@ -262,18 +257,7 @@ const Page = () => {
               />
 
             </Grid>
-            <Grid
-              xs={12}
-              md={6}
-              lg={4}
-            >
-              <ParticipantsSummaryCard
-                totalParticipants={54}
-                registered={23}
-                notRegistered={26}
-                optOut={5}
-              />
-            </Grid>
+            
           </Grid>
         </Container>
       </Box>
