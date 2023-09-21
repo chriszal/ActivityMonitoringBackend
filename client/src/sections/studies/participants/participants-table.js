@@ -210,7 +210,7 @@ export const ParticipantsTable = (props) => {
                                                         {participant.gender || "None"}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {participant.date_of_birth ? format(new Date(participant.date_of_birth), 'MM/dd/yyyy') : "None"}
+                                                        {participant.date_of_birth  || "None"}
                                                     </TableCell>
 
                                                     <TableCell>

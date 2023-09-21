@@ -11,6 +11,7 @@ from common.require_json import RequireJSON
 from resource.login_resource import LoginResource
 from resource.measurements_resource import MeasurementResource
 from resource.participant_resource import ParticipantResource
+from resource.steps_resource import StepsResource
 from resource.register_participant_resource import RegisterParticipantResource
 from resource.study_resource import StudyResource
 from resource.user_resource import UserResource
@@ -53,11 +54,12 @@ app = falcon.App(middleware=[Cors(),MultipartMiddleware()])
 
 study = StudyResource()
 user = UserResource()
-participant = ParticipantResource()
+participant = ParticipantResource(logging)
 measurement = MeasurementResource(rabbitMQ_instance,constants.INFLUXDB,logging)
 meal = MealResource()
 register = RegisterParticipantResource()
 login = LoginResource()
+steps = StepsResource(logging)
 
 
 
@@ -82,7 +84,7 @@ app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
 app.add_route('/api/v1/measurement/',measurement)
 app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
-
+app.add_route('/api/v1/participant/steps',steps)
 
 # Add health check endpoint
 

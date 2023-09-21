@@ -24,6 +24,10 @@ const Page = () => {
 
   const { openDialog } = useContext(DialogContext);
 
+  const baseRoute = router.pathname.includes('/admin-dashboard/')
+    ? '/admin-dashboard/studies/'
+    : '/dashboard/studies/';
+
   const handleCreateClick = () => {
     openDialog(
       'Create New Participants',
@@ -39,7 +43,7 @@ const Page = () => {
     useEffect(() => {
       if (router.isReady) {
         const { study_id } = router.query;
-        axiosInstance.get(`/participants/study/650618b28f89bce69cd91110`)
+        axiosInstance.get(`/participants/study/${study_id}`)
           .then(response => {
             if (response.status == 200) {
               setData(response.data);
@@ -154,8 +158,7 @@ const Page = () => {
                   underline="hover"
                   color="inherit"
                   variant="subtitle2"
-                  onClick={() => router.back()}
-                  href="/"
+                  href={baseRoute}
                 >
                   Studies
                 </Link>
@@ -165,8 +168,7 @@ const Page = () => {
                     underline="hover"
                     color="inherit"
                     variant="subtitle2"
-                    onClick={() => router.back()}
-                    href="/"
+                    href={`${baseRoute}${router.query.study_id}/view`}
                   >
                     {router.query.study_id}
                   </Link>

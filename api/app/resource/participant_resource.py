@@ -15,10 +15,11 @@ from common.constants import GMAIL_USER
 class ParticipantResource(object):
 
 
-    def __init__(self):
+    def __init__(self,logging):
         self.participant_service = ParticipantService()
         self.gmail = GMAIL_USER
         self.gmail_pass = GMAIL_PASS
+        self.logging = logging
 
     def on_get(self, req, resp):
         try:
@@ -48,18 +49,12 @@ class ParticipantResource(object):
 
     def on_get_study(self, req, resp, study_id):
         try:
-            study = Study.objects.get(id=study_id)
-            participant_objs = self.participant_service.list_participants_in_study(study_id)
-            if not participant_objs:
-                resp.status = falcon.HTTP_404
-                resp.body = json.dumps({
-                    'message': 'No participants found in the study.',
-                    'status': 404,
-                    'data': {}
-                })
-            else:
-                resp.body = participant_objs.to_json()
-                resp.status = falcon.HTTP_200
+            study = Study.objects.get(study_id=study_id)
+            participant_objs = self.participant_service.list_participants_in_study(study.id)            
+            participants_list = [participant.to_dict() for participant in participant_objs]
+            resp.body = json.dumps(participants_list)
+
+            resp.status = falcon.HTTP_200
         except Study.DoesNotExist:
             resp.status = falcon.HTTP_404
             resp.body = json.dumps({

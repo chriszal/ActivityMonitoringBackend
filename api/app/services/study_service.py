@@ -16,13 +16,14 @@ class StudyService(object):
                 "Duplicate user id found in owners, study coordinators, or study assistants list")
 
         study = Study(study_id=study_id, title=title, authors=authors,
-                      description=description, no_participants=no_participants, owners=study_owners, study_coordinators=study_coordinators, study_assistants=study_assistants).save()
+                    description=description, no_participants=no_participants, owners=study_owners, study_coordinators=study_coordinators, study_assistants=study_assistants).save()
 
         for i in range(no_participants):
-            Participant(participant_id=study_id+"_"+str(i), reg_code=''.join(random.choice(string.ascii_uppercase + string.digits)
+            Participant(participant_id=study_id + "_{:02}".format(i+1), reg_code=''.join(random.choice(string.ascii_uppercase + string.digits)
                         for _ in range(8)), name="", email="", date_of_birth=None, gender=None, weight=None, height=None, register_status='NONE', study=str(study.id)).save()
 
         return study
+
 
     @staticmethod
     def list_studies():

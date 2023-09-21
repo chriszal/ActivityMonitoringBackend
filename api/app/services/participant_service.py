@@ -11,7 +11,7 @@ class ParticipantService(object):
 
     @staticmethod
     def list_participants_in_study(study_id):
-        return Participant.objects.filter(study=study_id)
+        return Participant.objects.filter(study=str(study_id))
 
     @staticmethod
     def list_registered_participants_in_study(study_id):
