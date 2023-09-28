@@ -116,31 +116,41 @@ class ParticipantResource(object):
             })
 
     def on_put_id(self, req, resp, participant_id):
-        if req.context.userid == participant_id:
-            try:
-                participant_data = req.media
-                participant_data["participant_id"] = participant_id
-                participant_obj = self.participant_service.update_participant(**participant_data)
-                resp.status = falcon.HTTP_200
-                resp.body = json.dumps({
-                    'message': 'Participant successfully updated!',
-                    'status': 200,
-                    'body': participant_obj
-                })
-            except Participant.DoesNotExist:
-                resp.status = falcon.HTTP_404
-                resp.body = json.dumps({
-                    'message': 'Participant ID does not exist.',
-                    'status': 404,
-                    'data': {}
-                })
-        else:
-            resp.status = falcon.HTTP_409
+        try:
+            participant_data = req.media
+            participant_data["participant_id"] = participant_id
+            participant_obj = self.participant_service.update_participant(**participant_data)
+            
+            # Convert the participant_obj to a dictionary
+            participant_dict = {
+                'participant_id': participant_obj.participant_id,
+                'date_of_birth': participant_obj.date_of_birth.strftime('%Y-%m-%d'), # assuming date_of_birth is a datetime object
+                'gender': participant_obj.gender,
+                'weight': participant_obj.weight,
+                'height': participant_obj.height,
+            }
+            
+            resp.status = falcon.HTTP_200
             resp.body = json.dumps({
-                'message': 'Authentication Failure',
-                'status': 409,
+                'message': 'Participant successfully updated!',
+                'status': 200,
+                'body': participant_dict
+            })
+        except Participant.DoesNotExist:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'message': 'Participant ID does not exist.',
+                'status': 404,
                 'data': {}
             })
+
+        # else:
+        #     resp.status = falcon.HTTP_409
+        #     resp.body = json.dumps({
+        #         'message': 'Authentication Failure',
+        #         'status': 409,
+        #         'data': {}
+        #     })
 
 
     def on_post_participant_invitation(self, req, resp):

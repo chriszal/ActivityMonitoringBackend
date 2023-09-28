@@ -15,7 +15,7 @@ import { OverviewWeeklySteps } from 'src/sections/studies/overview/overview-week
 import { OverviewStudyProgress } from 'src/sections/studies/overview/overview-study-progress';
 import { OverviewRegisteredParticipants } from 'src/sections/studies/overview/overview-registered-participants';
 import { OverviewAgeRadar } from 'src/sections/studies/overview/overview-age-radar';
-
+import axiosInstance from 'src/utils/axios-instance';
 import { ParticipantsSummaryCard } from 'src/sections/studies/overview/participant-summary'
 
 const now = new Date();
@@ -24,12 +24,24 @@ const now = new Date();
 const Page = () => {
   const router = useRouter();
 
+  const [study, setStudy] = useState(null);  // 1. Add the state for the study
+
   useEffect(() => {
     if (router.isReady) {
       const { study_id } = router.query;
 
+      // 2. Fetch the data from the API in the useEffect hook
+      axiosInstance.get(`/study/${study_id}`)
+        .then(response => {
+          // 3. Set the state with the fetched data
+          setStudy(response.data);
+        })
+        .catch(error => {
+          console.error("There was an error fetching the study", error);
+        });
     }
   }, [router.isReady, router.query]);
+
 
   return (
     <>
@@ -71,76 +83,9 @@ const Page = () => {
             mt={2}
           >
             <Grid xs={12} md={6} lg={4.2}>
-              <StudyDetails
-                study={{
-                  id: 'HUA',
-                  title: 'Software system for recording signals',
-                  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id dolor placerat, placerat lorem a, molestie eros. Aenean volutpat, est id congue dignissim, urna leo tincidunt tortor, quis tristique massa nisi nec leo. In iaculis pharetra quam. Aliquam erat volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Ut suscipit magna eu neque facilisis, at gravida nulla feugiat. Cras dignissim sollicitudin diam id iaculis. Suspendisse ac turpis placerat, porta ex eget, consequat risus. Donec vitae rutrum erat.',
-                  no_participants:34,
-                  authors: ['Christos Zalachoris', 'Peter Smeichel'],
-                  owners: [
-                    {
-                      fullName: 'Ella Thompson',
-                      email: 'ella.thompson@example.com'
-                    }
-                  ],
-                  coordinators: [
-                    {
-                      fullName: 'Mason White',
-                      email: 'mason.white@example.com'
-                    },
-                    {
-                      fullName: 'Olivia Green',
-                      email: 'olivia.green@example.com'
-                    }
-                  ],
-                  assistants: [
-                    {
-                      fullName: 'Ethan Johnson',
-                      email: 'ethan.johnson@example.com'
-                    },
-                    {
-                      fullName: 'Sophia Martin',
-                      email: 'sophia.martin@example.com'
-                    },
-                    {
-                      fullName: 'Jackson Clark',
-                      email: 'jackson.clark@example.com'
-                    },
-                    {
-                      fullName: 'Ava Turner',
-                      email: 'ava.turner@example.com'
-                    },
-                    {
-                      fullName: 'Liam Hall',
-                      email: 'liam.hall@example.com'
-                    },
-                    {
-                      fullName: 'Charlotte Scott',
-                      email: 'charlotte.scott@example.com'
-                    },
-                    {
-                      fullName: 'Noah Wright',
-                      email: 'noah.wright@example.com'
-                    },
-                    {
-                      fullName: 'Isabella Lewis',
-                      email: 'isabella.lewis@example.com'
-                    },
-                    {
-                      fullName: 'Aiden Walker',
-                      email: 'aiden.walker@example.com'
-                    },
-                    {
-                      fullName: 'Mia King',
-                      email: 'mia.king@example.com'
-                    }
-                  ]
-                  
-                }}
-                sx={{ height: '100%' }}
-              />
+              {study && <StudyDetails study={study} sx={{ height: '100%' }} />}
             </Grid>
+
 
             <Grid xs={12} md={6} lg={7.8} container >
               <Grid
@@ -181,41 +126,16 @@ const Page = () => {
               <Grid
                 xs={12}
               >
-                <OverviewParticipants
-                  participants={[
+                <OverviewWeeklySteps
+                  chartSeries={[
                     {
-                      id: 'HUA_01',
-                      gender: 'Female',
-                      height: 170,
-                      weight: 60,
-                      createdAt: 1015016400000,
-                      status: 'registered'
+                      name: 'Male',
+                      data: [200, 160, 50, 108, 313, 14, 140]
                     },
                     {
-                      id: 'HUA_02',
-                      gender: 'Male',
-                      height: 185,
-                      weight: 90,
-                      createdAt: 1055016400000,
-                      status: 'registered'
-                    },
-                    {
-                      id: 'HUA_03',
-                      gender: 'Female',
-                      height: 180,
-                      weight: 65,
-                      createdAt: 1151930000000,
-                      status: 'registered'
-                    },
-                    {
-                      id: 'HUA_04',
-                      gender: 'None',
-                      height: 'None',
-                      weight: 'None',
-                      createdAt: 'None',
-                      status: 'not registered'
-                    },
-
+                      name: 'Female',
+                      data: [102, 210, 40, 60, 240, 20, 90]
+                    }
                   ]}
                   sx={{ height: '100%' }}
                 />
@@ -226,25 +146,6 @@ const Page = () => {
 
 
 
-
-            <Grid
-              xs={12}
-              lg={8}
-            >
-              <OverviewWeeklySteps
-                chartSeries={[
-                  {
-                    name: 'Male',
-                    data: [200, 160, 50, 108, 313, 14, 140]
-                  },
-                  {
-                    name: 'Female',
-                    data: [102, 210, 40, 60, 240, 20, 90]
-                  }
-                ]}
-                sx={{ height: '100%' }}
-              />
-            </Grid>
             <Grid
               xs={12}
               md={6}
@@ -257,7 +158,7 @@ const Page = () => {
               />
 
             </Grid>
-            
+
           </Grid>
         </Container>
       </Box>

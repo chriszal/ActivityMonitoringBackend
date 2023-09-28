@@ -29,7 +29,8 @@ class ParticipantService(object):
         Participant.objects.get(participant_id=participant_id).delete()
 
     @staticmethod
-    def update_participant(participant_id, date_of_birth, gender, weight, height):
+    def update_participant(participant_id, date_of_birth, gender, weight, height, **kwargs):
+
 
         participant = Participant.objects.get(participant_id=participant_id)
         participant.update(set__gender=gender, set__date_of_birth=datetime.strptime(

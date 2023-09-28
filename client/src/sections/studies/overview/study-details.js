@@ -49,7 +49,7 @@ export const StudyDetails = (props) => {
             </SvgIcon>
           </Avatar>
         }
-        title={study.id}
+        title={study.study_id}
       />
       <Divider />
       <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginLeft: 3 }}>

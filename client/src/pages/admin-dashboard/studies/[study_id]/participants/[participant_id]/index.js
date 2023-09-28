@@ -72,8 +72,8 @@ const Page = () => {
   const router = useRouter();
   const { showAlert } = useContext(AlertContext);
   const [chartData, setChartData] = useState([]);
-  const [filterType, setFilterType] = useState('week');
-  const [filterValue, setFilterValue] = useState(getLastWeek());
+  const [filterType, setFilterType] = useState('year');
+  const [filterValue, setFilterValue] = useState(new Date().getFullYear());
 
   const baseRoute = router.pathname.includes('/admin-dashboard/')
     ? '/admin-dashboard/studies/'

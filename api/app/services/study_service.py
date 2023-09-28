@@ -33,15 +33,37 @@ class StudyService(object):
         for study in studies:
             for idx, user_id in enumerate(study.owners):
                 user = user_service.get_user_by_id(user_id)
-                study.owners[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+                if user:
+                    study.owners[idx] = {
+                        "id": user_id, 
+                        "email": user.email, 
+                        "full_name": f"{user.first_name} {user.last_name}"
+                    }
+                else:
+                    study.owners[idx] = 'User not found'
             for idx, user_id in enumerate(study.study_coordinators):
                 user = user_service.get_user_by_id(user_id)
-                study.study_coordinators[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+                if user:
+                    study.study_coordinators[idx] = {
+                        "id": user_id, 
+                        "email": user.email, 
+                        "full_name": f"{user.first_name} {user.last_name}"
+                    }
+                else:
+                    study.study_coordinators[idx] = 'User not found'
             for idx, user_id in enumerate(study.study_assistants):
                 user = user_service.get_user_by_id(user_id)
-                study.study_assistants[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+                if user:
+                    study.study_assistants[idx] = {
+                        "id": user_id, 
+                        "email": user.email, 
+                        "full_name": f"{user.first_name} {user.last_name}"
+                    }
+                else:
+                    study.study_assistants[idx] = 'User not found'
             studies_list.append(study.to_dict())
         return studies_list
+
 
 
 
@@ -52,15 +74,37 @@ class StudyService(object):
 
         for idx, user_id in enumerate(study.owners):
             user = user_service.get_user_by_id(user_id)
-            study.owners[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+            if user:
+                study.owners[idx] = {
+                    "id": user_id, 
+                    "email": user.email, 
+                    "full_name": f"{user.first_name} {user.last_name}"
+                }
+            else:
+                study.owners[idx] = 'User not found'
         for idx, user_id in enumerate(study.study_coordinators):
             user = user_service.get_user_by_id(user_id)
-            study.study_coordinators[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+            if user:
+                study.study_coordinators[idx] = {
+                    "id": user_id, 
+                    "email": user.email, 
+                    "full_name": f"{user.first_name} {user.last_name}"
+                }
+            else:
+                study.study_coordinators[idx] = 'User not found'
         for idx, user_id in enumerate(study.study_assistants):
             user = user_service.get_user_by_id(user_id)
-            study.study_assistants[idx] = {"id": user_id, "email": user.email} if user else 'User not found'
+            if user:
+                study.study_assistants[idx] = {
+                    "id": user_id, 
+                    "email": user.email, 
+                    "full_name": f"{user.first_name} {user.last_name}"
+                }
+            else:
+                study.study_assistants[idx] = 'User not found'
 
         return study
+
 
 
     @staticmethod

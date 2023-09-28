@@ -7,17 +7,17 @@ const ParticipantsTab = ({ study }) => {
     const router = useRouter();
 
     const handleRedirect = () => {
-        router.push(`/admin-dashboard/studies/${study.id}/participants`);
+        router.push(`/admin-dashboard/studies/${study.study_id}/participants`);
     };
 
     return (
         <Box>
             <Typography variant="h6" mb={2}>Participants Overview</Typography>
             <ParticipantsSummaryCard
-                totalParticipants={34}
-                registered={12}
-                notRegistered={19}
-                optOut={2}
+                totalParticipants={study.no_participants}
+                registered={1}
+                notRegistered={study.no_participants-1}
+                optOut={0}
             />
 
             <Box mt={2} display="flex" justifyContent="flex-end">

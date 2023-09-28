@@ -22,14 +22,14 @@ class RegisterParticipantService(object):
     def register_participant(reg_code):
         try:
             participant = Participant.objects.get(reg_code=reg_code)
-            if participant.register_status != "NULL":
+            if participant.register_status != "NONE":
                 return 0
             else:     
                 #study_obj = Study.objects.get(study_id=participant.study_id)
                 participant.update(set__register_status="REGISTERED")
 
                 return {
-                        'study_id': participant.study_id,
+                        'study_id': participant.study,
                         'participant_id': participant.participant_id
                         } 
         except Participant.DoesNotExist:
