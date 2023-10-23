@@ -17,6 +17,7 @@ import {
   useMediaQuery, Tabs, Tab, Typography
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { neutral } from 'src/theme/colors';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -82,7 +83,7 @@ export const TopNav = (props) => {
       component="header"
       sx={{
         backdropFilter: 'blur(6px)',
-        backgroundColor: (theme) => alpha(theme.palette.background.default, 0.8),
+        backgroundColor: (theme) => alpha(neutral[900], 0.8),
         position: 'sticky',
         top: 0,
         // backgroundColor: 'neutral.800',
@@ -127,9 +128,9 @@ export const TopNav = (props) => {
             onChange={handleChange}
             sx={{ flexGrow: 1 }}
           >
-            <Tab label="Home" component={CustomScrollLink} to="home" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem' }} />
-            <Tab label="About" component={CustomScrollLink} to="about" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem' }} />
-            <Tab label="Contact" component={CustomScrollLink} to="contact" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem' }} />
+            <Tab label="Home" component={CustomScrollLink} to="home" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem' ,color:"white"}} />
+            <Tab label="About" component={CustomScrollLink} to="about" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem',color:"white" }} />
+            <Tab label="Contact" component={CustomScrollLink} to="contact" smooth={true} sx={{ fontWeight: 'bold', fontSize: '1rem',color:"white" }} />
           </Tabs>
         )}
         <Box sx={{ flexGrow: 1 }}></Box>
