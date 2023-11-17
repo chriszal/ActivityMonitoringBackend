@@ -14,15 +14,15 @@
 .env
 
 # NPM related
-client/node_modules/
-client/.next/
+client/app/node_modules/
+client/app/.next/
 
 # Testing
 /coverage
 
 # Production
-client/build/
-client/out/
+client/app/build/
+client/app/out/
 
 # Misc
 .DS_Store
