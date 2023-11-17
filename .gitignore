@@ -13,6 +13,8 @@
 # Environments variables
 .env
 
+.hypothesis
+
 # NPM related
 client/app/node_modules/
 client/app/.next/
