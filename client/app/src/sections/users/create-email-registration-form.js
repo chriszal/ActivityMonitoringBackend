@@ -17,6 +17,8 @@ import {
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import axiosInstance from 'src/utils/axios-instance';
+
 const rolesOptions = [
     {
         value: 'admin',
@@ -61,33 +63,26 @@ export const CreateEmailRegistrationForm = () => {
                         onClick={async () => {
                             closeDialog();
                             try {
-                                console.log(values)
-                                const response = await fetch(
-                                    `http://localhost:8081/api/v1/user/register`,
-                                    {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify(values),
-                                    }
+                                console.log(values);
+                                const response = await axiosInstance.post(
+                                    `/user/register`,
+                                    values
                                 );
 
-                                if (response.ok) {
+                                if (response.status === 200) {
                                     console.log("Submitted", values);
                                     showAlert('Registration email sent successfully!', 'success');
                                     router.back();
                                 } else {
-                                    const data = await response.json();
                                     showAlert('Registration email failed to send!', 'error');
                                     helpers.setStatus({ success: false });
-                                    helpers.setErrors({ submit: data.message });
+                                    helpers.setErrors({ submit: response.data.message });
                                     helpers.setSubmitting(false);
                                 }
                             } catch (err) {
                                 helpers.setStatus({ success: false });
                                 helpers.setErrors({ submit: err.message });
-                                showAlert( err.message, 'error');
+                                showAlert(err.message, 'error');
                                 helpers.setSubmitting(false);
                             }
                         }}
