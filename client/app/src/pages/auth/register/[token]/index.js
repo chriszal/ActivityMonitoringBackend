@@ -31,7 +31,7 @@ const Page = () => {
     const validateToken = async () => {
       setIsValidatingToken(true);
       setValidationError(null);
-
+    
       try {
         const { header, payload, signature } = jwt.decode(token, { complete: true });
         if (header.typ !== 'JWT') {
@@ -39,35 +39,23 @@ const Page = () => {
         } else {
           setDecodedToken(payload);
         }
-
-        try {
-          const response = await axiosInstance.get(`/is-token-valid/${token}`);
-          if (response.status === 200 || response.status === 201) {
-            setValidationError(null);
-          } else {
-            setValidationError(response.data.message);
-          }
-        } catch (error) {
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            setValidationError(error.response.data.message);
-          } else if (error.request) {
-            // The request was made but no response was received
-            setValidationError("No response received from the server");
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            setValidationError("Error in making the request");
-          }
-        }
     
-      } catch (err) {
-        // router.push("/404");
-        setValidationError("An error occurred while validating the token");
+        const response = await axiosInstance.get(`/is-token-valid/${token}`);
+        // If this line is reached, the request was successful
+        setValidationError(null);
+      } catch (error) {
+        console.error("There was an error validating the token.", error);
+        
+        if (error.response) {
+          setValidationError(error.response.data.message || 'An error occurred while validating the token.');
+        } else {
+          setValidationError('Unable to reach the server. Please check your connection or contact an Admin.');
+        }
       }
-
+    
       setIsValidatingToken(false);
     }
+    
 
     if (token) {
       validateToken();
@@ -114,27 +102,18 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       try {
         const response = await axiosInstance.post(`/user/register/${token}`, values);
-      
-        if (response.status === 200 || response.status === 201) {
-          router.push('/auth/login');
-        } else {
-          helpers.setStatus({ success: false });
-          helpers.setErrors({ submit: response.data.message });
-          helpers.setSubmitting(false);
-        }
+        router.push('/auth/login');
       } catch (error) {
-        // Error handling with axios
+        console.error("There was an error during registration.", error);
+  
         if (error.response) {
-          helpers.setErrors({ submit: error.response.data.message });
-        } else if (error.request) {
-          helpers.setErrors({ submit: "No response received from the server" });
+          helpers.setErrors({ submit: error.response.data.message || 'An error occurred during registration.' });
         } else {
-          helpers.setErrors({ submit: "Error in making the request" });
+          helpers.setErrors({ submit: 'Unable to reach the server. Please check your connection or contact an Admin.' });
         }
         helpers.setStatus({ success: false });
         helpers.setSubmitting(false);
       }
-      
     }
   });
 

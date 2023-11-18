@@ -64,27 +64,25 @@ export const CreateEmailRegistrationForm = () => {
                             closeDialog();
                             try {
                                 console.log(values);
-                                const response = await axiosInstance.post(
-                                    `/user/register`,
-                                    values
-                                );
-
-                                if (response.status === 200 || response.status === 201) {
-                                    console.log("Submitted", values);
-                                    showAlert('Registration email sent successfully!', 'success');
-                                    router.back();
+                                const response = await axiosInstance.post(`/user/register`, values);
+                              
+                                console.log("Submitted", response.data);
+                                showAlert('Registration email sent successfully!', 'success');
+                                router.back();
+                              } catch (error) {
+                                console.error("There was an error during registration.", error);
+                                
+                                if (error.response) {
+                                  showAlert(error.response.data.message || 'An error occurred while trying to register your user.', 'error');
+                                  helpers.setErrors({ submit: error.response.data.message });
                                 } else {
-                                    showAlert('Registration email failed to send!', 'error');
-                                    helpers.setStatus({ success: false });
-                                    helpers.setErrors({ submit: response.data.message });
-                                    helpers.setSubmitting(false);
+                                  // Network error or issue reaching the server
+                                  showAlert('Unable to reach the server. Please check your connection or contact an Admin.', 'error');
                                 }
-                            } catch (err) {
                                 helpers.setStatus({ success: false });
-                                helpers.setErrors({ submit: err.message });
-                                showAlert(err.message, 'error');
                                 helpers.setSubmitting(false);
-                            }
+                              }
+                              
                         }}
                         autoFocus
                     >
