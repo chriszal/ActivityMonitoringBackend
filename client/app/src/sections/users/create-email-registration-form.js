@@ -69,7 +69,7 @@ export const CreateEmailRegistrationForm = () => {
                                     values
                                 );
 
-                                if (response.status === 200) {
+                                if (response.status === 200 || response.status === 201) {
                                     console.log("Submitted", values);
                                     showAlert('Registration email sent successfully!', 'success');
                                     router.back();

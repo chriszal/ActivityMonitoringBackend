@@ -13,6 +13,7 @@ import NewtonsCradle from 'src/components/newtons-cradle-component';
 import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
 import CheckIcon from '@heroicons/react/24/solid/CheckIcon';
 
+import axiosInstance from 'src/utils/axios-instance';
 
 
 const Page = () => {
@@ -39,19 +40,30 @@ const Page = () => {
           setDecodedToken(payload);
         }
 
-        const response = await fetch(`http://localhost:8081/api/v1/is-token-valid/${token}`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setValidationError(null);
-        } else {
-          setValidationError(data.message);
+        try {
+          const response = await axiosInstance.get(`/is-token-valid/${token}`);
+          if (response.status === 200 || response.status === 201) {
+            setValidationError(null);
+          } else {
+            setValidationError(response.data.message);
+          }
+        } catch (error) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            setValidationError(error.response.data.message);
+          } else if (error.request) {
+            // The request was made but no response was received
+            setValidationError("No response received from the server");
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            setValidationError("Error in making the request");
+          }
         }
+    
       } catch (err) {
         // router.push("/404");
         setValidationError("An error occurred while validating the token");
-
-
       }
 
       setIsValidatingToken(false);
@@ -101,27 +113,28 @@ const Page = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const response = await fetch(`http://localhost:8081/api/v1/user/register/${token}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(values)
-        });
-
-        if (response.ok) {
+        const response = await axiosInstance.post(`/user/register/${token}`, values);
+      
+        if (response.status === 200 || response.status === 201) {
           router.push('/auth/login');
         } else {
-          const data = await response.json();
           helpers.setStatus({ success: false });
-          helpers.setErrors({ submit: data.message });
+          helpers.setErrors({ submit: response.data.message });
           helpers.setSubmitting(false);
         }
-      } catch (err) {
+      } catch (error) {
+        // Error handling with axios
+        if (error.response) {
+          helpers.setErrors({ submit: error.response.data.message });
+        } else if (error.request) {
+          helpers.setErrors({ submit: "No response received from the server" });
+        } else {
+          helpers.setErrors({ submit: "Error in making the request" });
+        }
         helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
         helpers.setSubmitting(false);
       }
+      
     }
   });
 
