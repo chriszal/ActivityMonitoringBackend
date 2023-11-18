@@ -6,6 +6,7 @@ REGISTRATION_SECRET = os.environ.get('JWT_REGISTRATION_SECRET')
 GMAIL_USER = os.environ.get("GMAIL_USER")
 GMAIL_PASS = os.environ.get("GMAIL_PASS")
             
+SERVER_IP = os.environ.get("SERVER_IP")
 
 MONGO = {
     'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),

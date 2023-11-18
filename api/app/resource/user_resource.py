@@ -9,6 +9,7 @@ from services.user_service import UserService
 from common.constants import REGISTRATION_SECRET
 from common.constants import GMAIL_PASS
 from common.constants import GMAIL_USER
+from common.constants import SERVER_IP
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -24,6 +25,7 @@ class UserResource(object):
         self.secret_key = REGISTRATION_SECRET
         self.gmail = GMAIL_USER
         self.gmail_pass = GMAIL_PASS
+        self.server_ip = SERVER_IP
         # self.creds = Credentials.from_authorized_user_file('/usr/api/credentials.json')
 
 
@@ -205,7 +207,7 @@ class UserResource(object):
                                             <table align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                                 <tr>
                                                     <td align="center" style="padding: 15px;">
-                                                        <a href="http://localhost:3000/auth/register/{token}" style="background-color: #3869D4; color: #FFF; text-decoration: none; border-radius: 3px; padding: 10px 18px;">Set up account</a>
+                                                        <a href="http://{self.server_ip}:3000/auth/register/{token}" style="background-color: #3869D4; color: #FFF; text-decoration: none; border-radius: 3px; padding: 10px 18px;">Set up account</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -214,7 +216,7 @@ class UserResource(object):
                                             <hr style="border-top: 1px solid #ccc;">
                                             <p style="font-size: 14px;"><strong>P.S.</strong> Need help getting started? Check out our <a href="https://github.com/chriszal/ActivityMonitoringBackend/blob/main/README.md">help documentation</a>.</p>
                                             <p style="font-size: 14px;">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
-                                            <p style="font-size: 14px;">http://localhost:3000/auth/register/{token}</p>
+                                            <p style="font-size: 14px;">http://{self.server_ip}:3000/auth/register/{token}</p>
                                         </td>
                                     </tr>
                                 </table>
