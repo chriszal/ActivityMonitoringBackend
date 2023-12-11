@@ -13,7 +13,7 @@ export const REDCapInfo = ({ onSync, onGoToREDCap, onExportData, onClose }) => {
       </Box>
       <Box mt={4}>
         <Typography paragraph>
-          REDCap is a secure web application for building and managing online surveys and databases. It is specifically designed to support data capture for research studies. Using REDCap's streamlined process for rapidly developing projects, you can create and design projects using an online method that allows for data entry and import, export data, and advanced features for data collection.
+          REDCap is a secure web application for building and managing online surveys and databases. It is specifically designed to support data capture for research studies. Using REDCap&apos;s streamlined process for rapidly developing projects, you can create and design projects using an online method that allows for data entry and import, export data, and advanced features for data collection.
         </Typography>
       </Box>
       <Box mt={2} display="flex" justifyContent="center">
