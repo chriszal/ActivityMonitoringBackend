@@ -1,13 +1,16 @@
-import { Box, Button, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Button,Card,CardContent, Typography, List, ListItem, ListItemText } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 import { ParticipantsSummaryCard } from '../participant-summary';
 
 const ParticipantsTab = ({ study }) => {
     const router = useRouter();
+    const baseRoute = router.pathname.includes('/admin-dashboard/')
+    ? '/admin-dashboard/studies/'
+    : '/dashboard/studies/';
 
     const handleRedirect = () => {
-        router.push(`/admin-dashboard/studies/${study.study_id}/participants`);
+        router.push(`${baseRoute}${study.study_id}/participants`);
     };
 
     return (

@@ -33,6 +33,9 @@ import { SendRegistrationEmailDialog } from './participant-invitation';
 
 import ArrowSmallRightIcon from '@heroicons/react/24/solid/ArrowSmallRightIcon';
 import EllipsisVerticalIcon from '@heroicons/react/24/solid/EllipsisVerticalIcon';
+import ArrowPathIcon from '@heroicons/react/24/solid/ArrowPathIcon';
+import AtSymbolIcon from '@heroicons/react/24/solid/AtSymbolIcon';
+import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 
 import NextLink from 'next/link';
 import NewtonsCradle from 'src/components/newtons-cradle-component';
@@ -52,7 +55,10 @@ const statusMap = {
 
 export const ParticipantsTable = (props) => {
     const router = useRouter();
-
+  
+    const baseRoute = router.pathname.includes('/admin-dashboard/')
+      ? '/admin-dashboard/studies/'
+      : '/dashboard/studies/';
 
     const {
         error = "",
@@ -105,8 +111,8 @@ export const ParticipantsTable = (props) => {
             } else {
                 showAlert("Request error. Please try again.", "error");
             }
-        }finally{
-            handleClose();  
+        } finally {
+            handleClose();
             closeDialog();
         }
     };
@@ -210,7 +216,7 @@ export const ParticipantsTable = (props) => {
                                                         {participant.gender || "None"}
                                                     </TableCell>
                                                     <TableCell>
-                                                        {participant.date_of_birth  || "None"}
+                                                        {participant.date_of_birth || "None"}
                                                     </TableCell>
 
                                                     <TableCell>
@@ -224,13 +230,43 @@ export const ParticipantsTable = (props) => {
                                                             {participant.register_status}
                                                         </SeverityPill>
                                                     </TableCell>
-                                                    <TableCell>
-                                                        <IconButton onClick={(event) => handleClick(event, participant)}>
-                                                            <SvgIcon fontSize="medium">
-                                                                <EllipsisVerticalIcon />
-                                                            </SvgIcon>
-                                                        </IconButton>
-                                                    </TableCell>
+                                                        <TableCell>
+                                                            <Tooltip title="Send Registration Email">
+                                                                <IconButton onClick={() => {
+                                                                    openDialog(
+                                                                        "Send Registration Email",
+                                                                        `Enter an email to send the registration code to ${participant.participant_id}`,
+                                                                        <SendRegistrationEmailDialog
+                                                                            onClose={handleClose}
+                                                                            onSend={sendEmail}
+                                                                            selectedParticipant={participant}
+                                                                        />
+                                                                    );
+                                                                }}>
+                                                                    <SvgIcon fontSize="small">
+                                                                        <AtSymbolIcon />
+                                                                    </SvgIcon>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="Regenerate Code">
+                                                                <IconButton onClick={() => { /* Regenerate Code Logic */ }}>
+                                                                    <SvgIcon fontSize="small">
+                                                                        <ArrowPathIcon />
+                                                                    </SvgIcon>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                            <Tooltip title="View Participant Analytics">
+                                                                <IconButton onClick={() => {
+                                                                    // View Participant Analytics Logic
+                                                                    router.push(`${baseRoute}HUA/participants/${participant.participant_id}`);
+                                                                }}>
+                                                                    <SvgIcon fontSize="small">
+                                                                        <ArrowRightIcon />
+                                                                    </SvgIcon>
+                                                                </IconButton>
+                                                            </Tooltip>
+                                                        </TableCell>
+
                                                 </TableRow>
                                             );
                                         })) : (
@@ -255,36 +291,6 @@ export const ParticipantsTable = (props) => {
                 rowsPerPageOptions={[5, 10, 25]}
             />
 
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                 <MenuItem onClick={() => {
-            openDialog(
-                "Send Registration Email",
-                `Enter an email to send the registration code to ${selectedParticipant.participant_id}`,
-                <SendRegistrationEmailDialog 
-                    onClose={handleClose} 
-                    onSend={sendEmail} 
-                    selectedParticipant={selectedParticipant} 
-                />
-                
-            );
-        }}>Send Registration Email</MenuItem>
-
-
-                <MenuItem onClick={() => {
-                    console.log("Regenerate Code for:", selectedParticipant);
-                    handleClose();
-                }}>Regenerate Code</MenuItem>
-                <MenuItem onClick={() => {
-                    console.log("View Participant Analytics for:", selectedParticipant);
-                    router.push(`/admin-dashboard/studies/HUA/participants/${selectedParticipant.participant_id}`);
-                    handleClose();
-                }}>View Participant Analytics</MenuItem>
-
-            </Menu>
         </Card>
     );
 };

@@ -1,4 +1,4 @@
-import { format , isValid} from 'date-fns';
+import { format, isValid } from 'date-fns';
 import PropTypes from 'prop-types';
 import ArrowRightIcon from '@heroicons/react/24/solid/ArrowRightIcon';
 import {
@@ -10,6 +10,8 @@ import {
   Divider,
   SvgIcon,
   Table,
+  Tooltip,
+  IconButton,
   TableBody,
   TableCell,
   TableHead,
@@ -17,6 +19,7 @@ import {
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
+import { useRouter } from 'next/router';
 
 const statusMap = {
   'not registered': 'warning',
@@ -32,11 +35,21 @@ const formatDate = (value) => {
     return format(new Date(timestamp), 'dd/MM/yyyy');
   }
 
-  return 'None'; 
+  return 'None';
 };
-export const OverviewParticipants = (props) => {
-  const { participants = [], sx } = props;
 
+
+export const OverviewParticipants = (props) => {
+  const router = useRouter();
+  const { participants = [], study, sx } = props;
+
+  const baseRoute = router.pathname.includes('/admin-dashboard/')
+    ? '/admin-dashboard/studies/'
+    : '/dashboard/studies/';
+
+  const handleRedirect = () => {
+    router.push(`${baseRoute}${study.study_id}/participants`);
+  };
   return (
     <Card sx={sx}>
       <CardHeader title="Study Participants" />
@@ -63,6 +76,9 @@ export const OverviewParticipants = (props) => {
                 <TableCell>
                   Status
                 </TableCell>
+                <TableCell>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -81,7 +97,7 @@ export const OverviewParticipants = (props) => {
                       {participant.gender}
                     </TableCell>
                     <TableCell>
-                      {createdAt}
+                      {participant.dateOfBirth}
                     </TableCell>
                     <TableCell>
                       {participant.height}
@@ -93,6 +109,18 @@ export const OverviewParticipants = (props) => {
                       <SeverityPill color={statusMap[participant.status]}>
                         {participant.status}
                       </SeverityPill>
+                    </TableCell>
+                    <TableCell>
+                      <Tooltip title="View Participant Analytics">
+                        <IconButton onClick={() => {
+                          // View Participant Analytics Logic
+                          router.push(`${baseRoute}HUA/participants/${participant.participant_id}`);
+                        }}>
+                          <SvgIcon fontSize="small">
+                            <ArrowRightIcon />
+                          </SvgIcon>
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 );
@@ -112,6 +140,7 @@ export const OverviewParticipants = (props) => {
           )}
           size="small"
           variant="text"
+          onClick={handleRedirect}
         >
           View all
         </Button>

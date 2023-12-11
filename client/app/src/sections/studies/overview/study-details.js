@@ -22,7 +22,7 @@ import AcademicCapIcon from '@heroicons/react/24/solid/AcademicCapIcon';
 import DetailsTab from './tabs/details-tab';
 import RoleTabContent from './tabs/role-tab';
 import ParticipantsTab from './tabs/participants-tab';
-
+import {SettingsTab} from './tabs/settings-tab';
 export const StudyDetails = (props) => {
   const { study, sx } = props;
   const [tabValue, setTabValue] = useState(0); // for managing active tab
@@ -36,28 +36,30 @@ export const StudyDetails = (props) => {
   return (
     <Card sx={sx}>
       <CardHeader
-        avatar={
-          <Avatar
-            sx={{
-              backgroundColor: 'success.main',
-              height: 36,
-              width: 36,
-              borderRadius: '8px', // rounded square
-            }}>
-            <SvgIcon>
-              <AcademicCapIcon />
-            </SvgIcon>
-          </Avatar>
-        }
-        title={study.study_id}
-      />
+  avatar={
+    <Avatar
+      sx={{
+        backgroundColor: 'success.main',
+        height: 36,
+        width: 36,
+        borderRadius: '8px', 
+      }}
+    >
+      <SvgIcon>
+        <AcademicCapIcon />
+      </SvgIcon>
+    </Avatar>
+  }
+  title={study.study_id}
+  
+/>
       <Divider />
       <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginLeft: 3 }}>
         <Tab label="Details" />
-        <Tab label="Participants" />
         <Tab label="Owners" />
         <Tab label="Cordinators" />
         <Tab label="Assistants" />
+        <Tab label="Settings" />
       </Tabs>
       <Divider />
       <CardContent>
@@ -67,23 +69,25 @@ export const StudyDetails = (props) => {
             console.log("Updated Data:", updatedData);
           }} />
         )}
+
         {tabValue === 1 && (
-           <ParticipantsTab study={study} />
-
-        )}
-
-        {tabValue === 2 && (
             <RoleTabContent roleData={{ roleName: 'Owner', data: study.owners }} />
 
         )}
-        {tabValue === 3 && (
+        {tabValue === 2 && (
             <RoleTabContent roleData={{ roleName: 'Coordinator', data: study.coordinators }} />
 
         )}
-        {tabValue === 4 && (
+        {tabValue === 3 && (
            <RoleTabContent roleData={{ roleName: 'Assistant', data: study.assistants }} />
 
         )}
+        {tabValue === 4 && (
+  <SettingsTab study={study} onUpdate={(updatedData) => {
+    // Handle settings update here
+    console.log("Settings Updated:", updatedData);
+  }} />
+)}
       </CardContent>
     </Card>
   );

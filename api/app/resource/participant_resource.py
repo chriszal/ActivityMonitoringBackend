@@ -72,7 +72,7 @@ class ParticipantResource(object):
 
     def on_get_registered(self, req, resp, study_id):
         try:
-            study = Study.objects.get(id=study_id)
+            study = Study.objects.get(study_id=study_id)
             participant_objs = self.participant_service.list_registered_participants_in_study(study_id)
             resp.body = participant_objs.to_json()
             resp.status = falcon.HTTP_200
