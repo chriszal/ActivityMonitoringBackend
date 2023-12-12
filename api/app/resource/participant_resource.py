@@ -75,6 +75,8 @@ class ParticipantResource(object):
             limit = int(req.get_param('limit', required=True))
             self.logging.info(f"Fetching {limit} participants with priority for study {study_id}")
             study = Study.objects.get(study_id=study_id)
+            self.logging.info(f"Study: {study.title}")
+
             participants = self.participant_service.list_participants_with_priority(study.id, limit)
             participants_list = [participant.to_dict() for participant in participants]
             resp.body = json.dumps(participants_list)
