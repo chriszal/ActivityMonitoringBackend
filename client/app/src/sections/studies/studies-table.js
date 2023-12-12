@@ -63,7 +63,6 @@ export const StudiesTable = (props) => {
               <TableRow>
                 <TableCell>Study ID</TableCell>
                 <TableCell>Title & Description</TableCell>
-                <TableCell>Authors</TableCell>
                 <TableCell>Generated Participants</TableCell>
                 <TableCell>Owners</TableCell>
                 <TableCell>Coordinators</TableCell>
@@ -152,11 +151,6 @@ export const StudiesTable = (props) => {
                             }
                           </TableCell>
 
-                          <TableCell>
-                            <Typography variant="caption">
-                              {study.authors.join(', ')}
-                            </Typography>
-                          </TableCell>
                           <TableCell align="center" >
                             <Chip
                               label={study.no_participants}

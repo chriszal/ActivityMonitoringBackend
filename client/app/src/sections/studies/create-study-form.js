@@ -39,7 +39,6 @@ const validationSchema = Yup.object({
   study_id: Yup.string().required('Study ID is required').max(20, 'Study ID must be less than 20 characters long').matches(/^[a-zA-Z0-9]+$/, 'Study ID can only contain alphanumerics and no spaces'),
   title: Yup.string().required('Title is required').max(500, 'Title must be less than 500 characters long'),
   description: Yup.string().required('Description is required').max(4000, 'Description must be less than 4000 characters long'),
-  authors: Yup.string().required('Authors is required'),
   no_participants: Yup.number().required('Number of participants is required').min(1, 'Number of participants must be between 1 and 100').max(100, 'Number of participants must be between 1 and 100'),
 
 });
@@ -149,7 +148,6 @@ export const CreateStudyForm = () => {
           postData.study_coordinators = study_coordinators;
           postData.study_assistants = study_assistants;
           postData.study_owners = study_owners;
-          postData.authors = values.authors.split(',').map(author => author.trim());
           closeDialog();
           console.log('Submitted', postData);
           try {
@@ -183,7 +181,6 @@ export const CreateStudyForm = () => {
       study_id: '',
       title: '',
       description: '',
-      authors: '',
       no_participants: '',
       study_owners: [],
       study_coordinators: [],
@@ -299,17 +296,7 @@ export const CreateStudyForm = () => {
                       </Typography>
                     </Box>
 
-                    <TextField
-                      fullWidth
-                      label="Names of Authors (seperated with commas)"
-                      name="authors"
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange}
-                      required
-                      value={formik.values.authors}
-                      error={formik.touched.authors && Boolean(formik.errors.authors)}
-                      helperText={formik.touched.authors && formik.errors.authors}
-                    />
+                    
 
                   </Stack>
 

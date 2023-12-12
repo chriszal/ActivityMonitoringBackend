@@ -20,6 +20,7 @@ import {
 import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
 import { useRouter } from 'next/router';
+import AtSymbolIcon from '@heroicons/react/24/solid/AtSymbolIcon';
 
 import { useContext } from 'react';
 import { DialogContext } from 'src/contexts/dialog-context';

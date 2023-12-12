@@ -17,11 +17,9 @@ const DetailsTab = ({ study, onUpdate }) => {
   
     const [originalTitle, setOriginalTitle] = useState(study.title);
     const [originalDescription, setOriginalDescription] = useState(study.description);
-    const [originalAuthors, setOriginalAuthors] = useState(study.authors.join(', '));
   
     const [title, setTitle] = useState(originalTitle);
     const [description, setDescription] = useState(originalDescription);
-    const [authors, setAuthors] = useState(originalAuthors);
   
     const handleEditClick = (field) => {
       setEditingField(field);
@@ -30,7 +28,6 @@ const DetailsTab = ({ study, onUpdate }) => {
     const handleCancelClick = () => {
       setTitle(originalTitle);
       setDescription(originalDescription);
-      setAuthors(originalAuthors);
       setEditingField(null);
     };
   
@@ -43,9 +40,6 @@ const DetailsTab = ({ study, onUpdate }) => {
             break;
           case 'description':
             updatedData = { description };
-            break;
-          case 'authors':
-            updatedData = { authors: authors.split(',').map(author => author.trim()) };
             break;
           default:
             break;
@@ -90,33 +84,7 @@ const DetailsTab = ({ study, onUpdate }) => {
 
 
             <Box display="flex"  alignItems="center">
-    {editingField === 'authors' ? (
-        <TextField
-            fullWidth
-            variant="standard"
-            value={authors}
-            onChange={(e) => setAuthors(e.target.value)}
-            InputProps={{
-                endAdornment: (
-                    <>
-                        <IconButton onClick={() => handleUpdateClick('authors')}>
-                            <SvgIcon><CheckIcon /></SvgIcon>
-                        </IconButton>
-                        <IconButton onClick={() => handleCancelClick()}>
-                            <SvgIcon><XMarkIcon /></SvgIcon>
-                        </IconButton>
-                    </>
-                )
-            }}
-        />
-    ) : (
-        <>
-            <Typography variant="caption">{authors}</Typography>
-            <IconButton onClick={() => handleEditClick('authors')}>
-                <SvgIcon fill="#ccc"><PencilIcon /></SvgIcon>
-            </IconButton>
-        </>
-    )}
+   
 </Box>
 
 

@@ -59,7 +59,6 @@ const StudyCard = ({ study, userId }) => {
             <Typography variant="h6" sx={{ mb: 1, mt: -3 }}>{study.title}</Typography>
             <Typography variant="body2" sx={{ mb: 2 }}>{trimmedDescription}</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>{`Authors: ${study.authors}`}</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <SvgIcon sx={{ mr: 0.5 }}><UsersIcon /></SvgIcon>
                     <Typography variant="caption" sx={{ color: 'text.secondary' }}>{study.no_participants}</Typography>

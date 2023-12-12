@@ -8,14 +8,14 @@ from mongoengine.queryset.visitor import Q
 
 class StudyService(object):
     @staticmethod
-    def create_study(study_id, title, authors, description, no_participants, study_owners, study_coordinators, study_assistants):
+    def create_study(study_id, title, description, no_participants, study_owners, study_coordinators, study_assistants):
 
         # Check for duplicate user IDs on owner study coordinator and study assistant fields
         if len(set(study_owners) & set(study_coordinators)) > 0 or len(set(study_owners) & set(study_assistants)) > 0 or len(set(study_coordinators) & set(study_assistants)) > 0:
             raise ValueError(
                 "Duplicate user id found in owners, study coordinators, or study assistants list")
 
-        study = Study(study_id=study_id, title=title, authors=authors,
+        study = Study(study_id=study_id, title=title,
                     description=description, no_participants=no_participants, owners=study_owners, study_coordinators=study_coordinators, study_assistants=study_assistants).save()
 
         for i in range(no_participants):

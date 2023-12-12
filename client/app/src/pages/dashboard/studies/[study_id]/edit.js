@@ -143,7 +143,6 @@ const Page = () => {
                     study_id={data.study_id}
                     title={data.title}
                     description={data.description}
-                    authors={data.authors}
                     no_participants={data.no_participants}
                     study_owners={data.owners}
                     study_coordinators={data.study_coordinators}

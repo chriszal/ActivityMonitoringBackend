@@ -29,7 +29,6 @@ export const EditStudyForm = (props) => {
   const { study_id } = props;
   const { title } = props;
   const { description } = props;
-  const { authors } = props;
   const { no_participants } = props;
   const { study_owners } =props;
   const { study_coordinators } = props;
@@ -57,7 +56,6 @@ export const EditStudyForm = (props) => {
     description: Yup.string()
       .max(1000, 'Description must be less than 1000 characters long.')
       .required('Description is required.'),
-    authors: Yup.string().required('Authors are required'),
     no_participants: Yup.number()
       .min(1, 'Number of participants must be between 1 and 100.')
       .max(100, 'Number of participants must be between 1 and 100.')
@@ -78,7 +76,6 @@ export const EditStudyForm = (props) => {
             postData.study_coordinators = values.study_coordinators.map(coordinator => coordinator.id);
             postData.study_assistants = values.study_assistants.map(assistant => assistant.id);
             postData.study_owners = values.study_owners.map(owner => owner.id);
-            postData.authors = values.authors.split(',').map(author => author.trim());
 
             closeDialog();
             console.log('Submitted', postData);
@@ -111,7 +108,6 @@ export const EditStudyForm = (props) => {
       study_id: study_id,
       title: title,
       description: description,
-      authors: authors.join(", "),
       no_participants: no_participants,
       study_owners: study_owners,
       study_ownersInput: "",
@@ -374,22 +370,7 @@ export const EditStudyForm = (props) => {
                     helperText={formik.touched.description && formik.errors.description}
                   />
                 </Grid>
-                <Grid
-                  xs={12}
-                  md={6}
-                >
-                  <TextField
-                    fullWidth
-                    label="Authors"
-                    name="authors"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    required
-                    value={formik.values.authors}
-                    error={formik.touched.authors && Boolean(formik.errors.authors)}
-                    helperText={formik.touched.authors && formik.errors.authors}
-                  />
-                </Grid>
+               
                 <Grid
                   xs={12}
                   md={6}
