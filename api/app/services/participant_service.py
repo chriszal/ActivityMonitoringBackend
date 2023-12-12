@@ -30,15 +30,15 @@ class ParticipantService(object):
         
     @staticmethod
     def list_participants_with_priority(study_id, limit):
-        """
-        List participants with a priority order: REGISTERED, PENDING, NONE
-        """
         registered = Participant.objects.filter(study=study_id, register_status='REGISTERED')
         pending = Participant.objects.filter(study=study_id, register_status='PENDING')
         none = Participant.objects.filter(study=study_id, register_status='NONE')
 
+        print(f"Registered: {registered.count()}, Pending: {pending.count()}, None: {none.count()}")  # Debug print
+
         participants = list(registered) + list(pending) + list(none)
         return participants[:limit]
+
 
     @staticmethod
     def update_participant(participant_id, date_of_birth, gender, weight, height, **kwargs):
