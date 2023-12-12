@@ -70,7 +70,7 @@ class ParticipantResource(object):
                 'data': {}
             })
             
-    def on_get_with_priority(self, req, resp, study_id):
+    def on_get_priority(self, req, resp, study_id):
         try:
             limit = int(req.get_param('limit', required=True))
             participants = self.participant_service.list_participants_with_priority(study_id, limit)
