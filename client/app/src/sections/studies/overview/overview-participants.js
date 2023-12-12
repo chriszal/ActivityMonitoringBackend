@@ -17,15 +17,19 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
+import EyeIcon from '@heroicons/react/24/solid/EyeIcon';
+import EyeSlashIcon from '@heroicons/react/24/solid/EyeSlashIcon';
 import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
 import { useRouter } from 'next/router';
 import AtSymbolIcon from '@heroicons/react/24/solid/AtSymbolIcon';
+import { useState } from 'react';
 
 import { useContext } from 'react';
 import { DialogContext } from 'src/contexts/dialog-context';
 import axiosInstance from 'src/utils/axios-instance';
 import { SendRegistrationEmailDialog } from 'src/sections/studies/participants/participant-invitation'
+import { AlertContext } from 'src/contexts/alert-context';
 
 
 const statusMap = {
@@ -51,6 +55,8 @@ export const OverviewParticipants = (props) => {
   const router = useRouter();
   const { participants = [], study, sx } = props;
   const { openDialog, closeDialog } = useContext(DialogContext);
+  const [showRegCode, setShowRegCode] = useState({});
+  const { showAlert } = useContext(AlertContext);
 
 
   const baseRoute = router.pathname.includes('/admin-dashboard/')
@@ -64,37 +70,37 @@ export const OverviewParticipants = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
     setSelectedParticipant(null);
-};
+  };
 
   const sendEmail = async (values, selectedParticipant) => {
     try {
-        const postData = {
-            email: values.email,
-            reg_code: selectedParticipant.reg_code,
-            participant_id: selectedParticipant.participant_id,
-            study: selectedParticipant.study,
-        };
-        console.log(postData);
-        const response = await axiosInstance.post('/participant/invitation', postData);
+      const postData = {
+        email: values.email,
+        reg_code: selectedParticipant.reg_code,
+        participant_id: selectedParticipant.participant_id,
+        study: selectedParticipant.study,
+      };
+      console.log(postData);
+      const response = await axiosInstance.post('/participant/invitation', postData);
 
-        if (response.status === 201) {
-            showAlert("Email sent successfully!", "success");
-        } else {
-            showAlert(response.data.message || "Error sending email.", "error");
-        }
+      if (response.status === 201) {
+        showAlert("Email sent successfully!", "success");
+      } else {
+        showAlert(response.data.message || "Error sending email.", "error");
+      }
     } catch (error) {
-        if (error.response) {
-            showAlert(error.response.data.message || "Error sending email.", "error");
-        } else if (error.request) {
-            showAlert("No response from the server. Please try again.", "error");
-        } else {
-            showAlert("Request error. Please try again.", "error");
-        }
+      if (error.response) {
+        showAlert(error.response.data.message || "Error sending email.", "error");
+      } else if (error.request) {
+        showAlert("No response from the server. Please try again.", "error");
+      } else {
+        showAlert("Request error. Please try again.", "error");
+      }
     } finally {
-        handleClose();
-        closeDialog();
+      handleClose();
+      closeDialog();
     }
-};
+  };
   return (
     <Card sx={sx}>
       <CardHeader title="Study Participants" />
@@ -105,6 +111,10 @@ export const OverviewParticipants = (props) => {
               <TableRow>
                 <TableCell>
                   ID
+                </TableCell>
+                
+                <TableCell>
+                  Reg. Code
                 </TableCell>
                 <TableCell>
                   Gender
@@ -133,26 +143,37 @@ export const OverviewParticipants = (props) => {
                 return (
                   <TableRow
                     hover
-                    key={participant.id}
+                    key={participant.participant_id}
                   >
                     <TableCell>
-                      {participant.id}
+                      {participant.participant_id}
                     </TableCell>
                     <TableCell>
-                      {participant.gender}
+                  {showRegCode[participant.participant_id] ? participant.reg_code : '•••••••••••'}
+                  <IconButton onClick={() => setShowRegCode(prevState => ({
+                    ...prevState,
+                    [participant.participant_id]: !showRegCode[participant.participant_id]
+                  }))}>
+                    <SvgIcon fontSize="small">
+                      {showRegCode[participant.participant_id] ? <EyeSlashIcon /> : <EyeIcon />}
+                    </SvgIcon>
+                  </IconButton>
+                </TableCell>
+                    <TableCell>
+                    {participant.gender || "None"}
                     </TableCell>
                     <TableCell>
-                      {participant.dateOfBirth}
+                    {participant.date_of_birth || "None"}
                     </TableCell>
                     <TableCell>
-                      {participant.height}
+                    {participant.height || "None"}
                     </TableCell>
                     <TableCell>
-                      {participant.weight}
+                    {participant.weight || "None"}
                     </TableCell>
                     <TableCell>
-                      <SeverityPill color={statusMap[participant.status]}>
-                        {participant.status}
+                      <SeverityPill color={statusMap[participant.register_status]}>
+                        {participant.register_status}
                       </SeverityPill>
                     </TableCell>
                     <TableCell>

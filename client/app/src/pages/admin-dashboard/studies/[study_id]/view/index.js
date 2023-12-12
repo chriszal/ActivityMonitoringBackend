@@ -47,14 +47,14 @@ const Page = () => {
           console.error("There was an error fetching the study", error);
         });
 
-      axiosInstance.get(`/registered/participants/study/${study_id}`)
+        axiosInstance.get(`/participants/priority/study/${study_id}?limit=4`)
         .then(response => {
           if (response.status === 200 && response.data.length > 0) {
-            setParticipants(response.data.slice(0, 5)); // Get first 5 participants
+            setParticipants(response.data); 
           }
         })
         .catch(error => {
-          console.error("There was an error fetching the participants", error);
+          console.error("There was an error fetching the participants with priority", error);
         });
     }
   }, [router.isReady, router.query]);
