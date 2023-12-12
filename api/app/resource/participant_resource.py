@@ -73,7 +73,8 @@ class ParticipantResource(object):
     def on_get_priority(self, req, resp, study_id):
         try:
             limit = int(req.get_param('limit', required=True))
-            participants = self.participant_service.list_participants_with_priority(study_id, limit)
+            study = Study.objects.get(study_id=study_id)
+            participants = self.participant_service.list_participants_with_priority(study.id, limit)
             participants_list = [participant.to_dict() for participant in participants]
             resp.body = json.dumps(participants_list)
             resp.status = falcon.HTTP_200
