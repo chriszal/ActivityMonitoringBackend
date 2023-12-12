@@ -69,6 +69,28 @@ class ParticipantResource(object):
                 'status': 500,
                 'data': {}
             })
+            
+    def on_get_with_priority(self, req, resp, study_id):
+        try:
+            limit = int(req.get_param('limit', required=True))
+            participants = self.participant_service.list_participants_with_priority(study_id, limit)
+            participants_list = [participant.to_dict() for participant in participants]
+            resp.body = json.dumps(participants_list)
+            resp.status = falcon.HTTP_200
+        except ValueError:
+            resp.status = falcon.HTTP_400
+            resp.body = json.dumps({
+                'message': 'Invalid limit value.',
+                'status': 400,
+                'data': {}
+            })
+        except Exception as e:
+            resp.status = falcon.HTTP_500
+            resp.body = json.dumps({
+                'message': str(e),
+                'status': 500,
+                'data': {}
+            })
 
     def on_get_registered(self, req, resp, study_id):
         try:

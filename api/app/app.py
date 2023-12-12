@@ -85,6 +85,7 @@ app.add_route('/api/v1/measurement/',measurement)
 app.add_route('/api/v1/meal/',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
 app.add_route('/api/v1/participant/steps',steps)
+app.add_route('/api/v1/participants/priority/study/{study_id}', participant, suffix="priority")
 
 # Add health check endpoint
 

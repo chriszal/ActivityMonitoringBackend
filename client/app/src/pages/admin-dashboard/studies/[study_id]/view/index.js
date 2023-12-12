@@ -50,7 +50,6 @@ const Page = () => {
       axiosInstance.get(`/registered/participants/study/${study_id}`)
         .then(response => {
           if (response.status === 200 && response.data.length > 0) {
-            // Assuming response.data is an array of participants
             setParticipants(response.data.slice(0, 5)); // Get first 5 participants
           }
         })

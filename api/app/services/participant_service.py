@@ -27,6 +27,18 @@ class ParticipantService(object):
         Delete the study
         """
         Participant.objects.get(participant_id=participant_id).delete()
+        
+    @staticmethod
+    def list_participants_with_priority(study_id, limit):
+        """
+        List participants with a priority order: REGISTERED, PENDING, NONE
+        """
+        registered = Participant.objects.filter(study=study_id, register_status='REGISTERED')
+        pending = Participant.objects.filter(study=study_id, register_status='PENDING')
+        none = Participant.objects.filter(study=study_id, register_status='NONE')
+
+        participants = list(registered) + list(pending) + list(none)
+        return participants[:limit]
 
     @staticmethod
     def update_participant(participant_id, date_of_birth, gender, weight, height, **kwargs):

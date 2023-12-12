@@ -21,10 +21,17 @@ import { Scrollbar } from 'src/components/scrollbar';
 import { SeverityPill } from 'src/components/severity-pill';
 import { useRouter } from 'next/router';
 
+import { useContext } from 'react';
+import { DialogContext } from 'src/contexts/dialog-context';
+import axiosInstance from 'src/utils/axios-instance';
+import { SendRegistrationEmailDialog } from 'src/sections/studies/participants/participant-invitation'
+
+
 const statusMap = {
-  'not registered': 'warning',
-  registered: 'success',
-  unregistered: 'error'
+  PENDING: 'info',
+  UNREGISTERED: 'error',
+  REGISTERED: 'success',
+  NONE: 'warning'
 };
 const formatDate = (value) => {
   // First, check if the value is numeric
@@ -42,6 +49,8 @@ const formatDate = (value) => {
 export const OverviewParticipants = (props) => {
   const router = useRouter();
   const { participants = [], study, sx } = props;
+  const { openDialog, closeDialog } = useContext(DialogContext);
+
 
   const baseRoute = router.pathname.includes('/admin-dashboard/')
     ? '/admin-dashboard/studies/'
@@ -50,6 +59,41 @@ export const OverviewParticipants = (props) => {
   const handleRedirect = () => {
     router.push(`${baseRoute}${study.study_id}/participants`);
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setSelectedParticipant(null);
+};
+
+  const sendEmail = async (values, selectedParticipant) => {
+    try {
+        const postData = {
+            email: values.email,
+            reg_code: selectedParticipant.reg_code,
+            participant_id: selectedParticipant.participant_id,
+            study: selectedParticipant.study,
+        };
+        console.log(postData);
+        const response = await axiosInstance.post('/participant/invitation', postData);
+
+        if (response.status === 201) {
+            showAlert("Email sent successfully!", "success");
+        } else {
+            showAlert(response.data.message || "Error sending email.", "error");
+        }
+    } catch (error) {
+        if (error.response) {
+            showAlert(error.response.data.message || "Error sending email.", "error");
+        } else if (error.request) {
+            showAlert("No response from the server. Please try again.", "error");
+        } else {
+            showAlert("Request error. Please try again.", "error");
+        }
+    } finally {
+        handleClose();
+        closeDialog();
+    }
+};
   return (
     <Card sx={sx}>
       <CardHeader title="Study Participants" />
@@ -111,6 +155,23 @@ export const OverviewParticipants = (props) => {
                       </SeverityPill>
                     </TableCell>
                     <TableCell>
+                      <Tooltip title="Send Registration Email">
+                        <IconButton onClick={() => {
+                          openDialog(
+                            "Send Registration Email",
+                            `Enter an email to send the registration code to ${participant.participant_id}`,
+                            <SendRegistrationEmailDialog
+                              onClose={handleClose}
+                              onSend={sendEmail}
+                              selectedParticipant={participant}
+                            />
+                          );
+                        }}>
+                          <SvgIcon fontSize="small">
+                            <AtSymbolIcon />
+                          </SvgIcon>
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title="View Participant Analytics">
                         <IconButton onClick={() => {
                           // View Participant Analytics Logic
