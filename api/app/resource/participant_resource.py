@@ -16,7 +16,7 @@ class ParticipantResource(object):
 
 
     def __init__(self,logging):
-        self.participant_service = ParticipantService()
+        self.participant_service = ParticipantService(logging)
         self.gmail = GMAIL_USER
         self.gmail_pass = GMAIL_PASS
         self.logging = logging
@@ -73,7 +73,7 @@ class ParticipantResource(object):
     def on_get_priority(self, req, resp, study_id):
         try:
             limit = int(req.get_param('limit', required=True))
-            print(limit)
+            self.logging.info(f"Fetching {limit} participants with priority for study {study_id}")
             study = Study.objects.get(study_id=study_id)
             participants = self.participant_service.list_participants_with_priority(study.id, limit)
             participants_list = [participant.to_dict() for participant in participants]

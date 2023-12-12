@@ -5,6 +5,10 @@ from datetime import datetime
 
 
 class ParticipantService(object):
+    
+    def __init__(self,logging):
+        self.logging = logging
+        
     @staticmethod
     def list_all_participants():
         return Participant.objects()
@@ -28,17 +32,19 @@ class ParticipantService(object):
         """
         Participant.objects.get(participant_id=participant_id).delete()
         
-    @staticmethod
-    def list_participants_with_priority(study_id, limit):
-        registered = Participant.objects.filter(study=study_id, register_status='REGISTERED')
-        pending = Participant.objects.filter(study=study_id, register_status='PENDING')
-        none = Participant.objects.filter(study=study_id, register_status='NONE')
+    def list_participants_with_priority(self,study_id, limit):
+        try:
+            registered = Participant.objects.filter(study=study_id, register_status='REGISTERED')
+            pending = Participant.objects.filter(study=study_id, register_status='PENDING')
+            none = Participant.objects.filter(study=study_id, register_status='NONE')
 
-        print(f"Registered: {registered.count()}, Pending: {pending.count()}, None: {none.count()}")  # Debug print
+            self.logging.info(f"Registered: {registered.count()}, Pending: {pending.count()}, None: {none.count()}")  # Debug print
 
-        participants = list(registered) + list(pending) + list(none)
-        return participants[:limit]
-
+            participants = list(registered) + list(pending) + list(none)
+            return participants[:limit]
+        except Exception as e:
+            self.logging.error(f"Error in list_participants_with_priority: {str(e)}")
+            raise
 
     @staticmethod
     def update_participant(participant_id, date_of_birth, gender, weight, height, **kwargs):

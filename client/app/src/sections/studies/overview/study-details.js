@@ -54,7 +54,8 @@ export const StudyDetails = (props) => {
   
 />
       <Divider />
-      <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginLeft: 3 }}>
+      <Tabs value={tabValue} onChange={handleTabChange} variant="scrollable"
+        scrollButtons="auto" sx={{ marginLeft: 3 }}>
         <Tab label="Details" />
         <Tab label="Owners" />
         <Tab label="Cordinators" />
