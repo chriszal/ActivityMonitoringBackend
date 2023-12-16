@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, Container, Stack,Link, Typography, Breadcrumbs, Unstable_Grid2 as Grid } from '@mui/material';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import { Layout as WelcomeLayout } from 'src/layouts/dashboard/welcome';
 import { CreateStudyForm } from 'src/sections/studies/create-study-form';
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'; 
@@ -59,9 +59,9 @@ const Page = () => {
 )};
 
 Page.getLayout = (page) => (
-  <DashboardLayout>
+  <WelcomeLayout>
     {page}
-  </DashboardLayout>
+  </WelcomeLayout>
 );
 
 export default Page;

@@ -114,18 +114,7 @@ const Page = () => {
               <Typography variant="h4" sx={{ mb: 1 }}>
                 Study Overview
               </Typography>
-              <Breadcrumbs separator="•" aria-label="breadcrumb">
-                <Link component={NextLink}
-                  underline="hover"
-                  color="inherit"
-                  variant="subtitle2"
-                  onClick={() => router.back()}
-                  href="/"
-                >
-                  Studies
-                </Link>
-                <Typography variant="subtitle2" color="text.primary">Overview</Typography>
-              </Breadcrumbs>
+             
             </Box>
             <Box display="flex">
               <Button

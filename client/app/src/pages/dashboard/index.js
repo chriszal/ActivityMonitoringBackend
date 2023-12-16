@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState,useEffect } from 'react';
 import Head from 'next/head';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
-import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import { Layout as WelcomeLayout } from 'src/layouts/dashboard/welcome';
 import { StudiesSearch } from 'src/sections/studies/studies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import axios from 'axios';
@@ -18,7 +18,6 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState('');
-  console.log(user.id);
 
   const useStudies = (page, rowsPerPage) => {
     const [data, setData] = useState([]);
@@ -101,40 +100,6 @@ const Page = () => {
   }, [studies, searchQuery]);
 
 
-  // const filteredStudies = useMemo(() => {
-  //   if (!searchQuery) {
-  //     return studies.map((study) => ({
-  //       ...study,
-  //       studyType:
-  //         study.owner.includes(username)
-  //           ? 'owned'
-  //           : study.study_coordinators.includes(username)
-  //           ? 'coordinating'
-  //           : study.study_assistants.includes(username)
-  //           ? 'assisting'
-  //           : ''
-  //     }));
-  //   }
-  
-  //   const lowerCaseQuery = searchQuery.toLowerCase();
-  //   return studies
-  //     .filter(
-  //       (study) =>
-  //         study.study_id.toLowerCase().includes(lowerCaseQuery) ||
-  //         study.title.toLowerCase().includes(lowerCaseQuery)
-  //     )
-  //     .map((study) => ({
-  //       ...study,
-  //       studyType:
-  //         study.owner.includes(username)
-  //           ? 'owned'
-  //           : study.study_coordinators.includes(username)
-  //           ? 'coordinating'
-  //           : study.study_assistants.includes(username)
-  //           ? 'assisting'
-  //           : ''
-  //     }));
-  // }, [studies, searchQuery, username]);
   
 
   return (
@@ -174,9 +139,9 @@ const Page = () => {
 };
 
 Page.getLayout = (page) => (
-  <DashboardLayout>
+  <WelcomeLayout>
     {page}
-  </DashboardLayout>
+  </WelcomeLayout>
 );
 
 export default Page;

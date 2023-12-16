@@ -11,6 +11,7 @@ import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
 import { DialogProvider } from "src/providers/dialog-provider";
 import { AlertProvider } from 'src/providers/alert-provider';
+import { StudyProvider } from 'src/providers/study-provider';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -40,6 +41,7 @@ const App = (props) => {
         <AuthProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <StudyProvider>
             <AlertProvider>
               <DialogProvider>
                 <AuthConsumer>
@@ -51,7 +53,7 @@ const App = (props) => {
                 </AuthConsumer>
               </DialogProvider>
             </AlertProvider>
-
+            </StudyProvider>
 
           </ThemeProvider>
         </AuthProvider>

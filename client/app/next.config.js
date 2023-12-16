@@ -23,11 +23,7 @@ module.exports = {
       },
       {
         source: '/dashboard',
-        destination: '/dashboard/studies',
-      },
-      {
-        source: '/dashboard/studies',
-        destination: '/dashboard/studies',
+        destination: '/dashboard',
       },
     ]
   },

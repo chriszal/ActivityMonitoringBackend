@@ -9,7 +9,6 @@ export const Layout = (props) => {
 
   return (
     <>
-      {/* <canvas id="gradient-canvas" style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1 }}></canvas> */}
       <GradientCanvas />
       <Box
         component="main"
@@ -38,7 +37,7 @@ export const Layout = (props) => {
               display: 'inline-flex'
             }}
           >
-            <Logo />
+            <Logo fillColor="#4D5761" />
           </Box>
         </Box>
         <Box sx={{ height: '100hv' }}>{children}</Box>

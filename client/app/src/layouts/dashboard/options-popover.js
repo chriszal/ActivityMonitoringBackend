@@ -34,7 +34,7 @@ export const OptionsPopover = (props) => {
         <MenuItem component={NextLink} href="/admin-dashboard/studies" onClick={onClose}>
           Admin
         </MenuItem>
-        <MenuItem component={NextLink} href="/dashboard/studies" onClick={onClose}>
+        <MenuItem component={NextLink} href="/dashboard" onClick={onClose}>
           Member
         </MenuItem>
       </MenuList>

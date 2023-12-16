@@ -143,7 +143,6 @@ const Page = () => {
                     Study Participants
                   </Typography>
                 </Stack>
-                <div>
                   <Button
                     startIcon={<SvgIcon fontSize="small"><PlusIcon /></SvgIcon>}
                     variant="contained"
@@ -151,30 +150,8 @@ const Page = () => {
                   >
                     Create
                   </Button>
-                </div>
               </Stack>
-              <Breadcrumbs separator="•" aria-label="breadcrumb">
-                <Link component={NextLink}
-                  underline="hover"
-                  color="inherit"
-                  variant="subtitle2"
-                  href={baseRoute}
-                >
-                  Studies
-                </Link>
-                {router.isReady && (
-                  <Link
-                    component={NextLink}
-                    underline="hover"
-                    color="inherit"
-                    variant="subtitle2"
-                    href={`${baseRoute}${router.query.study_id}/view`}
-                  >
-                    {router.query.study_id}
-                  </Link>
-                )}
-                <Typography variant="subtitle2" color="text.primary">Participants</Typography>
-              </Breadcrumbs>
+             
             </div>
             <ParticipantsSearch onSearch={handleSearch} onExport={handleExport} />
             <ParticipantsTable

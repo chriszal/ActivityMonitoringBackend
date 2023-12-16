@@ -1,30 +1,30 @@
 import { useState } from 'react';
 import { styled as style,Typography} from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
-import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
 import { usePathname } from 'next/navigation';
 import { useAuth } from 'src/hooks/use-auth';
 import styled from '@emotion/styled';
-import { useStudy } from 'src/providers/study-provider';
 
-const SIDE_NAV_WIDTH = 280;
 
 const LayoutRoot = style('div')(({ theme }) => ({
-  display: 'flex',
-  flex: '1 1 auto',
-  maxWidth: '100%',
-  [theme.breakpoints.up('lg')]: {
-    paddingLeft: SIDE_NAV_WIDTH
-  }
-}));
-
-const LayoutContainer = style('div')({
-  display: 'flex',
-  flex: '1 1 auto',
-  flexDirection: 'column',
-  width: '100%'
-});
+    display: 'flex',
+    flex: '1 1 auto',
+    maxWidth: '100%',
+    padding: '0 20px', 
+    [theme.breakpoints.up('lg')]: {
+      padding: '0 40px', 
+    }
+  }));
+  
+  const LayoutContainer = style('div')({
+    display: 'flex',
+    flex: '1 1 auto',
+    flexDirection: 'column',
+    width: '100%',
+    maxWidth: '1200px', 
+    margin: '0 auto', 
+  });
 
 const FooterText = styled('div')({
   textAlign: 'center',
@@ -33,21 +33,12 @@ const FooterText = styled('div')({
   fontSize: '0.8em',
 });
 export const Layout = withAuthGuard((props) => {
-  const { user } = useAuth();
   const { children } = props;
-  const pathname = usePathname();
-  const [openNav, setOpenNav] = useState(true);
-  const { selectedStudy } = useStudy();
-
 
   return (
     <>
-      <TopNav onNavOpen={() => setOpenNav(true)} />
-      <SideNav role={user.role}
-        onClose={() => setOpenNav(false)}
-        open={openNav}
-        selectedStudy={selectedStudy}
-      />
+      <TopNav onNavOpen={() => setOpenNav(true)} isWelcomeLayout={true}/>
+      
       <LayoutRoot>
         <LayoutContainer>
           {children}

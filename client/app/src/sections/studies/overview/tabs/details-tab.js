@@ -49,7 +49,6 @@ const DetailsTab = ({ study, onUpdate }) => {
       setEditingField(null);
       setOriginalTitle(title);
       setOriginalDescription(description);
-      setOriginalAuthors(authors);
     };
   return (
     <Box>

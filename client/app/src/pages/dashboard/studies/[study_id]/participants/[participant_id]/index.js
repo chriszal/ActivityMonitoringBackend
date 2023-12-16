@@ -152,25 +152,7 @@ const Page = () => {
                 </Stack>
               </Stack>
               <Breadcrumbs separator="•" aria-label="breadcrumb">
-                <Link component={NextLink}
-                  underline="hover"
-                  color="inherit"
-                  variant="subtitle2"
-                  href={baseRoute}
-                >
-                  Studies
-                </Link>
-                {router.isReady && (
-                  <Link
-                    component={NextLink}
-                    underline="hover"
-                    color="inherit"
-                    variant="subtitle2"
-                    href={`${baseRoute}${router.query.study_id}/view`}
-                  >
-                    {router.query.study_id}
-                  </Link>
-                )}
+                
                 <Link component={NextLink}
                   underline="hover"
                   color="inherit"
