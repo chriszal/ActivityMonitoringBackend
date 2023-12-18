@@ -148,7 +148,7 @@ class ParticipantResource(object):
             # Convert the participant_obj to a dictionary
             participant_dict = {
                 'participant_id': participant_obj.participant_id,
-                'date_of_birth': participant_obj.date_of_birth.strftime('%Y-%m-%d'), # assuming date_of_birth is a datetime object
+                'date_of_birth': participant_obj.date_of_birth,
                 'gender': participant_obj.gender,
                 'weight': participant_obj.weight,
                 'height': participant_obj.height,
