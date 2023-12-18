@@ -25,15 +25,19 @@ class RegisterParticipantService(object):
             if participant.register_status != "NONE":
                 return 0
             else:     
-                #study_obj = Study.objects.get(study_id=participant.study_id)
+                # Assuming participant.study is the Mongo ID of the Study document
+                study_obj = Study.objects.get(id=participant.study)
                 participant.update(set__register_status="REGISTERED")
 
                 return {
-                        'study_id': participant.study,
+                        'study_id': str(study_obj.study_id), 
+                        'title': study_obj.title, 
+                        'description': study_obj.description, 
                         'participant_id': participant.participant_id
                         } 
         except Participant.DoesNotExist:
             return -1
+
 
         
         

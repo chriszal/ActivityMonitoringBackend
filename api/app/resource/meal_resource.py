@@ -22,14 +22,15 @@ class MealResource(object):
         meal_type = req.get_param('type')
         portion = req.get_param('portion')
 
-        if not all([input_image, participant_id, meal_type, portion]):
-            resp.status = falcon.HTTP_400
-            resp.body = json.dumps({
-                'message': 'Missing required parameters',
-                'status': 400,
-                'data': {}
-            })
-            return
+        if input_image is None or not input_image.file or \
+            not participant_id or not meal_type or not portion:
+                resp.status = falcon.HTTP_400
+                resp.body = json.dumps({
+                    'message': 'Missing required parameters',
+                    'status': 400,
+                    'data': {}
+                })
+                return
 
         if not allowed_file(input_image.filename):
             resp.status = falcon.HTTP_405
