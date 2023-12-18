@@ -39,7 +39,7 @@ class RegisterParticipantResource(object):
             secret = SECRET
             algo = "HS256"
             token = jwt.encode(payload=payload, key=secret, algorithm=algo)
-            participant_objs['token'] = token.decode("utf-8")
+            participant_objs['token'] = token
             # print(part_json)
             resp.body = json.dumps(participant_objs)
             resp.status = falcon.HTTP_200
