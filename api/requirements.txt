@@ -18,3 +18,4 @@ falcon-policy
 pretend
 python-dotenv
 pika
+python-keycloak

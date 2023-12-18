@@ -30,8 +30,8 @@ export const getMemberItems = (study_id) => [
     )
   }, 
   {
-    title: 'Quessionaires',
-    path: `/dashboard/studies/${study_id}/quessionaires`,
+    title: 'Questionnaires',
+    path: `/dashboard/studies/${study_id}/questionnaires`,
     icon: (
       <SvgIcon fontSize="small">
         <ClipboardDocumentListIcon />

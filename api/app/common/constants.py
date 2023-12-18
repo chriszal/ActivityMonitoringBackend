@@ -8,6 +8,16 @@ GMAIL_PASS = os.environ.get("GMAIL_PASS")
             
 SERVER_IP = os.environ.get("SERVER_IP")
 
+CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
+
+KEYCLOAK_CONFIG = {
+    'server_url': 'http://{SERVER_IP}:8080/auth/',
+    'realm_name': 'beam-realm',
+    'client_id': 'beam-client',
+    'client_secret': CLIENT_SECRET
+}
+
+
 MONGO = {
     'DATABASE': os.environ.get('MONGO_INITDB_DATABASE'),
     'HOST': 'mongodb',

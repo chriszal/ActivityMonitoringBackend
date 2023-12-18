@@ -6,7 +6,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-      Quessionaires 
+      Questionnaires 
       </title>
     </Head>
     <Box
@@ -19,7 +19,7 @@ const Page = () => (
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <Typography variant="h4">
-            Quessionaires
+          Questionnaires
           </Typography>
         </Stack>
       </Container>

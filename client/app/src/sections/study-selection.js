@@ -20,7 +20,7 @@ const StudySelectPopup = ({onClose}) => {
   const NoStudiesRow = () => (
     <Box sx={{ display: 'flex', alignItems: 'center', bgcolor: 'grey.100', p: 1 }}>
       <SvgIcon size="small" sx={{  mr: 1 }}><ExclamationCircleIcon /></SvgIcon>
-      <Typography sx={{fontSize: '0.75rem'}} variant="body2">There's no studies here.</Typography>
+      <Typography sx={{fontSize: '0.75rem'}} variant="body2">There&apos;s no studies here.</Typography>
     </Box>
   );
 
