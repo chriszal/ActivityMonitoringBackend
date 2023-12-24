@@ -106,7 +106,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Studies 
+          Welcome - My Studies - Beam
         </title>
       </Head>
       <Box
@@ -125,7 +125,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  My Studies
+                  Welcome
                 </Typography>
               </Stack>
             </Stack>

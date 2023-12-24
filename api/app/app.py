@@ -81,7 +81,7 @@ app.add_route('/api/v1/participant/invitation', participant,suffix="participant_
 app.add_route('/api/v1/participants/study/{study_id}', participant,suffix="study")
 app.add_route('/api/v1/registered/participants/study/{study_id}', participant,suffix="registered")
 app.add_route('/api/v1/participant/{participant_id}', participant,suffix="id")
-app.add_route('/api/v1/measurement/',measurement)
+app.add_route('/api/v1/measurement',measurement)
 app.add_route('/api/v1/upload-meal',meal)
 app.add_route('/api/v1/meals/participant/{participant_id}',meal,suffix="id")
 app.add_route('/api/v1/participant/steps',steps)

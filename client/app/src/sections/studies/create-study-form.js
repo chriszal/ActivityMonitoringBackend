@@ -354,7 +354,7 @@ export const CreateStudyForm = () => {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                   <Typography variant="h6">Users & Roles</Typography>
-                  <Typography variant="body2">Description ...</Typography>
+                  <Typography sx={{ mt: 2 }} variant="body2">Add users to your study and assign them roles.</Typography>
                 </Grid>
                 <Grid xs={12} md={8} >
                   <div style={{ display: 'flex', alignItems: 'center' }}>
