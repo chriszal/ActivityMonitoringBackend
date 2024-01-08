@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box,Grid, Container, Stack, Typography } from '@mui/material';
+import { Box,Grid,Card,CardMedia,CardContent, Container, Stack, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import axiosInstance from 'src/utils/axios-instance';
 import React, { useState, useEffect } from 'react';
