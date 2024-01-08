@@ -36,7 +36,7 @@ const Page = () => {
                 <CardMedia
                   component="img"
                   height="140"
-                  image={meal.photo_url} // Adjust according to how you handle images
+                  image={`http://10.100.51.150:8081${meal.photo_url}`}  // Adjust the domain as necessary
                   alt={meal.meal_type}
                 />
                 <CardContent>
