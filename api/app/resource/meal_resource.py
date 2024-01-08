@@ -28,7 +28,7 @@ class MealResource(object):
             if not participant_ids:
                 raise DoesNotExist
 
-            meals = Meal.objects(participant_id__in=participant_ids)
+            meals = Meal.objects(participant_id=participant_ids)
             resp.body = meals.to_json()
             resp.status = falcon.HTTP_200
 
