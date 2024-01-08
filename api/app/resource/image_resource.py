@@ -10,11 +10,14 @@ class ImageResource(object):
             if not meal or not meal.photo:
                 raise DoesNotExist
 
-            content_type = 'image/jpeg'  # Default content type
-            file_extension = meal.photo.filename.rsplit('.', 1)[1].lower() if '.' in meal.photo.filename else ''
+            # Default content type
+            content_type = 'image/jpeg'
 
-            if file_extension in ALLOWED_EXTENSIONS:
-                content_type = f'image/{file_extension}'
+            # Check if filename is not None and has an extension
+            if meal.photo.filename and '.' in meal.photo.filename:
+                file_extension = meal.photo.filename.rsplit('.', 1)[1].lower()
+                if file_extension in ALLOWED_EXTENSIONS:
+                    content_type = f'image/{file_extension}'
 
             resp.content_type = content_type
             resp.body = meal.photo.read()
@@ -26,4 +29,3 @@ class ImageResource(object):
                 'status': 404,
                 'data': {}
             })
-
