@@ -22,7 +22,7 @@ class MealResource(object):
     def on_get_study(self, req, resp, study_id):
         try:
             participant_id_prefix = f'{study_id}_'
-            participant_ids = Participant.objects.filter(participant_id__startswith=participant_id_prefix).scalar('id')
+            participant_ids = Participant.objects.filter(participant_id__startswith=participant_id_prefix).scalar('participant_id')
             
             self.logging.info(f'Participant IDs for study {study_id}: {participant_ids}')
             
