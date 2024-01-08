@@ -20,16 +20,14 @@ class MealResource(object):
         
     def on_get_study(self, req, resp, study_id):
         try:
-            # Construct the prefix to search in participant_id
             participant_id_prefix = f'{study_id}_'
-
-            # Fetch participant IDs starting with the constructed prefix
             participant_ids = Participant.objects.filter(participant_id__startswith=participant_id_prefix).scalar('id')
             if not participant_ids:
                 raise DoesNotExist
 
-            meals = Meal.objects(participant_id=participant_ids)
-            resp.body = meals.to_json()
+            meals = Meal.objects(participant_id__in=participant_ids)
+            meals_data = [meal.to_dict() for meal in meals]  # Convert each meal to a dictionary
+            resp.body = json.dumps(meals_data)  # Serialize the list of dictionaries to JSON
             resp.status = falcon.HTTP_200
 
         except DoesNotExist:
