@@ -5,7 +5,7 @@ from mongoengine import DoesNotExist
 class ImageResource(object):
     def on_get(self, req, resp, grid_id):
         try:
-            meal = Meal.objects.get(photo__grid_id=grid_id)
+            meal = Meal.objects.get(photo=grid_id)
             if not meal or not meal.photo:
                 raise DoesNotExist
 
