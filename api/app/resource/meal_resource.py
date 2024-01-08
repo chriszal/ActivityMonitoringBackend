@@ -20,13 +20,13 @@ class MealResource(object):
         
     def on_get_study(self, req, resp, study_id):
         try:
-            # Fetch participant IDs starting with the study_id prefix
-            participant_ids = Participant.objects.filter(participant_id__startswith=study_id).scalar('id')
+            # Filter participant IDs based on the study_id prefix
+            participant_ids = [participant.participant_id for participant in Participant.objects(study=study_id)]
             if not participant_ids:
                 raise DoesNotExist
 
             meals = Meal.objects(participant_id__in=participant_ids)
-            resp.body = meals.to_json()
+            resp.body = json.dumps([meal.to_dict() for meal in meals])
             resp.status = falcon.HTTP_200
 
         except DoesNotExist:

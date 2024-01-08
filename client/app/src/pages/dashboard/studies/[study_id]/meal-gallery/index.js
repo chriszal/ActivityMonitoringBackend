@@ -14,6 +14,7 @@ const Page = () => {
     const fetchMeals = async () => {
       try {
         const response = await axiosInstance.get(`/meals/study/${study_id}`);
+        console.log(response);
         setMeals(response.data);
       } catch (error) {
         console.error('Error fetching meals:', error);

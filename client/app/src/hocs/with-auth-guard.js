@@ -23,6 +23,7 @@ const roles = {
   "/dashboard/create": MEMBER_ROLES,
   "/dashboard/studies/[study_id]/view": MEMBER_ROLES,
   "/dashboard/studies/[study_id]/participants": MEMBER_ROLES,
+  "/dashboard/studies/[study_id]/meal-gallery": MEMBER_ROLES,
   "/dashboard/studies/[study_id]/participants/[participant_id]": MEMBER_ROLES,
   "/dashboard/studies/[study_id]/questionnaires/[quessionaire_id]/edit":MEMBER_ROLES,
   "/404": MEMBER_ROLES
