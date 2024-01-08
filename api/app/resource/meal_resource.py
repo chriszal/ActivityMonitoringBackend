@@ -9,7 +9,8 @@ def allowed_file(filename):
         
 class MealResource(object):
 
-    # def __init__(self):
+    def __init__(self,logging):
+        self.logging=logging
 
     def on_get_id(self, req, resp,participant_id):
         meal = Meal.objects(participant_id=participant_id)
@@ -22,12 +23,17 @@ class MealResource(object):
         try:
             participant_id_prefix = f'{study_id}_'
             participant_ids = Participant.objects.filter(participant_id__startswith=participant_id_prefix).scalar('id')
+            
+            self.logging.info(f'Participant IDs for study {study_id}: {participant_ids}')
+            
             if not participant_ids:
                 raise DoesNotExist
 
             meals = Meal.objects(participant_id__in=participant_ids)
-            meals_data = [meal.to_dict() for meal in meals]  # Convert each meal to a dictionary
-            resp.body = json.dumps(meals_data)  # Serialize the list of dictionaries to JSON
+            self.logging.info(f'Meals found: {meals.count()}')
+            
+            meals_data = [meal.to_dict() for meal in meals]
+            resp.body = json.dumps(meals_data)
             resp.status = falcon.HTTP_200
 
         except DoesNotExist:
@@ -37,7 +43,6 @@ class MealResource(object):
                 'status': 404,
                 'data': {}
             })
-
 
     def on_post(self, req, resp):
         input_image = req.get_param('image') 
