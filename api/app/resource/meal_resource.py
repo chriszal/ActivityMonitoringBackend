@@ -20,13 +20,16 @@ class MealResource(object):
         
     def on_get_study(self, req, resp, study_id):
         try:
-            # Filter participant IDs based on the study_id prefix
-            participant_ids = [participant.participant_id for participant in Participant.objects(study=study_id)]
+            # Construct the prefix to search in participant_id
+            participant_id_prefix = f'{study_id}_'
+
+            # Fetch participant IDs starting with the constructed prefix
+            participant_ids = Participant.objects.filter(participant_id__startswith=participant_id_prefix).scalar('id')
             if not participant_ids:
                 raise DoesNotExist
 
             meals = Meal.objects(participant_id__in=participant_ids)
-            resp.body = json.dumps([meal.to_dict() for meal in meals])
+            resp.body = meals.to_json()
             resp.status = falcon.HTTP_200
 
         except DoesNotExist:
@@ -36,6 +39,7 @@ class MealResource(object):
                 'status': 404,
                 'data': {}
             })
+
 
     def on_post(self, req, resp):
         input_image = req.get_param('image') 
