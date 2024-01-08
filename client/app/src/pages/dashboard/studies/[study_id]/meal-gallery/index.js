@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Stack, Typography } from '@mui/material';
+import { Box,Grid, Container, Stack, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import axiosInstance from 'src/utils/axios-instance';
 import React, { useState, useEffect } from 'react';
@@ -24,7 +24,6 @@ const Page = () => {
   }, []);
 
   return (
-    <Layout>
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ my: 4 }}>
           Meal Gallery
@@ -52,7 +51,6 @@ const Page = () => {
           ))}
         </Grid>
       </Container>
-    </Layout>
   )};
 
 Page.getLayout = (page) => (
