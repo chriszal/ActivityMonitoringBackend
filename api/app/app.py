@@ -16,6 +16,7 @@ from resource.register_participant_resource import RegisterParticipantResource
 from resource.study_resource import StudyResource
 from resource.user_resource import UserResource
 from resource.meal_resource import MealResource
+from resource.image_resource import ImageResource
 from services.rabbitmq import RabbitMQ
 
 
@@ -60,6 +61,8 @@ meal = MealResource(logging)
 register = RegisterParticipantResource(logging)
 login = LoginResource()
 steps = StepsResource(logging)
+image_resource = ImageResource()
+app.add_route('/api/v1/image/{grid_id}', image_resource)
 
 
 
