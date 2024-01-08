@@ -1,6 +1,8 @@
 import falcon, json
 from common.constants import ALLOWED_EXTENSIONS
 from model.meal import Meal
+from model.participant import Participant
+from mongoengine import DoesNotExist
 
 def allowed_file(filename):
         return '.' in filename and filename.rsplit('.',1)[1] in ALLOWED_EXTENSIONS
@@ -15,6 +17,25 @@ class MealResource(object):
 
         resp.body = meal.to_json()
         resp.status = falcon.HTTP_200
+        
+    def on_get_study(self, req, resp, study_id):
+        try:
+            # Fetch participant IDs starting with the study_id prefix
+            participant_ids = Participant.objects.filter(participant_id__startswith=study_id).scalar('id')
+            if not participant_ids:
+                raise DoesNotExist
+
+            meals = Meal.objects(participant_id__in=participant_ids)
+            resp.body = meals.to_json()
+            resp.status = falcon.HTTP_200
+
+        except DoesNotExist:
+            resp.status = falcon.HTTP_404
+            resp.body = json.dumps({
+                'message': f'No participants found for study_id {study_id}',
+                'status': 404,
+                'data': {}
+            })
 
     def on_post(self, req, resp):
         input_image = req.get_param('image') 
