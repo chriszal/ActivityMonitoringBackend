@@ -17,7 +17,7 @@ class Meal(Document):
             return {
                 'id': str(self.id),
                 'participant_id': self.participant_id,
-                'photo_url': f'/api/v1/image/{str(self.photo.grid_id)}' if self.photo.grid_id else None,
+                'photo_url': f'/api/v1/image/{str(self.id)}' if self.photo else None,
                 'meal_type': self.meal_type,
                 'portion': self.portion,
                 'created_at': str(self.created_at)

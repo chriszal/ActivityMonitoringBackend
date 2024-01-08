@@ -1,15 +1,22 @@
 import falcon, json
 from model.meal import Meal
 from mongoengine import DoesNotExist
+from common.constants import ALLOWED_EXTENSIONS
 
 class ImageResource(object):
-    def on_get(self, req, resp, grid_id):
+    def on_get(self, req, resp, meal_id):
         try:
-            meal = Meal.objects.get(photo=grid_id)
+            meal = Meal.objects.get(id=meal_id)
             if not meal or not meal.photo:
                 raise DoesNotExist
 
-            resp.content_type = 'image/jpeg' 
+            content_type = 'image/jpeg'  # Default content type
+            file_extension = meal.photo.filename.rsplit('.', 1)[1].lower() if '.' in meal.photo.filename else ''
+
+            if file_extension in ALLOWED_EXTENSIONS:
+                content_type = f'image/{file_extension}'
+
+            resp.content_type = content_type
             resp.body = meal.photo.read()
             resp.status = falcon.HTTP_200
         except DoesNotExist:
@@ -19,3 +26,4 @@ class ImageResource(object):
                 'status': 404,
                 'data': {}
             })
+

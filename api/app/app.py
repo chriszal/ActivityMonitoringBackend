@@ -62,7 +62,7 @@ register = RegisterParticipantResource(logging)
 login = LoginResource()
 steps = StepsResource(logging)
 image_resource = ImageResource()
-app.add_route('/api/v1/image/{grid_id}', image_resource)
+app.add_route('/api/v1/image/{meal_id}', image_resource)
 
 
 
