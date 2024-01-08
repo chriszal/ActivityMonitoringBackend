@@ -57,7 +57,7 @@ user = UserResource()
 participant = ParticipantResource(logging)
 measurement = MeasurementResource(rabbitMQ_instance,constants.INFLUXDB,logging)
 meal = MealResource()
-register = RegisterParticipantResource()
+register = RegisterParticipantResource(logging)
 login = LoginResource()
 steps = StepsResource(logging)
 

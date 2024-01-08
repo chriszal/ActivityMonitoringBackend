@@ -8,8 +8,8 @@ from services.register_participant_service import RegisterParticipantService
 
 class RegisterParticipantResource(object):
 
-    def __init__(self):
-        self.reg_service = RegisterParticipantService()
+    def __init__(self,logging):
+        self.reg_service = RegisterParticipantService(logging)
 
     def on_get_reg_code(self, req, resp, reg_code):
         participant_objs = self.reg_service.register_participant(reg_code)

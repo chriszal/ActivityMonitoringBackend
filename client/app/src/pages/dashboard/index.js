@@ -125,7 +125,10 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Welcome
+                Welcome to beam
+                </Typography>
+                <Typography variant="body2">
+                  Here you can create and select studies
                 </Typography>
               </Stack>
             </Stack>
