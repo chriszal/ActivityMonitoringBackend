@@ -4,10 +4,13 @@ import Head from 'next/head';
 import { IconButton,Box, Container, TextField,Stack, Typography, Tabs, Tab, Paper, Divider, SvgIcon } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
-
+import SurveyComponent from 'src/sections/questionnaires/survey-component';
 // Placeholder components for tab content
-const QuestionsTab = () => <Box>Questions Content</Box>;
-const AnswersTab = () => <Box>Answers Content</Box>;
+const QuestionsTab = () => (
+  <Box>
+    <SurveyComponent />
+  </Box>
+);const AnswersTab = () => <Box>Answers Content</Box>;
 const SettingsTab = () => <Box>Settings Content</Box>;
 
 const Page = () => {

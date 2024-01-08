@@ -44,6 +44,9 @@
     "react-icons": "^4.10.1",
     "react-scroll": "^1.8.9",
     "simplebar-react": "^3.2.1",
+    "survey-core": "^1.9.124",
+    "survey-creator": "^1.9.124",
+    "survey-react": "^1.9.124",
     "uuid": "^9.0.1",
     "xlsx": "^0.18.5",
     "yup": "1.0.0"
