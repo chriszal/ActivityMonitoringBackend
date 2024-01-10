@@ -25,7 +25,7 @@ class RegisterParticipantService(object):
         self.logging.info(f"Attempting to register participant with reg_code: {reg_code}")
         try:
             participant = Participant.objects.get(reg_code=reg_code)
-            if participant.register_status != "NONE":
+            if participant.register_status != "NONE" or participant.register_status != "PENDING":
                 self.logging.warning(f"Participant with reg_code {reg_code} already registered.")
                 return 0
             else:     

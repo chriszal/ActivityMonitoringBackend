@@ -42,6 +42,14 @@ class DataProcessor:
                         # Smooth the magnitude using the adjusted parameters
                         df['magnitude_smooth'] = savgol_filter(df['magnitude'], window_length=91, polyorder=2)
 
+                        # Dynamic window_length adjustment for Savitzky-Golay filter
+                        window_length = min(91, len(df['magnitude']) - 1)
+                        window_length = window_length if window_length % 2 != 0 else window_length - 1
+                        if window_length > 1:
+                            df['magnitude_smooth'] = savgol_filter(df['magnitude'], window_length=window_length, polyorder=2)
+                        else:
+                            df['magnitude_smooth'] = df['magnitude']
+                            
                         # Detect peaks with the adjusted parameters
                         initial_peaks, _ = find_peaks(df['magnitude_smooth'], height=0.9, prominence=0.4)
 
