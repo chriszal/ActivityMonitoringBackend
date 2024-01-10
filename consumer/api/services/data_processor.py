@@ -45,7 +45,7 @@ class DataProcessor:
                         # Dynamic window_length adjustment for Savitzky-Golay filter
                         window_length = min(91, len(df['magnitude']) - 1)
                         window_length = window_length if window_length % 2 != 0 else window_length - 1
-                        if window_length > 1:
+                        if window_length > 3:
                             df['magnitude_smooth'] = savgol_filter(df['magnitude'], window_length=window_length, polyorder=2)
                         else:
                             df['magnitude_smooth'] = df['magnitude']
@@ -53,13 +53,16 @@ class DataProcessor:
                         # Detect peaks with the adjusted parameters
                         initial_peaks, _ = find_peaks(df['magnitude_smooth'], height=0.9, prominence=0.4)
 
-                        # Time-based peak filtering with the adjusted min_time_interval
-                        min_time_interval = 0.15
-                        peaks = [initial_peaks[0]]
-                        for i in range(1, len(initial_peaks)):
-                            if (df.index[initial_peaks[i]] - df.index[peaks[-1]]).total_seconds() > min_time_interval:
-                                peaks.append(initial_peaks[i])
-                        peaks = np.array(peaks)
+                        if initial_peaks.size > 0:
+                            # Time-based peak filtering with adjusted min_time_interval
+                            min_time_interval = 0.15
+                            peaks = [initial_peaks[0]]
+                            for i in range(1, len(initial_peaks)):
+                                if (df.index[initial_peaks[i]] - df.index[peaks[-1]]).total_seconds() > min_time_interval:
+                                    peaks.append(initial_peaks[i])
+                            peaks = np.array(peaks)
+                        else:
+                            peaks = np.array([])
 
                         step_count = len(peaks)
                         logging.info(f"Number of steps: {step_count}")
