@@ -256,7 +256,7 @@ export const ParticipantStepsChart = (props) => {
           height={350}
           options={chartOptions}
           series={chartSeries}
-          type="line"
+          type="bar"
           width="100%"
         />
       </CardContent>
